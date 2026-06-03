@@ -264,6 +264,61 @@
   </div>
 </section>
 
+<!-- ============================ GOVERNANCE ARCHITECTURE (both modes) ============================ -->
+<section>
+  <div class="wrap">
+    <h2>Governance architecture</h2>
+    <p class="muted" style="max-width:820px">Two ladders sit beneath the daily floor: a <b>sit-out ladder</b> that
+      throttles trading after losses, and a <b>falsifiability protocol</b> that stands the edge down entirely if it
+      stops working. Both are pre-committed and witness-countersigned — not discretionary.</p>
+
+    <h3 style="margin-top:30px">Sit-out ladder</h3>
+    <table class="rules" style="margin-top:10px">
+      <thead><tr><th>Trigger</th><th>Response</th><th>Resume</th></tr></thead>
+      <tbody>
+        <tr>
+          <td class="mono">1–2 red days</td>
+          <td>Within tolerance — keep trading the full menu.</td>
+          <td class="muted">n/a</td>
+        </tr>
+        <tr>
+          <td class="mono">3 consecutive red days<br><span class="muted small">(net loss &gt; $500 each)</span></td>
+          <td>Sit out the remainder of the week. No new entries.</td>
+          <td>Following week.</td>
+        </tr>
+        <tr>
+          <td class="mono">4th consecutive red day</td>
+          <td>
+            <span class="operator-only">Restrict to <b>{Setup&nbsp;C-Validated, Setup&nbsp;D}</b> only</span>
+            <span class="investor-only">Restrict to <b>validated setups only</b></span>
+            — until back to profitability.
+          </td>
+          <td>Full setup menu, once profitable again.</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <h3 style="margin-top:30px">Falsifiability layers</h3>
+    <table class="rules" style="margin-top:10px">
+      <thead><tr><th>Layer</th><th>Condition</th><th>On trigger</th></tr></thead>
+      <tbody>
+        <tr>
+          <td><b>Operator</b> <span class="muted small">— fidelity</span></td>
+          <td>Deviation from the published Gate&nbsp;02 + three-tier sit-out architecture.</td>
+          <td>Tiered response, witness-countersigned (Manish&nbsp;Dharod).</td>
+        </tr>
+        <tr>
+          <td><b>Edge</b> <span class="muted small">— expression</span></td>
+          <td class="mono">10 consecutive losing days</td>
+          <td>Edge stand-down → research-only; public Discord notice.</td>
+        </tr>
+      </tbody>
+    </table>
+    <p class="muted small" style="margin-top:14px">The daily floor is the <em>daily-granularity</em> edge of this same
+      protocol: a pre-committed, observable, binary kill condition for the session.</p>
+  </div>
+</section>
+
 <!-- ============================ §G GOVERNANCE ============================ -->
 <section>
   <div class="wrap">
