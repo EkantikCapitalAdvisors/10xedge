@@ -12,7 +12,6 @@
    --------------------------------------------------------------------------- */
 const RULES = Object.freeze({
   startingCapital: 10000,        // $10k account (§3.1c, locked)
-  esPointValue: 50,              // ES = $50 / point
 
   // (a) Two loss thresholds — DO NOT conflate (§3.1a)
   DLL: 1000,                     // Hard daily floor (dollars). Inviolable.
@@ -20,10 +19,12 @@ const RULES = Object.freeze({
   redDayThreshold: 500,          // a "red day" = daily net loss WORSE than -$500.
 
   // (c) Setups, stops & sizing — DEFINED (§3.1c). Universe = C and D only.
+  // Sizes are ranges (C-Val 1–2 ES, C-guess 1–5 MES, D 1 ES); the sim models the
+  // RANGE UPPER BOUND (worst-case risk). pointValue: ES = $50/pt, MES = $5/pt.
   setups: {
-    C_validated: { label: 'Setup C — Validated', contracts: 2, stopPoints: 10, maxLoss: 1000 },
-    C_guess:     { label: 'Setup C — guess',      contracts: 1, stopPoints: 10, maxLoss: 500  },
-    D:           { label: 'Setup D',              contracts: 4, stopPoints: 3,  maxLoss: 600  },
+    C_validated: { label: 'Setup C — Validated', contracts: 2, pointValue: 50, stopPoints: 10, maxLoss: 1000 },
+    C_guess:     { label: 'Setup C — guess',      contracts: 5, pointValue: 5,  stopPoints: 10, maxLoss: 250  },
+    D:           { label: 'Setup D',              contracts: 1, pointValue: 50, stopPoints: 3,  maxLoss: 150  },
   },
 
   // (d) Scale-up rules — DEFINED (§3.1d)
@@ -95,23 +96,21 @@ function cloneEdge(src) {
    The simulator gives the (lower) geometric reality.
    --------------------------------------------------------------------------- */
 function expectedDollarsPerDay(edge) {
-  const v = RULES.esPointValue;
-
-  // Setup C splits into Validated (2 ES) and guess (1 ES) by validationRate.
-  const cLoss = RULES.setups.C_validated.stopPoints;        // 10 pts
-  const cWin  = edge.C.winRate * edge.C.avgWinPoints;
-  const cLossE = (1 - edge.C.winRate) * cLoss;
-  const cPerOccPoints = cWin - cLossE;                       // points / C occurrence
+  // Setup C splits into Validated (2 ES) and guess (5 MES) by validationRate.
+  // $/pt differs per setup (ES vs MES), so each leg carries its own pointValue.
+  const cV = RULES.setups.C_validated, cG = RULES.setups.C_guess;
+  const cLoss = cV.stopPoints;                               // 10 pts (same for guess)
+  const cPerOccPoints = edge.C.winRate * edge.C.avgWinPoints - (1 - edge.C.winRate) * cLoss;
 
   const valOcc = edge.C.frequencyPerDay * edge.C.validationRate;
   const gsOcc  = edge.C.frequencyPerDay * (1 - edge.C.validationRate);
   const cDollars =
-      valOcc * RULES.setups.C_validated.contracts * v * cPerOccPoints +
-      gsOcc  * RULES.setups.C_guess.contracts     * v * cPerOccPoints;
+      valOcc * cV.contracts * cV.pointValue * cPerOccPoints +
+      gsOcc  * cG.contracts * cG.pointValue * cPerOccPoints;
 
-  const dLoss = RULES.setups.D.stopPoints;                   // 3 pts
-  const dPerOccPoints = edge.D.winRate * edge.D.avgWinPoints - (1 - edge.D.winRate) * dLoss;
-  const dDollars = edge.D.frequencyPerDay * RULES.setups.D.contracts * v * dPerOccPoints;
+  const d = RULES.setups.D;
+  const dPerOccPoints = edge.D.winRate * edge.D.avgWinPoints - (1 - edge.D.winRate) * d.stopPoints;
+  const dDollars = edge.D.frequencyPerDay * d.contracts * d.pointValue * dPerOccPoints;
 
   return cDollars + dDollars;
 }
@@ -119,7 +118,7 @@ function expectedDollarsPerDay(edge) {
 /* Max single-trade loss for a given setup state at a sizing multiplier (§4.4 check). */
 function maxSingleTradeLoss(setupKey, multiplier) {
   const s = RULES.setups[setupKey];
-  return s.contracts * multiplier * RULES.esPointValue * s.stopPoints;
+  return s.contracts * multiplier * s.pointValue * s.stopPoints;
 }
 
 /* ---------------------------------------------------------------------------
@@ -229,13 +228,14 @@ function simulatePath(edge, policy, seed) {
         }
 
         const contracts = base.contracts * mult;
+        const v = base.pointValue;                 // ES = $50/pt, MES = $5/pt
         const win = rng() < p;
         let tradePnL;
         if (win) {
-          tradePnL = winPts * RULES.esPointValue * contracts;
+          tradePnL = winPts * v * contracts;
         } else {
           // nominal point-stop loss ...
-          let loss = lossPts * RULES.esPointValue * contracts;
+          let loss = lossPts * v * contracts;
           // ... but the daily floor caps realized loss at remaining room (§3.1d note)
           if (loss > RULES.DLL + dayPnL) loss = RULES.DLL + dayPnL;
           tradePnL = -loss;

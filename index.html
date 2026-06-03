@@ -92,14 +92,18 @@
     <table class="rules" style="margin-top:18px">
       <thead><tr><th>Setup / state</th><th>Contracts</th><th>Stop</th><th>$/pt</th><th>Max single-trade loss</th></tr></thead>
       <tbody>
-        <tr><td>Setup C — Validated</td><td class="mono">2 ES</td><td class="mono">10 pts</td><td class="mono">$100</td><td class="mono">$1,000</td></tr>
-        <tr><td>Setup C — guess</td><td class="mono">1 ES</td><td class="mono">10 pts</td><td class="mono">$50</td><td class="mono">$500</td></tr>
-        <tr><td>Setup D</td><td class="mono">4 ES</td><td class="mono">3 pts</td><td class="mono">$200</td><td class="mono">$600</td></tr>
+        <tr><td>Setup C — Validated</td><td class="mono">1–2 ES</td><td class="mono">10 pts</td><td class="mono">$50–$100</td><td class="mono">$500–$1,000</td></tr>
+        <tr><td>Setup C — guess</td><td class="mono">1–5 MES</td><td class="mono">10 pts</td><td class="mono">$5–$25</td><td class="mono">$50–$250</td></tr>
+        <tr><td>Setup D</td><td class="mono">1 ES</td><td class="mono">3 pts</td><td class="mono">$50</td><td class="mono">$150</td></tr>
       </tbody>
     </table>
     <p class="muted small" style="margin-top:14px">
+      <b>ES = $50/pt · MES = $5/pt.</b> The floor is calibrated to the top of the C-Validated range: 2 ES × 10 pts
+      × $50 = <b>$1,000</b> = one full-stop loss ends the day. Every other setup risks well under the floor —
+      a max C-guess ($250) plus a Setup&nbsp;D ($150) is only $400, so a single C-Validated stop (or the ×4
+      confluence) is the only single event that can reach it.<br>
       <b>A/B not traded</b> — confluence conditions only: A∧B∧C all Validated fires the ×4 exponential
-      (8 ES). <b>Scale-up:</b> +$2,000 running profit unlocks an optional ×2; ×4 does not compound to ×8
+      (up to 8 ES). <b>Scale-up:</b> +$2,000 running profit unlocks an optional ×2; ×4 does not compound to ×8
       (working default). Oversized-position loss is capped by the remaining daily-floor room, never the
       nominal point-stop.<br>
       <b>Sit-out ladder:</b> 3 consecutive red days (loss &gt; $500) ⇒ sit out the week; 4th ⇒ restrict to
