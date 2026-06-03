@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="en" data-mode="operator">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>The 10x Account — a defined-downside engine · Ekantik Capital</title>
+<meta name="description" content="A defined daily floor turns an unbounded fear into a single known number — and a positive-expectancy edge compounds above it. Interactive, client-side rules engine.">
+<meta name="robots" content="noindex,nofollow"><!-- §8.7: do not index the holding-out surface until compliance posture is settled -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;600;700&family=Cormorant+Garamond:wght@500;600&family=DM+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body data-mode="operator">
+
+<!-- ============================ TOP BAR ============================ -->
+<div class="topbar">
+  <div class="wrap">
+    <div class="brand"><b>10x</b> Account <span>· ekantik capital</span></div>
+    <div class="modes" role="tablist" aria-label="Presentation mode">
+      <button id="mode-operator" class="active" role="tab">Operator</button>
+      <button id="mode-investor" role="tab">Investor</button>
+    </div>
+  </div>
+</div>
+
+<!-- ============================ §A HERO ============================ -->
+<section class="hero">
+  <div class="wrap">
+    <div class="kicker investor-only">The Edge, in Plain English · Founding Member Briefing</div>
+    <div class="kicker operator-only">Operator cockpit · live execution rules</div>
+
+    <h1 class="investor-only">One number you set.<br>One number you can never breach in a day.</h1>
+    <h1 class="operator-only">The 10x Account — risk architecture cockpit</h1>
+
+    <p class="sub investor-only">The 10x Account is a <b>defined-downside engine</b>: you set the most it can
+      lose in a day, and a positive-expectancy edge compounds above that floor.</p>
+    <p class="sub operator-only">Hard daily floor, circuit breaker, fixed-fractional sizing, and a
+      published sit-out ladder — the literal execution rules of the live prop account, instrumented.</p>
+
+    <div class="chips">
+      <div class="chip"><b>Daily floor:</b> you set it</div>
+      <div class="chip"><b>Circuit breaker:</b> automatic</div>
+      <div class="chip"><b>Failure:</b> pre-committed &amp; witnessed</div>
+    </div>
+    <!-- §A note: NO 64.7% / 1.93 / +105R chips here — that is the deck's record, not this account's. -->
+  </div>
+</section>
+
+<!-- ============================ §B THE REFRAME ============================ -->
+<section class="investor-only">
+  <div class="wrap">
+    <h2>The reframe</h2>
+    <p class="muted" style="max-width:760px">Most managers tell you their <em>return</em>. Almost none tell you
+      their <em>floor</em>. We lead with the floor, because the floor is the only thing you actually control
+      before the edge takes over. A hard daily loss limit — “you cannot lose more than this in a day” — is
+      concrete and visceral in a way “fixed-fractional R sizing” never is.</p>
+  </div>
+</section>
+
+<!-- ============================ §C THE MECHANIC ============================ -->
+<section>
+  <div class="wrap">
+    <h2>The three jobs of the daily floor</h2>
+    <div class="three" style="margin-top:28px">
+      <div class="panel ring">
+        <div class="num">1</div>
+        <div><h3>A risk budget</h3><p class="muted small">Each session you risk at most the daily limit.
+          The engine allocates that budget across the day’s trades.</p></div>
+      </div>
+      <div class="panel ring">
+        <div class="num">2</div>
+        <div><h3>A circuit breaker</h3><p class="muted small">Hit −DLL on the day and the session ends.
+          No revenge trades, no spiral — where real edges get killed by their operators.</p></div>
+      </div>
+      <div class="panel ring">
+        <div class="num">3</div>
+        <div><h3>A falsifiability floor</h3><p class="muted small">A pre-committed, observable, binary kill
+          condition for the day — the daily-granularity edge of a witness-locked protocol.</p></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================ DEFINED RULES (operator) ============================ -->
+<section class="operator-only">
+  <div class="wrap">
+    <h2>The defined rules <span class="muted small">(fixed core — <code>RULES</code>)</span></h2>
+    <p class="muted small">Sizing, stops and governance are settled. Edge stats are TBD inputs (below).
+      $10k account · floor $1,000 = 10% = exactly one Setup&nbsp;C&nbsp;Validated full stop.</p>
+    <table class="rules" style="margin-top:18px">
+      <thead><tr><th>Setup / state</th><th>Contracts</th><th>Stop</th><th>$/pt</th><th>Max single-trade loss</th></tr></thead>
+      <tbody>
+        <tr><td>Setup C — Validated</td><td class="mono">2 ES</td><td class="mono">10 pts</td><td class="mono">$100</td><td class="mono">$1,000</td></tr>
+        <tr><td>Setup C — guess</td><td class="mono">1 ES</td><td class="mono">10 pts</td><td class="mono">$50</td><td class="mono">$500</td></tr>
+        <tr><td>Setup D</td><td class="mono">4 ES</td><td class="mono">3 pts</td><td class="mono">$200</td><td class="mono">$600</td></tr>
+      </tbody>
+    </table>
+    <p class="muted small" style="margin-top:14px">
+      <b>A/B not traded</b> — confluence conditions only: A∧B∧C all Validated fires the ×4 exponential
+      (8 ES). <b>Scale-up:</b> +$2,000 running profit unlocks an optional ×2; ×4 does not compound to ×8
+      (working default). Oversized-position loss is capped by the remaining daily-floor room, never the
+      nominal point-stop.<br>
+      <b>Sit-out ladder:</b> 3 consecutive red days (loss &gt; $500) ⇒ sit out the week; 4th ⇒ restrict to
+      {C-Validated, D} until back to profitability. <b>Edge falsification:</b> 10 consecutive losing days ⇒
+      stand-down to research-only.
+    </p>
+  </div>
+</section>
+
+<!-- ============================ §D THE CALCULATOR ============================ -->
+<section id="calc">
+  <div class="wrap">
+    <h2>The calculator <span class="muted small">— what the <em>rules</em> do with <em>your</em> edge</span></h2>
+    <p class="muted investor-only" style="max-width:780px">Set your floor. Dial in an edge — start with our
+      illustrative figures or enter your own — and watch what the rules do with it, ten thousand times over,
+      so you see the spread, not just the dream. <b>Nothing here is a forecast.</b> It’s the compounding math
+      of <em>whatever edge you assume</em>, run inside a fixed floor.</p>
+
+    <div class="calc" style="margin-top:22px">
+
+      <!-- ---------------- controls ---------------- -->
+      <div class="panel controls">
+        <label for="capital">Starting capital&nbsp;<span class="muted">C</span></label>
+        <input type="number" id="capital" value="10000" readonly>
+        <p class="muted small" style="margin-top:6px">Locked at $10,000 for v0.5: sizing (2/4 ES) is calibrated so
+          the $1,000 floor = exactly one Setup&nbsp;C&nbsp;Validated full stop. Rescaling capital without
+          rescaling sizing would break that calibration (§9 leverage flag).</p>
+
+        <label>Daily loss limit (DLL)</label>
+        <div class="bigstat"><div class="floor mono">$1,000 <small id="dll-pct">(10%)</small></div></div>
+        <p class="muted small" style="margin-top:6px">The hard floor. Fixed by design = one Setup C Validated
+          full stop. Recomputes as 10% of capital.</p>
+
+        <label>Scale-up policy <span class="muted small">— the headline tradeoff</span></label>
+        <div class="seg" id="policy">
+          <button data-policy="conservative" class="active">Conservative</button>
+          <button data-policy="aggressive">Aggressive</button>
+        </div>
+        <p class="muted small" style="margin-top:6px">Conservative never exercises the +$2k ×2 doubling or the
+          ×4 confluence exponential. Aggressive exercises both, per rules.</p>
+
+        <details class="advanced">
+          <summary>Advanced / Edge assumptions <span class="illus-tag">illustrative</span></summary>
+          <p class="muted small" style="margin-top:10px">TBD per setup. Loss side is fixed by the stops;
+            the <b>win (target, in points)</b> is the open lever that sets the R-multiple.</p>
+
+          <div class="edge-grid">
+            <div class="full"><b class="small" style="color:var(--gold)">Setup C</b></div>
+            <div><label>Frequency / day</label><input type="number" id="c-freq" step="0.5" min="0"></div>
+            <div><label>Validation rate</label><input type="number" id="c-val" step="0.05" min="0" max="1"></div>
+            <div><label>Win rate p</label><input type="number" id="c-p" step="0.01" min="0" max="1"></div>
+            <div><label>Avg win (pts)</label><input type="number" id="c-win" step="0.5" min="0"></div>
+
+            <div class="full"><b class="small" style="color:var(--gold)">Setup D</b></div>
+            <div><label>Frequency / day</label><input type="number" id="d-freq" step="0.5" min="0"></div>
+            <div><label>Win rate p</label><input type="number" id="d-p" step="0.01" min="0" max="1"></div>
+            <div><label>Avg win (pts)</label><input type="number" id="d-win" step="0.5" min="0"></div>
+            <div></div>
+
+            <div class="full"><label>Confluence rate (A∧B∧C → ×4 fires)</label>
+              <input type="number" id="conf" step="0.01" min="0" max="1"></div>
+          </div>
+          <div class="edge-actions">
+            <button id="reset-edge">Reset to illustrative</button>
+            <button id="clear-edge">Clear / enter your own</button>
+          </div>
+        </details>
+
+        <button class="btn-run" id="run">Run 10,000 paths</button>
+        <p class="muted small" id="progress" style="margin-top:10px">&nbsp;</p>
+      </div>
+
+      <!-- ---------------- results ---------------- -->
+      <div class="results">
+
+        <div class="panel">
+          <div class="bigstat">
+            <div class="floor mono" id="floor-big">$1,000</div>
+            <div class="muted">hard daily floor — the most this account can lose in a single day.</div>
+          </div>
+          <p class="small muted" id="closedform" style="margin-top:12px"></p>
+        </div>
+
+        <div class="panel">
+          <h3>Path to 10x</h3>
+          <div class="chartwrap"><canvas id="fan"></canvas></div>
+          <p class="muted small">Median (P50) with the P10–P90 band. 10x is reached by
+            <em>time × compounding at the optimum</em>, not by cranking risk.</p>
+        </div>
+
+        <div class="statgrid">
+          <div class="statbox"><div class="k">Median time to 10x</div><div class="v" id="r-median">—</div></div>
+          <div class="statbox"><div class="k">P(reach 10x in horizon)</div><div class="v good" id="r-p10x">—</div></div>
+          <div class="statbox"><div class="k">P(ruin)</div><div class="v bad" id="r-pruin">—</div></div>
+          <div class="statbox"><div class="k">P(edge falsified)</div><div class="v bad" id="r-pfals">—</div></div>
+        </div>
+
+        <!-- ===== §F / §2 THE HONEST DOWNSIDE — required, never hidden ===== -->
+        <div class="downside">
+          <h3>The honest downside</h3>
+          <p class="small"><b>A daily loss limit caps the <em>day</em>, not the <em>month</em>.</b> You can hit
+            −$1,000 on three separate days and be down $3,000. The deck’s own live record already shows a
+            <span class="mono">−23.3%</span> drawdown.</p>
+          <div class="statgrid" style="margin-top:6px">
+            <div class="statbox"><div class="k">Modeled worst-case total drawdown</div><div class="v bad" id="r-maxdd">—</div></div>
+            <div class="statbox"><div class="k">Median max drawdown</div><div class="v" id="r-meddd">—</div></div>
+          </div>
+          <p class="small muted" style="margin-top:10px">“10x” is an aspirational ceiling reached through time
+            and compounding — <b>not a forecast, not a guarantee, not a promised multiple.</b></p>
+        </div>
+
+        <!-- ===== §4.3 POLICY COMPARISON ===== -->
+        <div class="panel">
+          <h3>Policy comparison <span class="muted small">— speed vs. drawdown &amp; ruin</span></h3>
+          <table class="cmp" id="cmp">
+            <thead><tr><th>Scale-up policy</th><th>Median → 10x</th><th>Max DD</th><th>P(ruin)</th><th>P(falsified)</th></tr></thead>
+            <tbody>
+              <tr><td>Conservative</td><td id="c-med">—</td><td id="c-dd">—</td><td id="c-ruin">—</td><td id="c-fals">—</td></tr>
+              <tr><td>Aggressive</td><td id="a-med">—</td><td id="a-dd">—</td><td id="a-ruin">—</td><td id="a-fals">—</td></tr>
+            </tbody>
+          </table>
+          <p class="muted small" style="margin-top:8px">Because the hard floor caps <em>daily</em> loss identically
+            under either policy, aggression scales the <em>upside</em> and the path — not the daily downside. The
+            table shows the <em>actual</em> drawdown and ruin each policy produces at your edge, so you compare
+            the real cost, not an assumed one.</p>
+        </div>
+
+        <!-- ===== §4.3 RULE-ACTIVITY TELEMETRY ===== -->
+        <div class="panel operator-only">
+          <h3>Rule-activity telemetry</h3>
+          <div class="tel">
+            <div class="statbox"><div class="k">Days floor caught</div><div class="v" id="t-floor">—</div></div>
+            <div class="statbox"><div class="k">3-red sit-outs</div><div class="v" id="t-week">—</div></div>
+            <div class="statbox"><div class="k">4th-day restrictions</div><div class="v" id="t-rest">—</div></div>
+            <div class="statbox"><div class="k">×4 confluence fires</div><div class="v" id="t-conf">—</div></div>
+          </div>
+          <p class="muted small" style="margin-top:8px">Rates per 1,000 simulated trading days. A∧B∧C confluence
+            is rare by construction.</p>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================ §E PATH TO 10X (copy) ============================ -->
+<section class="investor-only">
+  <div class="wrap">
+    <h2>Why 10x is a hill, not a cliff</h2>
+    <p class="muted" style="max-width:780px">A small per-trade edge is the snowball. A few hundred trades a
+      year is the hill. A daily floor is what keeps the snowball from rolling off a cliff. Set the edge; the
+      rules decide how safely it rolls. <b>10x is the structural ceiling — never the daily threshold.</b></p>
+  </div>
+</section>
+
+<!-- ============================ §F HONEST DOWNSIDE (copy) ============================ -->
+<section class="investor-only">
+  <div class="wrap">
+    <h2>A skilled boxer still gets hit</h2>
+    <p class="muted" style="max-width:780px">The floor decides how hard, per round. It does not promise you
+      never bleed across the fight. The edge’s <em>existence</em> and its <em>constancy</em> are assumptions
+      the Falsifiability Protocol tests — not facts this page asserts.</p>
+  </div>
+</section>
+
+<!-- ============================ §G GOVERNANCE ============================ -->
+<section>
+  <div class="wrap">
+    <h2>Governance</h2>
+    <p class="muted" style="max-width:820px">The daily floor is not a mood. It’s the daily-granularity edge of
+      a protocol committed to publicly, in writing, with a witness (Manish Dharod) who countersigns every
+      exception. See the witness-locked <a href="https://accelerator.ekantikcapital.com" rel="noopener">
+      Falsifiability Protocol v2.0 + three-tier sit-out ladder</a>.</p>
+  </div>
+</section>
+
+<!-- ============================ §H FOUNDING TERMS + CTA ============================ -->
+<section class="investor-only cta">
+  <div class="wrap">
+    <h2>Founding terms</h2>
+    <p class="muted" style="max-width:720px;margin:0 auto">80/20 capital architecture · lifetime flat fee ·
+      capacity priority. The floor is defined. The protocol is published. What’s left is one decision — the
+      daily floor you want your edge to run above.</p>
+    <!-- §8.7: the CTA is the holding-out surface; gated, not a public solicitation. -->
+    <p class="gatenote">Founding-member access is by invitation while the registration posture is resolved.
+      This page is not a public solicitation.</p>
+  </div>
+</section>
+
+<!-- ============================ §8 COMPLIANCE ============================ -->
+<section>
+  <div class="wrap">
+    <h2 class="small" style="font-family:'DM Sans';text-transform:uppercase;letter-spacing:1px;color:var(--gold)">Important disclosures</h2>
+    <p class="disclaimer"><b>Hypothetical &amp; illustrative.</b> The edge statistics in this calculator are
+      <b>to be determined</b>. Every figure emitted is a <em>hypothetical illustration of the rules</em>, not a
+      performance representation. The deck’s verified figures are <em>not</em> this account’s expected results.</p>
+    <p class="disclaimer">No guarantees, no forecasts — this is the math of an <em>assumed</em> edge.
+      <span class="warn">A daily loss limit caps daily downside, not cumulative downside;</span> multiple red days
+      compound into a larger drawdown.</p>
+    <p class="disclaimer">The edge’s existence and constancy are assumptions the Protocol tests.
+      Simulated/hypothetical results have inherent limitations and do not represent actual trading. “10x” is an
+      aspirational ceiling, never an expected or likely return.</p>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">10xedge.ekantikcapital.com · Ekantik Capital Advisors LLC · Internal architecture —
+    operator cockpit. Investor-mode guardrails active before any public release.</div>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+<script src="engine.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
