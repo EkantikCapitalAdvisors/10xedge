@@ -65,6 +65,10 @@ section:first-of-type { border-top: none; }
 }
 .modes button.active { background: var(--gold); color: var(--navy-deep); font-weight: 600; }
 
+.topbar .cx-link { font-family: 'JetBrains Mono', monospace; font-size: .78rem; color: var(--gold-soft); border: 1px solid var(--navy-line); border-radius: 999px; padding: 7px 14px; white-space: nowrap; }
+.topbar .cx-link:hover { color: var(--gold); border-color: var(--gold); }
+@media (max-width: 640px) { .topbar .cx-link { display: none; } }
+
 /* ---- hero ---- */
 .hero { text-align: center; padding-top: 96px; }
 .hero .kicker { font-family: 'JetBrains Mono', monospace; color: var(--gold); letter-spacing: 3px; text-transform: uppercase; font-size: .72rem; margin-bottom: 18px; }
