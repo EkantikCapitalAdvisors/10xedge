@@ -101,9 +101,10 @@
     <table class="rules" style="margin-top:18px">
       <thead><tr><th>Component</th><th>Rule</th></tr></thead>
       <tbody>
-        <tr><td>Margin to run the engine</td><td class="mono">1 ES per $10,000 of capital</td></tr>
-        <tr><td>Position size</td><td class="mono">start 1 ES · +1 ES per profitable month (each ES ≈ $3,000/mo)</td></tr>
+        <tr><td>Position size (margin-gated)</td><td class="mono">Tradovate: 1 ES / $10k · Interactive Brokers: 1 ES / $30k of account</td></tr>
+        <tr><td>Scale-up</td><td class="mono">size grows as the account grows (one ES per margin unit); each ES ≈ $3,000/mo</td></tr>
         <tr><td>Daily loss limit</td><td class="mono">$500 per ES → floor = $500 × current ES count</td></tr>
+        <tr><td>Trading calendar</td><td class="mono">10 trading months + 2 break months per year</td></tr>
         <tr><td>Sit-out (weekly)</td><td class="mono">2 losing days in a week → sit out the rest of the week</td></tr>
         <tr><td>Restriction</td><td class="mono">3 consecutive losing days → high-probability trades only</td></tr>
         <tr><td>Edge falsification</td><td class="mono">10 consecutive losing days → stand-down (research-only)</td></tr>
@@ -112,9 +113,10 @@
     </table>
     <p class="muted small" style="margin-top:14px">
       <b>Active capital is the smallest tier; the engine carries no separate reserve buffer.</b> One full-stop
-      loss equals the day’s floor ($500 × ES), so a losing day ends on the first stop. The position steps up one
-      ES per profitable month (each contract earns ≈ $3k/mo, which funds the next); as capital falls, size
-      de-scales with it. The high-probability-only restriction lifts on the next winning day.
+      loss equals the day’s floor ($500 × ES), so a losing day ends on the first stop. Position size is gated by
+      broker margin — at <b>Tradovate</b> (1 ES / $10k) the account scales up fast (aspirational); at
+      <b>Interactive Brokers</b> (1 ES / $30k) it scales far slower (realistic). As capital falls, size de-scales
+      with it. The high-probability-only restriction lifts on the next winning day.
     </p>
   </div>
 </section>
@@ -142,8 +144,16 @@
         <p class="muted small" style="margin-top:6px">$500 per contract → the day’s floor is $500 × your current
           ES count. One full-stop loss equals the floor, so a losing day ends on the first stop.</p>
 
-        <label for="e-monthly">Profit per ES / month <span class="muted small">— drives the year table</span></label>
+        <label for="e-monthly">Profit per ES / month <span class="muted small">— drives both projections</span></label>
         <input type="number" id="e-monthly" value="3000" step="500" min="0">
+
+        <label>Broker margin <span class="muted small">— for the Monte Carlo</span></label>
+        <div class="seg" id="mc-broker">
+          <button data-margin="10000" class="active">Tradovate</button>
+          <button data-margin="30000">Interactive Brokers</button>
+        </div>
+        <p class="muted small" style="margin-top:6px">Tradovate = 1 ES / $10k (aspirational); IBKR = 1 ES / $30k
+          (realistic). The Monte Carlo runs the selected broker.</p>
 
         <details class="advanced">
           <summary>Advanced / Edge assumptions <span class="illus-tag">illustrative</span></summary>
@@ -168,20 +178,25 @@
       <!-- ---------------- results ---------------- -->
       <div class="results">
 
-        <!-- ===== YEAR-1 PROJECTION (deterministic compounding table) ===== -->
+        <!-- ===== YEAR PROJECTION — two brokers, 10 trading + 2 break months ===== -->
         <div class="panel">
-          <h3>Year 1 projection <span class="muted small" id="year-sub">— $3,000 per ES / month</span></h3>
+          <h3>Year projection <span class="muted small">— two brokers · 10 trading months + 2 break</span></h3>
+          <p class="muted small">Both assume <b><span id="year-rate">$3,000</span> per ES / month</b>. Position size
+            is gated by broker margin — the only difference between the two paths.</p>
           <div class="chartwrap"><canvas id="yearchart"></canvas></div>
           <div class="statgrid" style="margin-top:14px">
-            <div class="statbox"><div class="k">Account at month 12</div><div class="v good" id="y-end">—</div></div>
-            <div class="statbox"><div class="k">Position size at month 12</div><div class="v" id="y-es">—</div></div>
+            <div class="statbox"><div class="k">Tradovate · after 10 months <span class="badge-asp">aspirational</span></div><div class="v good" id="y-trad-end">—</div></div>
+            <div class="statbox"><div class="k">Interactive Brokers · after 10 months <span class="badge-real">realistic</span></div><div class="v" id="y-ibkr-end">—</div></div>
           </div>
           <p class="muted small" style="margin-top:10px" id="y-to10x">—</p>
-          <div id="year-table" style="margin-top:14px;overflow-x:auto"></div>
-          <p class="muted small" style="margin-top:12px"><b>Compounding table.</b> Month <em>m</em> trades <em>m</em>
-            ES (one contract added per profitable month); each ES earns the rate above, so monthly profit and
-            account size compound. Illustrative — assumes a steady per-contract month and no losing stretches;
-            not a forecast. The Monte Carlo below adds the realistic spread and drawdowns.</p>
+          <div class="two-tables">
+            <div><h4 class="tbl-h">Tradovate <span class="badge-asp">1 ES / $10k</span></h4><div id="year-table-trad" style="overflow-x:auto"></div></div>
+            <div><h4 class="tbl-h">Interactive Brokers <span class="badge-real">1 ES / $30k</span></h4><div id="year-table-ibkr" style="overflow-x:auto"></div></div>
+          </div>
+          <p class="muted small" style="margin-top:12px"><b>10 trading months + 2 break months.</b> Each trading
+            month, size = 1 ES per the broker’s margin unit of account; profit (rate × ES) compounds; break months
+            are flat. Illustrative — a steady per-contract month with no losing stretches; not a forecast. The
+            Monte Carlo below adds the realistic spread and drawdowns.</p>
         </div>
 
         <div class="panel">
@@ -195,8 +210,8 @@
         <div class="panel">
           <h3>Path to 10x <span class="muted small">— Monte Carlo, 10,000 paths</span></h3>
           <div class="chartwrap"><canvas id="fan"></canvas></div>
-          <p class="muted small">Median (P50) with the P10–P90 band. The edge scales with size here, so the path
-            compounds faster than the flat year projection above — read the drawdown alongside it.</p>
+          <p class="muted small">Median (P50) with the P10–P90 band, for the broker selected on the left. Unlike the
+            smooth year tables above, this adds the realistic spread — read the drawdown alongside the path.</p>
         </div>
 
         <div class="statgrid">

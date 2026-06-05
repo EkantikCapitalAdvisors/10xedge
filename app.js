@@ -9,7 +9,10 @@
   const $ = (id) => document.getElementById(id);
   let edge = cloneEdge(EDGE_ILLUSTRATIVE);
   let monthly = 3000;
+  let mcMargin = RULES.brokers.tradovate.marginPerES;
   let mcChart = null, yrChart = null;
+  const TRAD = RULES.brokers.tradovate.marginPerES;   // 10000
+  const IBKR = RULES.brokers.ibkr.marginPerES;        // 30000
 
   /* -------------------- mode toggle -------------------- */
   function setMode(mode) {
@@ -47,6 +50,13 @@
     drawYear();
   });
 
+  /* -------------------- MC broker margin toggle -------------------- */
+  $('mc-broker').addEventListener('click', (e) => {
+    const b = e.target.closest('button'); if (!b) return;
+    mcMargin = parseFloat(b.dataset.margin);
+    [...$('mc-broker').children].forEach((x) => x.classList.toggle('active', x === b));
+  });
+
   /* -------------------- helpers -------------------- */
   const money = (x) => '$' + Math.round(x).toLocaleString();
   const fmtDays = (d) => d == null ? '—' : (d / 252).toFixed(1) + ' yr';
@@ -59,45 +69,62 @@
       'geometric reality.';
   }
 
-  /* -------------------- deterministic year projection (compounding table) -------------------- */
-  function drawYear() {
-    const rows = yearProjection(monthly, 12);
-    const last = rows[rows.length - 1];
-    const m10 = monthsTo10x(monthly);
-    $('year-sub').textContent = '— ' + money(monthly) + ' per ES / month';
-    $('y-end').textContent = money(last.capital);
-    $('y-es').textContent = last.es + ' ES';
-    $('y-to10x').innerHTML = isFinite(m10)
-      ? 'At ' + money(monthly) + ' per ES / month, <b>10× ($100,000 account) is crossed in month ' + m10 +
-        '</b> (~' + (m10 / 12).toFixed(1) + ' yr) as profit compounds.'
-      : 'At $0 the target is never reached.';
+  /* -------------------- two broker year projections -------------------- */
+  const TRADING = RULES.tradingMonthsPerYear, BREAK = RULES.breakMonthsPerYear;
 
-    // render the month-by-month table
-    let html = '<table class="rules"><thead><tr><th>Month</th><th>ES traded</th>' +
-      '<th>Monthly profit</th><th>Cumulative profit</th><th>Account value</th><th>Next level</th></tr></thead><tbody>';
+  function yearTableHTML(rows) {
+    let html = '<table class="rules"><thead><tr><th>Mo</th><th>ES</th><th>Profit</th>' +
+      '<th>Account</th></tr></thead><tbody>';
     for (const r of rows) {
       const hit = r.capital >= RULES.startingCapital * RULES.target.multiple;
       html += '<tr' + (hit ? ' style="color:var(--gold)"' : '') + '><td class="mono">' + r.month +
-        '</td><td class="mono">' + r.es + ' ES</td><td class="mono">' + money(r.monthlyProfit) +
-        '</td><td class="mono">' + money(r.cumulative) + '</td><td class="mono">' + money(r.capital) +
-        '</td><td class="mono">' + r.nextLevel + ' ES</td></tr>';
+        '</td><td class="mono">' + r.es + '</td><td class="mono">' + money(r.monthlyProfit) +
+        '</td><td class="mono">' + money(r.capital) + '</td></tr>';
     }
-    html += '</tbody></table>';
-    $('year-table').innerHTML = html;
+    return html + '</tbody></table>';
+  }
+
+  // equity series over the full calendar (trading months active, break months flat)
+  function calendarSeries(rows) {
+    const s = [RULES.startingCapital];
+    rows.forEach(r => s.push(r.capital));
+    for (let i = 0; i < BREAK; i++) s.push(rows[rows.length - 1].capital);  // flat break months
+    return s;
+  }
+
+  function drawYear() {
+    const trad = yearProjection(monthly, TRAD, TRADING);
+    const ibkr = yearProjection(monthly, IBKR, TRADING);
+    $('year-rate').textContent = money(monthly);
+    $('y-trad-end').textContent = money(trad[trad.length - 1].capital) + ' · ' + trad[trad.length - 1].es + ' ES';
+    $('y-ibkr-end').textContent = money(ibkr[ibkr.length - 1].capital) + ' · ' + ibkr[ibkr.length - 1].es + ' ES';
+
+    const mT = monthsTo10x(monthly, TRAD), mI = monthsTo10x(monthly, IBKR);
+    const m10 = (label, m) => !isFinite(m) ? label + ': never at this rate'
+      : label + ': month ' + m + ' (' + (m / TRADING).toFixed(1) + ' yr of trading)';
+    $('y-to10x').innerHTML = '<b>Months of trading to reach 10× ($100k):</b> ' +
+      m10('Tradovate', mT) + ' · ' + m10('Interactive Brokers', mI) + '.';
+
+    $('year-table-trad').innerHTML = yearTableHTML(trad);
+    $('year-table-ibkr').innerHTML = yearTableHTML(ibkr);
+
+    const labels = [];
+    for (let m = 0; m <= TRADING; m++) labels.push('m' + m);
+    for (let b = 1; b <= BREAK; b++) labels.push('break ' + b);
 
     const data = {
-      labels: rows.map(r => 'm' + r.month),
+      labels,
       datasets: [
-        { label: 'Account value', data: rows.map(r => r.capital), borderColor: '#C8A951', backgroundColor: 'rgba(200,169,81,.14)', borderWidth: 2.6, fill: true, tension: .2, yAxisID: 'y', pointRadius: 0 },
-        { label: 'Position size (ES)', data: rows.map(r => r.es), borderColor: '#6FAE8E', borderWidth: 1.8, stepped: true, fill: false, yAxisID: 'yes', pointRadius: 0 }
+        { label: 'Tradovate (1 ES / $10k)', data: calendarSeries(trad), borderColor: '#C8A951', backgroundColor: 'rgba(200,169,81,.12)', borderWidth: 2.6, fill: true, tension: .2, pointRadius: 0 },
+        { label: 'Interactive Brokers (1 ES / $30k)', data: calendarSeries(ibkr), borderColor: '#6FAE8E', borderWidth: 2.2, fill: false, tension: .2, pointRadius: 0 }
       ]
     };
     const opts = {
       responsive: true, maintainAspectRatio: false, animation: false,
+      interaction: { mode: 'index', intersect: false },
       scales: {
         x: { ticks: { color: '#B9C0CF' }, grid: { color: 'rgba(46,67,115,.5)' } },
-        y: { position: 'left', title: { display: true, text: 'capital ($)', color: '#B9C0CF' }, ticks: { color: '#B9C0CF', callback: v => '$' + (v / 1000) + 'k' }, grid: { color: 'rgba(46,67,115,.5)' } },
-        yes: { position: 'right', title: { display: true, text: 'ES contracts', color: '#6FAE8E' }, ticks: { color: '#6FAE8E', precision: 0 }, grid: { drawOnChartArea: false } }
+        y: { title: { display: true, text: 'account value ($)', color: '#B9C0CF' }, ticks: { color: '#B9C0CF', callback: v => '$' + (v / 1000) + 'k' }, grid: { color: 'rgba(46,67,115,.5)' } }
       },
       plugins: { legend: { labels: { color: '#F3EFE6', font: { family: 'JetBrains Mono' }, boxWidth: 12 } } }
     };
@@ -112,7 +139,7 @@
       if (e.data.type === 'progress') onProgress && onProgress(e.data.done, e.data.total);
       else if (e.data.type === 'done') { onDone(e.data.result); w.terminate(); }
     };
-    w.postMessage({ edge: cloneEdge(edge), policy: 'n/a', paths: 10000 });
+    w.postMessage({ edge: cloneEdge(edge), marginPerES: mcMargin, paths: 10000 });
   }
 
   function renderMC(res) {

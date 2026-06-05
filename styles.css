@@ -69,6 +69,16 @@ section:first-of-type { border-top: none; }
 .topbar .cx-link:hover { color: var(--gold); border-color: var(--gold); }
 @media (max-width: 640px) { .topbar .cx-link { display: none; } }
 
+/* two side-by-side year tables */
+.two-tables { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; margin-top: 16px; }
+.two-tables table.rules { font-size: .82rem; }
+.two-tables table.rules th, .two-tables table.rules td { padding: 6px 8px; }
+.tbl-h { font-size: .95rem; margin: 0 0 8px; }
+.badge-asp, .badge-real { display: inline-block; font-family: 'JetBrains Mono', monospace; font-size: .62rem; font-weight: 700; letter-spacing: .5px; text-transform: uppercase; padding: 2px 7px; border-radius: 4px; margin-left: 6px; vertical-align: middle; }
+.badge-asp { color: var(--navy-deep); background: var(--gold); }
+.badge-real { color: var(--ivory); background: var(--navy-line); }
+@media (max-width: 760px) { .two-tables { grid-template-columns: 1fr; } }
+
 /* experimental flag banner */
 .exp-banner { background: rgba(200,169,81,.08); border-bottom: 1px solid var(--navy-line); }
 .exp-banner .wrap { padding: 11px 24px; font-size: .8rem; color: var(--ivory-dim); line-height: 1.5; }

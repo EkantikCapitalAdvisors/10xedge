@@ -14,8 +14,9 @@ function percentile(sortedArr, q) {
 }
 
 self.onmessage = function (e) {
-  const { edge, policy, paths } = e.data;
+  const { edge, marginPerES, paths } = e.data;
   const N = paths || 10000;
+  const margin = marginPerES || RULES.brokers.tradovate.marginPerES;
 
   const target = RULES.startingCapital * RULES.target.multiple;
   const maxSnaps = Math.ceil(RULES.sim.timeCapDays / RULES.sim.snapshotEvery) + 1;
@@ -29,7 +30,7 @@ self.onmessage = function (e) {
   const tel = { floorHits: 0, weekOuts: 0, restrictions: 0, confluenceFires: 0, redDays: 0, totalDays: 0 };
 
   for (let i = 0; i < N; i++) {
-    const r = simulatePath(edge, policy, (i * 2654435761) ^ 0x9e3779b9);
+    const r = simulatePath(edge, margin, (i * 2654435761) ^ 0x9e3779b9);
 
     // fill snapshot columns, carrying the terminal capital forward to the cap
     const term = (r.outcome === '10x') ? target : (r.outcome === 'ruin') ? 0 : r.finalCapital;
