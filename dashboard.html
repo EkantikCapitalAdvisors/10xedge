@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en" data-mode="operator">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Trade Dashboard · 10x Account</title>
+<meta name="robots" content="noindex,nofollow">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;600;700&family=Cormorant+Garamond:wght@500;600&family=DM+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body data-mode="operator">
+
+<!-- ============================ TOP BAR ============================ -->
+<div class="topbar">
+  <div class="wrap">
+    <div class="brand"><b>10x</b> Account <span>· trade dashboard</span></div>
+    <div class="nav-right">
+      <a href="index.html" class="back">← 10x Account</a>
+    </div>
+  </div>
+</div>
+
+<div class="exp-banner" role="note">
+  <div class="wrap"><span class="exp-tag">Experimental</span>
+    Operator cockpit. Parses a Tradovate <em>Orders</em> CSV export entirely in your browser — nothing is
+    uploaded or stored. KPIs and rule scoring are diagnostic, not a performance representation.</div>
+</div>
+
+<section>
+  <div class="wrap">
+    <h2>Trade dashboard <span class="muted small">— Tradovate orders → rules scorecard</span></h2>
+
+    <!-- upload + config -->
+    <div class="calc" style="margin-top:18px">
+      <div class="panel controls">
+        <div id="drop" class="drop-zone">
+          <input type="file" id="file" accept=".csv,text/csv" hidden>
+          <label for="file" class="btn-run" style="display:inline-block;text-align:center">Choose Tradovate CSV</label>
+          <p class="muted small" style="margin-top:10px">…or drag &amp; drop the <em>Orders</em> export here.</p>
+          <p class="muted small mono" id="fname">no file loaded</p>
+        </div>
+
+        <label style="margin-top:18px">Account size <span class="muted small">— for the margin check</span></label>
+        <input type="number" id="dash-account" value="10000" step="1000" min="1000">
+
+        <label>Broker</label>
+        <div class="seg" id="dash-broker">
+          <button data-broker="tradovate" class="active">Tradovate</button>
+          <button data-broker="ibkr">Interactive Brokers</button>
+        </div>
+        <p class="muted small" style="margin-top:8px">Sets the max ES (1 ES per $10k / $30k of account) used for the
+          position-size rule check.</p>
+
+        <p class="muted small" style="margin-top:16px"><b>Rules scored:</b> $500/ES stop · daily floor ($500×ES) ·
+          one loss per day · 2 losing days/week → sit out · 3 consecutive → high-prob only · 10 → stand-down ·
+          size within margin.</p>
+      </div>
+
+      <div class="results">
+        <p class="muted" id="empty">Upload a Tradovate <em>Orders</em> CSV to see KPIs and your rule scorecard.
+          Trades are reconstructed by netting fills (fill-time FIFO) per contract; ES = $50/pt, MES = $5/pt.</p>
+
+        <div id="dash" style="display:none">
+          <!-- rule scorecard -->
+          <div class="panel">
+            <h3>Rule scorecard <span id="rule-summary"></span></h3>
+            <div id="rules" style="margin-top:10px"></div>
+            <p class="muted small mono" id="openpos" style="margin-top:12px"></p>
+          </div>
+
+          <!-- KPI cards -->
+          <div class="panel">
+            <h3>KPIs <span class="muted small">— this file</span></h3>
+            <div class="kpi-grid">
+              <div class="statbox"><div class="k">Net P&L</div><div class="v" id="k-net">—</div></div>
+              <div class="statbox"><div class="k">Trades</div><div class="v" id="k-trades">—</div></div>
+              <div class="statbox"><div class="k">Win rate</div><div class="v" id="k-win">—</div></div>
+              <div class="statbox"><div class="k">Profit factor</div><div class="v" id="k-pf">—</div></div>
+              <div class="statbox"><div class="k">Avg R / trade</div><div class="v" id="k-avgr">—</div></div>
+              <div class="statbox"><div class="k">Days traded</div><div class="v" id="k-days">—</div></div>
+              <div class="statbox"><div class="k">Avg win</div><div class="v" id="k-avgwin">—</div></div>
+              <div class="statbox"><div class="k">Avg loss</div><div class="v" id="k-avgloss">—</div></div>
+              <div class="statbox"><div class="k">Best day</div><div class="v" id="k-best">—</div></div>
+              <div class="statbox"><div class="k">Worst day</div><div class="v" id="k-worst">—</div></div>
+              <div class="statbox"><div class="k">Losing days</div><div class="v" id="k-losingdays">—</div></div>
+              <div class="statbox"><div class="k">Max consec. losing days</div><div class="v" id="k-consec">—</div></div>
+            </div>
+          </div>
+
+          <div class="panel">
+            <h3>Daily P&L</h3>
+            <div class="chartwrap" style="height:240px"><canvas id="chart-daily"></canvas></div>
+          </div>
+          <div class="panel">
+            <h3>Cumulative P&L <span class="muted small">— by trade</span></h3>
+            <div class="chartwrap" style="height:240px"><canvas id="chart-equity"></canvas></div>
+          </div>
+
+          <div class="panel">
+            <h3>By day</h3>
+            <div style="overflow-x:auto" id="daily-table"></div>
+          </div>
+          <div class="panel">
+            <h3>Round-trip trades</h3>
+            <div style="overflow-x:auto" id="trade-table"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap"><p class="small muted">10xedge.ekantikcapital.com · operator dashboard · all parsing is
+    client-side; no data leaves the browser. Diagnostic only — not a performance representation. Past performance
+    is not indicative of future results.</p></div>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+<script src="engine.js"></script>
+<script src="dashboard.js"></script>
+</body>
+</html>

@@ -84,6 +84,24 @@ section:first-of-type { border-top: none; }
 .exp-banner .wrap { padding: 11px 24px; font-size: .8rem; color: var(--ivory-dim); line-height: 1.5; }
 .exp-tag { display: inline-block; font-family: 'JetBrains Mono', monospace; font-size: .66rem; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; color: var(--navy-deep); background: var(--gold); padding: 3px 9px; border-radius: 4px; margin-right: 10px; }
 
+/* ---- dashboard ---- */
+.drop-zone { border: 1.5px dashed var(--navy-line); border-radius: var(--radius); padding: 22px; text-align: center; transition: .15s; }
+.drop-zone.over { border-color: var(--gold); background: rgba(200,169,81,.06); }
+.kpi-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; }
+.kpi-grid .statbox .v { font-size: 1.4rem; }
+.rule-row { display: grid; grid-template-columns: 28px 1fr; gap: 10px; align-items: start; padding: 10px 12px; border-radius: 8px; border: 1px solid var(--navy-line); background: var(--navy-deep); margin-bottom: 8px; }
+.rule-row.pass { border-left: 3px solid var(--green); }
+.rule-row.flag { border-left: 3px solid var(--red); }
+.rule-ic { font-family: 'JetBrains Mono', monospace; font-weight: 700; width: 24px; height: 24px; display: grid; place-items: center; border-radius: 50%; }
+.rule-row.pass .rule-ic { color: var(--green); border: 1.5px solid var(--green); }
+.rule-row.flag .rule-ic { color: var(--red); border: 1.5px solid var(--red); }
+.rule-lbl { font-weight: 600; font-size: .92rem; }
+.rule-det { font-size: .82rem; color: var(--ivory-dim); margin-top: 2px; }
+.pass-tag, .flag-tag { font-family: 'JetBrains Mono', monospace; font-size: .68rem; font-weight: 700; text-transform: uppercase; letter-spacing: .5px; padding: 3px 9px; border-radius: 4px; margin-left: 8px; }
+.pass-tag { color: var(--navy-deep); background: var(--green); }
+.flag-tag { color: var(--ivory); background: var(--red); }
+@media (max-width: 760px) { .kpi-grid { grid-template-columns: 1fr 1fr; } }
+
 /* ---- hero ---- */
 .hero { text-align: center; padding-top: 96px; }
 .hero .kicker { font-family: 'JetBrains Mono', monospace; color: var(--gold); letter-spacing: 3px; text-transform: uppercase; font-size: .72rem; margin-bottom: 18px; }
