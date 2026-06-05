@@ -59,23 +59,36 @@
       'geometric reality.';
   }
 
-  /* -------------------- deterministic year projection -------------------- */
+  /* -------------------- deterministic year projection (compounding table) -------------------- */
   function drawYear() {
     const rows = yearProjection(monthly, 12);
     const last = rows[rows.length - 1];
-    $('year-sub').textContent = '— assuming +' + money(monthly) + ' / month';
+    const m10 = monthsTo10x(monthly);
+    $('year-sub').textContent = '— ' + money(monthly) + ' per ES / month';
     $('y-end').textContent = money(last.capital);
     $('y-es').textContent = last.es + ' ES';
-    const m10 = monthsTo10x(monthly);
     $('y-to10x').innerHTML = isFinite(m10)
-      ? 'At +' + money(monthly) + '/month, <b>10× ($100,000) is reached around month ' + m10 +
-        '</b> (~' + (m10 / 12).toFixed(1) + ' yr) on this flat-rate path.'
-      : 'At $0/month the target is never reached.';
+      ? 'At ' + money(monthly) + ' per ES / month, <b>10× ($100,000 account) is crossed in month ' + m10 +
+        '</b> (~' + (m10 / 12).toFixed(1) + ' yr) as profit compounds.'
+      : 'At $0 the target is never reached.';
+
+    // render the month-by-month table
+    let html = '<table class="rules"><thead><tr><th>Month</th><th>ES traded</th>' +
+      '<th>Monthly profit</th><th>Cumulative profit</th><th>Account value</th><th>Next level</th></tr></thead><tbody>';
+    for (const r of rows) {
+      const hit = r.capital >= RULES.startingCapital * RULES.target.multiple;
+      html += '<tr' + (hit ? ' style="color:var(--gold)"' : '') + '><td class="mono">' + r.month +
+        '</td><td class="mono">' + r.es + ' ES</td><td class="mono">' + money(r.monthlyProfit) +
+        '</td><td class="mono">' + money(r.cumulative) + '</td><td class="mono">' + money(r.capital) +
+        '</td><td class="mono">' + r.nextLevel + ' ES</td></tr>';
+    }
+    html += '</tbody></table>';
+    $('year-table').innerHTML = html;
 
     const data = {
       labels: rows.map(r => 'm' + r.month),
       datasets: [
-        { label: 'Capital', data: rows.map(r => r.capital), borderColor: '#C8A951', backgroundColor: 'rgba(200,169,81,.14)', borderWidth: 2.6, fill: true, tension: .2, yAxisID: 'y', pointRadius: 0 },
+        { label: 'Account value', data: rows.map(r => r.capital), borderColor: '#C8A951', backgroundColor: 'rgba(200,169,81,.14)', borderWidth: 2.6, fill: true, tension: .2, yAxisID: 'y', pointRadius: 0 },
         { label: 'Position size (ES)', data: rows.map(r => r.es), borderColor: '#6FAE8E', borderWidth: 1.8, stepped: true, fill: false, yAxisID: 'yes', pointRadius: 0 }
       ]
     };

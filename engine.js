@@ -41,13 +41,17 @@ const RULES = Object.freeze({
 });
 
 /* Position size (ES contracts) at a given capital level.
-   1 ES base + one more ES per $3k of accumulated profit. Size tracks capital:
-   it de-scales as capital falls, but stays at 1 ES while solvent ($10k/ES is the
-   allocation/scaling rule, not a hard margin gate that ruins you below $10k). */
+   Calibrated to the operator's monthly table: add one ES per profitable month,
+   each ES ≈ $3k/month. Banking one ES-month of profit funds the next contract,
+   so cumulative profit to reach N contracts ≈ $3,000 × N(N+1)/2 — i.e. size grows
+   with the square root of accumulated profit. (A literal "+1 ES per $3k of
+   cumulative profit" would double contracts every month and explode; the table
+   paces it one contract per month, which this reproduces.) */
 function esCount(capital) {
   if (capital <= 0) return 0;
   const profit = capital - RULES.startingCapital;
-  return 1 + Math.max(0, Math.floor(profit / RULES.scaleUpProfitStep));
+  if (profit <= 0) return 1;
+  return 1 + Math.floor(Math.sqrt(profit / (RULES.scaleUpProfitStep / 2)));
 }
 
 /* ---------------------------------------------------------------------------
@@ -88,21 +92,35 @@ function expectedDollarsPerDayAt(edge, esCountNow) {
   return perTradeR * expTrades * RULES.maxLossPerES * esCountNow;
 }
 
-/* Deterministic year projection at a fixed monthly profit (the §"Year 1" chart).
-   Honors the assumption literally: +monthlyProfit each month, ES steps with capital. */
-function yearProjection(monthlyProfit, months) {
+/* Deterministic year projection — the operator's compounding table.
+   Month m trades m ES (one added each month); each ES earns `perES` per month, so
+   monthly profit = perES × m and profit compounds. Returns one row per month. */
+function yearProjection(perES, months) {
   const rows = [];
-  for (let m = 0; m <= months; m++) {
-    const capital = RULES.startingCapital + monthlyProfit * m;
-    const es = esCount(capital);
-    rows.push({ month: m, capital, es, dailyFloor: es * RULES.maxLossPerES });
+  let cumulative = 0;
+  for (let m = 1; m <= months; m++) {
+    const es = m;                              // +1 ES per month
+    const monthlyProfit = perES * es;          // $perES per ES
+    cumulative += monthlyProfit;
+    rows.push({
+      month: m, es, monthlyProfit, cumulative,
+      capital: RULES.startingCapital + cumulative,
+      nextLevel: es + 1,
+      dailyFloor: es * RULES.maxLossPerES
+    });
   }
   return rows;
 }
-function monthsTo10x(monthlyProfit) {
-  if (monthlyProfit <= 0) return Infinity;
-  const target = RULES.startingCapital * RULES.target.multiple;
-  return Math.ceil((target - RULES.startingCapital) / monthlyProfit);
+/* First month at which the compounding table crosses 10× (account ≥ $100k). */
+function monthsTo10x(perES) {
+  if (perES <= 0) return Infinity;
+  const targetProfit = RULES.startingCapital * (RULES.target.multiple - 1);
+  let cumulative = 0;
+  for (let m = 1; m <= 600; m++) {
+    cumulative += perES * m;
+    if (cumulative >= targetProfit) return m;
+  }
+  return Infinity;
 }
 
 /* ---------------------------------------------------------------------------
