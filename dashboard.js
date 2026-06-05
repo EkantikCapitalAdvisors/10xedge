@@ -83,7 +83,7 @@
   }
 
   /* -------------------- analysis + rule scoring -------------------- */
-  function analyze(trades, cfg) {
+  function analyze(trades, openLots) {
     const days = {};
     for (const t of trades) {
       const d = days[t.day] || (days[t.day] = { day: t.day, pnl: 0, trades: 0, losses: 0, maxContracts: 0, maxESrisk: 0 });
@@ -116,44 +116,38 @@
     for (const d of dayList) { if (d.pnl < 0) { cur++; maxConsec = Math.max(maxConsec, cur); } else cur = 0; }
 
     // rule checks
-    const margin = cfg.margin, account = cfg.account;
-    const maxESallowed = Math.max(1, Math.floor(account / margin));
     const dailyMax = RULES.dailyMaxLoss;
-    const oversize = trades.filter(t => (t.prod === 'MES' ? t.qty / 10 : t.qty) > maxESallowed);
     const bigStops = trades.filter(t => t.pnl < -riskPerContract(t.prod) * t.qty * 1.001);
     const dailyBreaches = dayList.filter(d => d.pnl < -dailyMax * 1.001);
-    // weekly sit-out: 2 losing days in a calendar week → should stop
-    const sitoutWeeks = weeklyLosingDays(dayList);
+    // weekly sit-out: 2 daily-max-loss days in a calendar week → sit out the week
+    const sitout = weeklyMaxLossDays(dayList, dailyMax);
 
     const rules = [
       { ok: dailyBreaches.length === 0, label: 'Daily max loss ≤ $' + dailyMax, detail: dailyBreaches.length ? 'Exceeded $' + dailyMax + ' on ' + dailyBreaches.map(d => d.day + ' (' + money(d.pnl) + ')').join(', ') : 'No day lost more than $' + dailyMax },
       { ok: bigStops.length === 0, label: 'Per-trade stop ≤ $500 / ES', detail: bigStops.length ? bigStops.length + ' trade(s) exceeded the $500/contract stop' : 'No trade exceeded the stop' },
-      { ok: !sitoutWeeks.flagged, label: '2 losing days / week → sit out the week', detail: sitoutWeeks.flagged ? 'Hit 2 losing days on ' + sitoutWeeks.triggerDay + '; ' + sitoutWeeks.tradedAfter + ' more trade(s) taken that week' : (kpi.losingDays >= 2 ? 'Reached 2 losing days but no further trading' : 'Fewer than 2 losing days') },
+      { ok: !sitout.flagged, label: '2 daily-max-loss days / week → sit out the week', detail: sitout.flagged ? 'Hit a 2nd $' + dailyMax + '-loss day on ' + sitout.triggerDay + '; ' + sitout.tradedAfter + ' more trade(s) taken that week' : (sitout.reached ? 'Reached 2 max-loss days but stopped' : 'No week reached 2 daily-max-loss days') },
       { ok: maxConsec < 3, label: '3 consecutive losing days → high-prob only', detail: maxConsec >= 3 ? maxConsec + ' consecutive losing days — restriction should be active' : 'Max ' + maxConsec + ' consecutive losing day(s)' },
-      { ok: maxConsec < 10, label: '10 consecutive losing days → stand-down', detail: maxConsec >= 10 ? 'Edge falsification triggered' : 'Not triggered' },
-      { ok: oversize.length === 0, label: 'Position size within margin (' + maxESallowed + ' ES @ ' + cfg.brokerLabel + ')', detail: oversize.length ? oversize.length + ' trade(s) above ' + maxESallowed + ' ES-equiv' : 'All trades within ' + maxESallowed + ' ES' }
+      { ok: maxConsec < 10, label: '10 consecutive losing days → stand-down', detail: maxConsec >= 10 ? 'Edge falsification triggered' : 'Not triggered' }
     ];
 
-    return { kpi, dayList, rules, maxConsec, openLots: cfg.openLots };
+    return { kpi, dayList, rules, maxConsec, openLots };
   }
 
-  function weeklyLosingDays(dayList) {
-    // group by ISO week; flag if a 2nd losing day occurs and trading continues that week
+  function weeklyMaxLossDays(dayList, dailyMax) {
+    // group by ISO week; a "max-loss day" = day net loss at/over the $dailyMax cap.
+    // flag if a 2nd max-loss day occurs and trading continues that week.
     const weeks = {};
-    for (const d of dayList) {
-      const wk = isoWeek(d.day);
-      (weeks[wk] = weeks[wk] || []).push(d);
-    }
+    for (const d of dayList) { const wk = isoWeek(d.day); (weeks[wk] = weeks[wk] || []).push(d); }
     for (const wk in weeks) {
       const ds = weeks[wk].sort((a, b) => a.day.localeCompare(b.day));
-      let losing = 0, triggerDay = null, tradedAfter = 0;
+      let cnt = 0, triggerDay = null, tradedAfter = 0;
       for (const d of ds) {
         if (triggerDay) tradedAfter += d.trades;
-        if (d.pnl < 0) { losing++; if (losing === 2 && !triggerDay) triggerDay = d.day; }
+        if (d.pnl <= -dailyMax) { cnt++; if (cnt === 2 && !triggerDay) triggerDay = d.day; }
       }
-      if (triggerDay && tradedAfter > 0) return { flagged: true, triggerDay, tradedAfter };
+      if (triggerDay) return { flagged: tradedAfter > 0, reached: true, triggerDay, tradedAfter };
     }
-    return { flagged: false };
+    return { flagged: false, reached: false };
   }
   function isoWeek(ymd) {
     const [y, m, d] = ymd.split('-').map(Number); const dt = new Date(y, m - 1, d);
@@ -251,15 +245,9 @@
   }
 
   /* -------------------- config + file handling -------------------- */
-  function cfg() {
-    const broker = $('dash-broker').querySelector('.active').dataset.broker;
-    const b = RULES.brokers[broker];
-    return { account: parseFloat($('dash-account').value) || RULES.startingCapital, margin: b.marginPerES, brokerLabel: b.label };
-  }
   function reanalyze() {
     if (!lastTrades) return;
-    const c = cfg(); c.openLots = lastTrades.openLots;
-    render(analyze(lastTrades.trades, c), lastTrades.trades, lastTrades.openLots);
+    render(analyze(lastTrades.trades, lastTrades.openLots), lastTrades.trades, lastTrades.openLots);
   }
 
   function handleText(text) {
@@ -279,13 +267,6 @@
     reader.onload = () => handleText(reader.result);
     reader.readAsText(f);
   });
-  $('dash-account').addEventListener('input', reanalyze);
-  $('dash-broker').addEventListener('click', (e) => {
-    const b = e.target.closest('button'); if (!b) return;
-    [...$('dash-broker').children].forEach(x => x.classList.toggle('active', x === b));
-    reanalyze();
-  });
-
   // drag & drop
   const zone = $('drop');
   ['dragover', 'dragenter'].forEach(ev => zone.addEventListener(ev, e => { e.preventDefault(); zone.classList.add('over'); }));

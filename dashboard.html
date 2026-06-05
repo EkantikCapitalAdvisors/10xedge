@@ -42,19 +42,8 @@
           <p class="muted small mono" id="fname">no file loaded</p>
         </div>
 
-        <label style="margin-top:18px">Account size <span class="muted small">— for the margin check</span></label>
-        <input type="number" id="dash-account" value="10000" step="1000" min="1000">
-
-        <label>Broker</label>
-        <div class="seg" id="dash-broker">
-          <button data-broker="tradovate" class="active">Tradovate</button>
-          <button data-broker="ibkr">Interactive Brokers</button>
-        </div>
-        <p class="muted small" style="margin-top:8px">Sets the max ES (1 ES per $10k / $30k of account) used for the
-          position-size rule check.</p>
-
-        <p class="muted small" style="margin-top:16px"><b>Rules scored:</b> $600 daily max loss · $500/ES stop ·
-          2 losing days/week → sit out · 3 consecutive → high-prob only · 10 → stand-down · size within margin.</p>
+        <p class="muted small" style="margin-top:18px"><b>Rules scored:</b> $600 daily max loss · $500/ES stop ·
+          2 daily-max-loss days/week → sit out · 3 consecutive losing days → high-prob only · 10 → stand-down.</p>
       </div>
 
       <div class="results">
