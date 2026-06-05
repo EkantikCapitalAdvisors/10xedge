@@ -101,6 +101,10 @@ section:first-of-type { border-top: none; }
 .pass-tag { color: var(--navy-deep); background: var(--green); }
 .flag-tag { color: var(--ivory); background: var(--red); }
 @media (max-width: 760px) { .kpi-grid { grid-template-columns: 1fr 1fr; } }
+.tgt-config { display: flex; gap: 16px; align-items: flex-end; flex-wrap: wrap; }
+.tgt-config label { display: block; margin-bottom: 4px; }
+#dash input[type=number] { background: var(--navy-deep); border: 1px solid var(--navy-line); color: var(--ivory); font-family: 'JetBrains Mono', monospace; padding: 8px 10px; border-radius: 7px; width: 120px; }
+.tgt-config > div:last-child { margin-left: auto; text-align: right; }
 
 /* ---- hero ---- */
 .hero { text-align: center; padding-top: 96px; }

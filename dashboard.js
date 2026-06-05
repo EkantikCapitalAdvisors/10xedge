@@ -214,8 +214,56 @@
       : 'Flat at end of file — all positions closed.';
 
     drawCharts(res.dayList, trades);
+    renderTargets(trades);
   }
   function setKPI(id, v, cls) { const el = $(id); el.textContent = v; el.className = 'v' + (cls ? ' ' + cls : ''); }
+
+  /* -------------------- target tracking ($X/month per ES) -------------------- */
+  const esEquiv = (t) => t.prod === 'MES' ? t.qty / 10 : t.qty;
+
+  function buildWeeks(trades) {
+    const wk = {};
+    for (const t of trades) {
+      const w = isoWeek(t.day);
+      const o = wk[w] || (wk[w] = { week: w, days: new Set(), pnl: 0, trades: 0, esSum: 0, first: t.day, last: t.day });
+      o.days.add(t.day); o.pnl += t.pnl; o.trades++; o.esSum += esEquiv(t);
+      if (t.day < o.first) o.first = t.day; if (t.day > o.last) o.last = t.day;
+    }
+    return Object.values(wk).map(o => ({ ...o, tradingDays: o.days.size, avgES: o.esSum / o.trades }))
+      .sort((a, b) => a.first.localeCompare(b.first));
+  }
+
+  function renderTargets(trades) {
+    const monthlyPerES = parseFloat($('tgt-monthly').value) || 3000;
+    const tradingMonths = parseFloat($('tgt-months').value) || 10;
+    const weeklyPerES = monthlyPerES * 12 / 52;
+    const annualPerES = monthlyPerES * tradingMonths;
+    $('tgt-rates').innerHTML = 'Weekly / ES: <b class="mono">' + money(weeklyPerES) + '</b><br>Annual / ES: <b class="mono">' + money(annualPerES) + '</b>';
+
+    const weeks = buildWeeks(trades);
+    let totPnl = 0, totTarget = 0;
+    let rows = '<table class="rules"><thead><tr><th>Week</th><th>Days</th><th>Avg ES</th><th>P&L</th><th>Target</th><th>% of target</th><th></th></tr></thead><tbody>';
+    for (const w of weeks) {
+      const target = weeklyPerES * w.avgES;
+      const pctv = target ? (w.pnl / target * 100) : 0;
+      const ok = w.pnl >= target;
+      totPnl += w.pnl; totTarget += target;
+      rows += '<tr><td class="mono">' + w.first + '–' + w.last.slice(5) + '</td><td class="mono">' + w.tradingDays +
+        '</td><td class="mono">' + w.avgES.toFixed(2) + '</td><td class="mono" style="color:' + (w.pnl >= 0 ? 'var(--green)' : 'var(--red)') + '">' + money(w.pnl) +
+        '</td><td class="mono">' + money(target) + '</td><td class="mono">' + pctv.toFixed(0) + '%</td><td>' +
+        '<span class="' + (ok ? 'pass-tag' : 'flag-tag') + '">' + (ok ? 'on pace' : 'behind') + '</span></td></tr>';
+    }
+    $('tgt-table').innerHTML = rows + '</tbody></table>';
+
+    const gap = totPnl - totTarget;
+    $('tgt-headline').innerHTML = weeks.length
+      ? 'Across ' + weeks.length + ' week' + (weeks.length > 1 ? 's' : '') + ': <b class="mono" style="color:' + (totPnl >= 0 ? 'var(--green)' : 'var(--red)') + '">' + money(totPnl) +
+        '</b> vs target <b class="mono">' + money(totTarget) + '</b> — ' +
+        '<b style="color:' + (gap >= 0 ? 'var(--green)' : 'var(--red)') + '">' + (gap >= 0 ? 'ahead by ' : 'behind by ') + money(Math.abs(gap)) + '</b>.'
+      : 'No trades to measure.';
+    const sumOk = totPnl >= totTarget;
+    $('tgt-summary').innerHTML = weeks.length ? '<span class="' + (sumOk ? 'pass-tag' : 'flag-tag') + '">' + (sumOk ? 'on pace' : 'behind target') + '</span>' : '';
+  }
 
   function drawCharts(dayList, trades) {
     const dpnl = $('chart-daily').getContext('2d');
@@ -267,6 +315,9 @@
     reader.onload = () => handleText(reader.result);
     reader.readAsText(f);
   });
+  $('tgt-monthly').addEventListener('input', reanalyze);
+  $('tgt-months').addEventListener('input', reanalyze);
+
   // drag & drop
   const zone = $('drop');
   ['dragover', 'dragenter'].forEach(ev => zone.addEventListener(ev, e => { e.preventDefault(); zone.classList.add('over'); }));

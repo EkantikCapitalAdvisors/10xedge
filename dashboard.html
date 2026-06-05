@@ -58,6 +58,21 @@
             <p class="muted small mono" id="openpos" style="margin-top:12px"></p>
           </div>
 
+          <!-- target tracking -->
+          <div class="panel">
+            <h3>Target tracking <span id="tgt-summary"></span></h3>
+            <div class="tgt-config">
+              <div><label class="muted small">Monthly target / ES</label><input type="number" id="tgt-monthly" value="3000" step="500" min="0"></div>
+              <div><label class="muted small">Trading months / yr</label><input type="number" id="tgt-months" value="10" step="1" min="1" max="12"></div>
+              <div class="muted small" id="tgt-rates"></div>
+            </div>
+            <p class="muted small" id="tgt-headline" style="margin:10px 0"></p>
+            <div style="overflow-x:auto" id="tgt-table"></div>
+            <p class="muted small" style="margin-top:8px">Weekly target = (monthly ÷ 4.33 weeks) × the ES size you ran
+              that week. 2 reserve months don’t change the weekly rate — they just remove ~8.7 weeks from the year
+              (annual target = monthly × trading months per ES). Avg ES = average ES-equivalent contracts per trade.</p>
+          </div>
+
           <!-- KPI cards -->
           <div class="panel">
             <h3>KPIs <span class="muted small">— this file</span></h3>
