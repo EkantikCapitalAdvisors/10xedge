@@ -118,17 +118,16 @@
     // rule checks
     const margin = cfg.margin, account = cfg.account;
     const maxESallowed = Math.max(1, Math.floor(account / margin));
+    const dailyMax = RULES.dailyMaxLoss;
     const oversize = trades.filter(t => (t.prod === 'MES' ? t.qty / 10 : t.qty) > maxESallowed);
     const bigStops = trades.filter(t => t.pnl < -riskPerContract(t.prod) * t.qty * 1.001);
-    const floorBreaches = dayList.filter(d => d.pnl < -d.maxESrisk * 1.001);
-    const multiLossDays = dayList.filter(d => d.losses >= 2);
+    const dailyBreaches = dayList.filter(d => d.pnl < -dailyMax * 1.001);
     // weekly sit-out: 2 losing days in a calendar week → should stop
     const sitoutWeeks = weeklyLosingDays(dayList);
 
     const rules = [
+      { ok: dailyBreaches.length === 0, label: 'Daily max loss ≤ $' + dailyMax, detail: dailyBreaches.length ? 'Exceeded $' + dailyMax + ' on ' + dailyBreaches.map(d => d.day + ' (' + money(d.pnl) + ')').join(', ') : 'No day lost more than $' + dailyMax },
       { ok: bigStops.length === 0, label: 'Per-trade stop ≤ $500 / ES', detail: bigStops.length ? bigStops.length + ' trade(s) exceeded the $500/contract stop' : 'No trade exceeded the stop' },
-      { ok: floorBreaches.length === 0, label: 'Daily loss within floor ($500 × ES)', detail: floorBreaches.length ? 'Floor breached on ' + floorBreaches.map(d => d.day).join(', ') : 'No daily-floor breach' },
-      { ok: multiLossDays.length === 0, label: 'Day ends on first stop (max one loss / day)', detail: multiLossDays.length ? '≥2 losses on ' + multiLossDays.map(d => d.day + ' (' + d.losses + ')').join(', ') : 'No day had a second loss' },
       { ok: !sitoutWeeks.flagged, label: '2 losing days / week → sit out the week', detail: sitoutWeeks.flagged ? 'Hit 2 losing days on ' + sitoutWeeks.triggerDay + '; ' + sitoutWeeks.tradedAfter + ' more trade(s) taken that week' : (kpi.losingDays >= 2 ? 'Reached 2 losing days but no further trading' : 'Fewer than 2 losing days') },
       { ok: maxConsec < 3, label: '3 consecutive losing days → high-prob only', detail: maxConsec >= 3 ? maxConsec + ' consecutive losing days — restriction should be active' : 'Max ' + maxConsec + ' consecutive losing day(s)' },
       { ok: maxConsec < 10, label: '10 consecutive losing days → stand-down', detail: maxConsec >= 10 ? 'Edge falsification triggered' : 'Not triggered' },
@@ -196,11 +195,13 @@
       : '<span class="flag-tag">' + flags + ' rule flag' + (flags > 1 ? 's' : '') + '</span>';
 
     // daily table
-    let dh = '<table class="rules"><thead><tr><th>Day</th><th>Trades</th><th>Losses</th><th>Max ES</th><th>Floor</th><th>Net P&L</th></tr></thead><tbody>';
+    let dh = '<table class="rules"><thead><tr><th>Day</th><th>Trades</th><th>Losses</th><th>Max ES</th><th>Daily cap</th><th>Net P&L</th></tr></thead><tbody>';
     for (const d of res.dayList) {
+      const over = d.pnl < -RULES.dailyMaxLoss;
       dh += '<tr><td class="mono">' + d.day + '</td><td class="mono">' + d.trades + '</td><td class="mono">' + d.losses +
-        '</td><td class="mono">' + d.maxContracts + '</td><td class="mono">' + money(-d.maxESrisk) +
-        '</td><td class="mono" style="color:' + (d.pnl >= 0 ? 'var(--green)' : 'var(--red)') + '">' + money(d.pnl) + '</td></tr>';
+        '</td><td class="mono">' + d.maxContracts + '</td><td class="mono">' + money(-RULES.dailyMaxLoss) +
+        '</td><td class="mono" style="color:' + (d.pnl >= 0 ? 'var(--green)' : 'var(--red)') + '">' + money(d.pnl) +
+        (over ? ' ⚠' : '') + '</td></tr>';
     }
     $('daily-table').innerHTML = dh + '</tbody></table>';
 

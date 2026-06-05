@@ -20,7 +20,8 @@
 const RULES = Object.freeze({
   startingCapital: 10000,
   esPointValue: 50,
-  maxLossPerES: 500,             // daily max loss per ES; floor = $500 × ES
+  maxLossPerES: 500,             // per-trade stop: $500 per ES
+  dailyMaxLoss: 600,             // hard daily max loss for the strategy ($ flat)
   perESPerMonthDefault: 3000,    // illustrative profit per ES per month
 
   tradingMonthsPerYear: 10,      // 10 trading months ...
