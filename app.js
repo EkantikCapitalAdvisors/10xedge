@@ -1,17 +1,17 @@
 /* =============================================================================
-   10x Account — UI wiring (spec §4 / §5). No persistence; in-memory only (§7).
-   engine.js is loaded before this file → RULES, EDGE_ILLUSTRATIVE, helpers exist.
+   10x Account — UI wiring (simplified paradigm). No persistence; in-memory only.
+   engine.js is loaded first → RULES, EDGE_ILLUSTRATIVE, esCount, yearProjection,
+   monthsTo10x, expectedDollarsPerDayAt, simulatePath, cloneEdge are in scope.
    ============================================================================= */
 (function () {
   'use strict';
 
   const $ = (id) => document.getElementById(id);
   let edge = cloneEdge(EDGE_ILLUSTRATIVE);
-  let policy = 'conservative';
-  let capital = RULES.startingCapital;
-  let chart = null;
+  let monthly = 3000;
+  let mcChart = null, yrChart = null;
 
-  /* -------------------- mode toggle (operator / investor) -------------------- */
+  /* -------------------- mode toggle -------------------- */
   function setMode(mode) {
     document.body.dataset.mode = mode;
     document.documentElement.dataset.mode = mode;
@@ -23,77 +23,86 @@
 
   /* -------------------- edge panel <-> state -------------------- */
   function writeEdgeInputs() {
-    $('c-freq').value = edge.C.frequencyPerDay;
-    $('c-val').value  = edge.C.validationRate;
-    $('c-p').value    = edge.C.winRate;
-    $('c-win').value  = edge.C.avgWinPoints;
-    $('d-freq').value = edge.D.frequencyPerDay;
-    $('d-p').value    = edge.D.winRate;
-    $('d-win').value  = edge.D.avgWinPoints;
-    $('conf').value   = edge.confluenceRate;
+    $('e-tpd').value = edge.tradesPerDay;
+    $('e-awr').value = edge.avgWinR;
+    $('e-wr').value  = edge.winRate;
+    $('e-hp').value  = edge.highProbWinRate;
   }
   function readEdgeInputs() {
     const num = (id, d) => { const v = parseFloat($(id).value); return isFinite(v) ? v : d; };
-    edge.C.frequencyPerDay = num('c-freq', 0);
-    edge.C.validationRate  = num('c-val', 0);
-    edge.C.winRate         = num('c-p', 0);
-    edge.C.avgWinPoints    = num('c-win', 0);
-    edge.D.frequencyPerDay = num('d-freq', 0);
-    edge.D.winRate         = num('d-p', 0);
-    edge.D.avgWinPoints    = num('d-win', 0);
-    edge.confluenceRate    = num('conf', 0);
+    edge.tradesPerDay     = Math.max(1, Math.round(num('e-tpd', 2)));
+    edge.avgWinR          = num('e-awr', 1.4);
+    edge.winRate          = num('e-wr', 0.5);
+    edge.highProbWinRate  = num('e-hp', 0.62);
     refreshClosedForm();
   }
-  ['c-freq','c-val','c-p','c-win','d-freq','d-p','d-win','conf']
-    .forEach((id) => $(id).addEventListener('input', readEdgeInputs));
-
+  ['e-tpd', 'e-awr', 'e-wr', 'e-hp'].forEach((id) => $(id).addEventListener('input', readEdgeInputs));
   $('reset-edge').addEventListener('click', () => { edge = cloneEdge(EDGE_ILLUSTRATIVE); writeEdgeInputs(); refreshClosedForm(); });
-  $('clear-edge').addEventListener('click', () => {
-    edge = { C:{frequencyPerDay:0,validationRate:0,winRate:0,avgWinPoints:0}, D:{frequencyPerDay:0,winRate:0,avgWinPoints:0}, confluenceRate:0 };
-    writeEdgeInputs(); refreshClosedForm();
+  $('clear-edge').addEventListener('click', () => { edge = { tradesPerDay: 1, avgWinR: 0, winRate: 0, highProbWinRate: 0 }; writeEdgeInputs(); refreshClosedForm(); });
+
+  /* -------------------- monthly profit (year projection) -------------------- */
+  $('e-monthly').addEventListener('input', () => {
+    const v = parseFloat($('e-monthly').value);
+    monthly = isFinite(v) && v >= 0 ? v : 0;
+    drawYear();
   });
 
-  /* capital is locked at $10k for v0.5 (sizing calibrated to the floor); no handler. */
+  /* -------------------- helpers -------------------- */
+  const money = (x) => '$' + Math.round(x).toLocaleString();
+  const fmtDays = (d) => d == null ? '—' : (d / 252).toFixed(1) + ' yr';
+  const pct = (x) => (x * 100).toFixed(1) + '%';
 
-  /* -------------------- policy segmented control -------------------- */
-  $('policy').addEventListener('click', (e) => {
-    const b = e.target.closest('button'); if (!b) return;
-    policy = b.dataset.policy;
-    [...$('policy').children].forEach((x) => x.classList.toggle('active', x === b));
-  });
-
-  /* -------------------- closed-form sanity layer (§4.4) -------------------- */
-  function fmtMoney(x) { return (x < 0 ? '−$' : '$') + Math.abs(Math.round(x)).toLocaleString(); }
   function refreshClosedForm() {
-    const perDay = expectedDollarsPerDay(edge);
-    // sizing-vs-floor check: warn if any worst-case single-trade loss nears/exceeds DLL
-    const dll = Math.round(capital * RULES.DLL_pct);
-    const expoLoss = maxSingleTradeLoss('C_validated', RULES.scaleUp.confluenceMultiplier); // 8 ES nominal
-    let msg = 'Arithmetic expectation ≈ <b class="mono">' + fmtMoney(perDay) +
-      '/day</b> at the dialed edge. The simulator gives the (lower) <em>geometric</em> reality — drawdown drag and sit-out idle time.';
-    if (expoLoss >= dll) {
-      msg += ' <span class="warn">Sizing-vs-floor: a ×4 confluence trade’s nominal stop ($' +
-        expoLoss.toLocaleString() + ') exceeds the $' + dll.toLocaleString() +
-        ' floor — realized loss is capped at the remaining floor room.</span>';
-    }
-    $('closedform').innerHTML = msg;
+    const perDay1 = expectedDollarsPerDayAt(edge, 1);
+    $('closedform').innerHTML = 'Arithmetic expectation ≈ <b class="mono">' + money(perDay1) +
+      '/day at 1 ES</b>, scaling up with each added contract. The Monte Carlo gives the (lower, drawdown-dragged) ' +
+      'geometric reality.';
   }
 
-  /* -------------------- run a Monte Carlo batch in the worker -------------------- */
-  function runBatch(pol, onDone, onProgress) {
+  /* -------------------- deterministic year projection -------------------- */
+  function drawYear() {
+    const rows = yearProjection(monthly, 12);
+    const last = rows[rows.length - 1];
+    $('year-sub').textContent = '— assuming +' + money(monthly) + ' / month';
+    $('y-end').textContent = money(last.capital);
+    $('y-es').textContent = last.es + ' ES';
+    const m10 = monthsTo10x(monthly);
+    $('y-to10x').innerHTML = isFinite(m10)
+      ? 'At +' + money(monthly) + '/month, <b>10× ($100,000) is reached around month ' + m10 +
+        '</b> (~' + (m10 / 12).toFixed(1) + ' yr) on this flat-rate path.'
+      : 'At $0/month the target is never reached.';
+
+    const data = {
+      labels: rows.map(r => 'm' + r.month),
+      datasets: [
+        { label: 'Capital', data: rows.map(r => r.capital), borderColor: '#C8A951', backgroundColor: 'rgba(200,169,81,.14)', borderWidth: 2.6, fill: true, tension: .2, yAxisID: 'y', pointRadius: 0 },
+        { label: 'Position size (ES)', data: rows.map(r => r.es), borderColor: '#6FAE8E', borderWidth: 1.8, stepped: true, fill: false, yAxisID: 'yes', pointRadius: 0 }
+      ]
+    };
+    const opts = {
+      responsive: true, maintainAspectRatio: false, animation: false,
+      scales: {
+        x: { ticks: { color: '#B9C0CF' }, grid: { color: 'rgba(46,67,115,.5)' } },
+        y: { position: 'left', title: { display: true, text: 'capital ($)', color: '#B9C0CF' }, ticks: { color: '#B9C0CF', callback: v => '$' + (v / 1000) + 'k' }, grid: { color: 'rgba(46,67,115,.5)' } },
+        yes: { position: 'right', title: { display: true, text: 'ES contracts', color: '#6FAE8E' }, ticks: { color: '#6FAE8E', precision: 0 }, grid: { drawOnChartArea: false } }
+      },
+      plugins: { legend: { labels: { color: '#F3EFE6', font: { family: 'JetBrains Mono' }, boxWidth: 12 } } }
+    };
+    if (yrChart) yrChart.destroy();
+    yrChart = new Chart($('yearchart'), { type: 'line', data, options: opts });
+  }
+
+  /* -------------------- Monte Carlo -------------------- */
+  function runBatch(onDone, onProgress) {
     const w = new Worker('worker.js');
     w.onmessage = (e) => {
-      if (e.data.type === 'progress') { onProgress && onProgress(e.data.done, e.data.total); }
+      if (e.data.type === 'progress') onProgress && onProgress(e.data.done, e.data.total);
       else if (e.data.type === 'done') { onDone(e.data.result); w.terminate(); }
     };
-    w.postMessage({ edge: cloneEdge(edge), policy: pol, paths: 10000 });
+    w.postMessage({ edge: cloneEdge(edge), policy: 'n/a', paths: 10000 });
   }
 
-  function fmtDays(d) { return d == null ? '—' : (d / 252).toFixed(1) + ' yr'; }
-  function pct(x) { return (x * 100).toFixed(1) + '%'; }
-
-  /* -------------------- render selected-policy results + chart -------------------- */
-  function renderMain(res) {
+  function renderMC(res) {
     $('r-median').textContent = fmtDays(res.medianDaysTo10x);
     $('r-p10x').textContent   = pct(res.p10x);
     $('r-pruin').textContent  = pct(res.pRuin);
@@ -106,16 +115,15 @@
     $('t-floor').textContent = per1k(res.telemetry.floorHits);
     $('t-week').textContent  = per1k(res.telemetry.weekOuts);
     $('t-rest').textContent  = per1k(res.telemetry.restrictions);
-    $('t-conf').textContent  = per1k(res.telemetry.confluenceFires);
+    $('t-red').textContent   = per1k(res.telemetry.redDays);
 
     drawFan(res.fan);
   }
 
   function drawFan(fan) {
-    const ctx = $('fan').getContext('2d');
     const gold = '#C8A951', goldFill = 'rgba(200,169,81,.14)';
     const data = {
-      labels: fan.days.map((d) => (d / 252).toFixed(1)),
+      labels: fan.days.map(d => (d / 252).toFixed(1)),
       datasets: [
         { label: 'P90', data: fan.p90, borderColor: 'rgba(200,169,81,.5)', borderWidth: 1, pointRadius: 0, fill: '+1', backgroundColor: goldFill },
         { label: 'P50 (median)', data: fan.p50, borderColor: gold, borderWidth: 2, pointRadius: 0, fill: false },
@@ -127,41 +135,25 @@
       interaction: { mode: 'index', intersect: false },
       scales: {
         x: { title: { display: true, text: 'years', color: '#B9C0CF' }, ticks: { color: '#B9C0CF', maxTicksLimit: 8 }, grid: { color: 'rgba(46,67,115,.5)' } },
-        y: { title: { display: true, text: 'equity ($)', color: '#B9C0CF' }, ticks: { color: '#B9C0CF', callback: (v) => '$' + (v / 1000) + 'k' }, grid: { color: 'rgba(46,67,115,.5)' } }
+        y: { title: { display: true, text: 'equity ($)', color: '#B9C0CF' }, ticks: { color: '#B9C0CF', callback: v => '$' + (v / 1000) + 'k' }, grid: { color: 'rgba(46,67,115,.5)' } }
       },
       plugins: { legend: { labels: { color: '#F3EFE6', font: { family: 'JetBrains Mono' } } } }
     };
-    if (chart) chart.destroy();
-    chart = new Chart(ctx, { type: 'line', data, options: opts });
+    if (mcChart) mcChart.destroy();
+    mcChart = new Chart($('fan'), { type: 'line', data, options: opts });
   }
 
-  function renderCmpRow(prefix, res) {
-    $(prefix + '-med').textContent  = fmtDays(res.medianDaysTo10x);
-    $(prefix + '-dd').textContent   = pct(res.modeledMaxDDpct);
-    $(prefix + '-ruin').textContent = pct(res.pRuin);
-    $(prefix + '-fals').textContent = pct(res.pFalsified);
-  }
-
-  /* -------------------- RUN button: selected policy + both for comparison -------------------- */
   $('run').addEventListener('click', () => {
     readEdgeInputs();
-    const btn = $('run'); btn.disabled = true;
-    $('progress').textContent = 'Simulating…';
-
-    // run the selected policy for the main panel + chart
-    runBatch(policy, (res) => {
-      renderMain(res);
-      renderCmpRow(policy === 'conservative' ? 'c' : 'a', res);
-      // run the *other* policy to fill the comparison table
-      const other = policy === 'conservative' ? 'aggressive' : 'conservative';
-      runBatch(other, (res2) => {
-        renderCmpRow(other === 'conservative' ? 'c' : 'a', res2);
-        btn.disabled = false; $('progress').textContent = 'Done · 2 × 10,000 paths.';
-      });
+    const btn = $('run'); btn.disabled = true; $('progress').textContent = 'Simulating…';
+    runBatch((res) => {
+      renderMC(res);
+      btn.disabled = false; $('progress').textContent = 'Done · 10,000 paths.';
     }, (done, total) => { $('progress').textContent = 'Simulating… ' + Math.round(done / total * 100) + '%'; });
   });
 
   /* -------------------- init -------------------- */
   writeEdgeInputs();
   refreshClosedForm();
+  drawYear();
 })();

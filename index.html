@@ -87,28 +87,25 @@
 <section class="operator-only">
   <div class="wrap">
     <h2>The defined rules <span class="muted small">(fixed core — <code>RULES</code>)</span></h2>
-    <p class="muted small">Sizing, stops and governance are settled. Edge stats are TBD inputs (below).
-      $10k account · floor $1,000 = 10% = exactly one Setup&nbsp;C&nbsp;Validated full stop.</p>
+    <p class="muted small">No capital buffer — just the margin to run the engine, a profit-funded scale-up, and a
+      loss limit that scales with size. Edge stats are TBD inputs (below).</p>
     <table class="rules" style="margin-top:18px">
-      <thead><tr><th>Setup / state</th><th>Contracts</th><th>Stop</th><th>$/pt</th><th>Max single-trade loss</th></tr></thead>
+      <thead><tr><th>Component</th><th>Rule</th></tr></thead>
       <tbody>
-        <tr><td>Setup C — Validated</td><td class="mono">1–2 ES</td><td class="mono">10 pts</td><td class="mono">$50–$100</td><td class="mono">$500–$1,000</td></tr>
-        <tr><td>Setup C — guess</td><td class="mono">1–5 MES</td><td class="mono">10 pts</td><td class="mono">$5–$25</td><td class="mono">$50–$250</td></tr>
-        <tr><td>Setup D</td><td class="mono">1 ES</td><td class="mono">3 pts</td><td class="mono">$50</td><td class="mono">$150</td></tr>
+        <tr><td>Margin to run the engine</td><td class="mono">1 ES per $10,000 of capital</td></tr>
+        <tr><td>Position size</td><td class="mono">start 1 ES · +1 ES for every +$3,000 of accumulated profit</td></tr>
+        <tr><td>Daily loss limit</td><td class="mono">$500 per ES → floor = $500 × current ES count</td></tr>
+        <tr><td>Sit-out (weekly)</td><td class="mono">2 losing days in a week → sit out the rest of the week</td></tr>
+        <tr><td>Restriction</td><td class="mono">3 consecutive losing days → high-probability trades only</td></tr>
+        <tr><td>Edge falsification</td><td class="mono">10 consecutive losing days → stand-down (research-only)</td></tr>
+        <tr><td>Target</td><td class="mono">10× ($10,000 → $100,000)</td></tr>
       </tbody>
     </table>
     <p class="muted small" style="margin-top:14px">
-      <b>ES = $50/pt · MES = $5/pt.</b> The floor is calibrated to the top of the C-Validated range: 2 ES × 10 pts
-      × $50 = <b>$1,000</b> = one full-stop loss ends the day. Every other setup risks well under the floor —
-      a max C-guess ($250) plus a Setup&nbsp;D ($150) is only $400, so a single C-Validated stop (or the ×4
-      confluence) is the only single event that can reach it.<br>
-      <b>A/B not traded</b> — confluence conditions only: A∧B∧C all Validated fires the ×4 exponential
-      (up to 8 ES). <b>Scale-up:</b> +$2,000 running profit unlocks an optional ×2; ×4 does not compound to ×8
-      (working default). Oversized-position loss is capped by the remaining daily-floor room, never the
-      nominal point-stop.<br>
-      <b>Sit-out ladder:</b> 3 consecutive red days (loss &gt; $500) ⇒ sit out the week; 4th ⇒ restrict to
-      {C-Validated, D} until back to profitability. <b>Edge falsification:</b> 10 consecutive losing days ⇒
-      stand-down to research-only.
+      <b>Active capital is the smallest tier; the engine carries no separate reserve buffer.</b> One full-stop
+      loss equals the day’s floor ($500 × ES), so a losing day ends on the first stop. As profit accumulates the
+      position steps up one ES per $3k; as capital falls, size de-scales with it. The high-probability-only
+      restriction lifts on the next winning day.
     </p>
   </div>
 </section>
@@ -128,43 +125,26 @@
       <div class="panel controls">
         <label for="capital">Starting capital&nbsp;<span class="muted">C</span></label>
         <input type="number" id="capital" value="10000" readonly>
-        <p class="muted small" style="margin-top:6px">Locked at $10,000 for v0.5: sizing (2/4 ES) is calibrated so
-          the $1,000 floor = exactly one Setup&nbsp;C&nbsp;Validated full stop. Rescaling capital without
-          rescaling sizing would break that calibration (§9 leverage flag).</p>
+        <p class="muted small" style="margin-top:6px">$10,000 — the margin to run 1 ES. Position size grows with
+          profit (+1 ES per $3k); the daily floor grows with it.</p>
 
-        <label>Daily loss limit (DLL)</label>
-        <div class="bigstat"><div class="floor mono">$1,000 <small id="dll-pct">(10%)</small></div></div>
-        <p class="muted small" style="margin-top:6px">The hard floor. Fixed by design = one Setup C Validated
-          full stop. Recomputes as 10% of capital.</p>
+        <label>Daily loss limit</label>
+        <div class="bigstat"><div class="floor mono">$500 <small>/ ES</small></div></div>
+        <p class="muted small" style="margin-top:6px">$500 per contract → the day’s floor is $500 × your current
+          ES count. One full-stop loss equals the floor, so a losing day ends on the first stop.</p>
 
-        <label>Scale-up policy <span class="muted small">— the headline tradeoff</span></label>
-        <div class="seg" id="policy">
-          <button data-policy="conservative" class="active">Conservative</button>
-          <button data-policy="aggressive">Aggressive</button>
-        </div>
-        <p class="muted small" style="margin-top:6px">Conservative never exercises the +$2k ×2 doubling or the
-          ×4 confluence exponential. Aggressive exercises both, per rules.</p>
+        <label for="e-monthly">Assumed profit / month <span class="muted small">— for the year projection</span></label>
+        <input type="number" id="e-monthly" value="3000" step="500" min="0">
 
         <details class="advanced">
           <summary>Advanced / Edge assumptions <span class="illus-tag">illustrative</span></summary>
-          <p class="muted small" style="margin-top:10px">TBD per setup. Loss side is fixed by the stops;
-            the <b>win (target, in points)</b> is the open lever that sets the R-multiple.</p>
-
+          <p class="muted small" style="margin-top:10px">Drives the Monte Carlo only. Loss is fixed by the stop
+            (1R = $500 per ES); the <b>average win (in R)</b> is the open lever.</p>
           <div class="edge-grid">
-            <div class="full"><b class="small" style="color:var(--gold)">Setup C</b></div>
-            <div><label>Frequency / day</label><input type="number" id="c-freq" step="0.5" min="0"></div>
-            <div><label>Validation rate</label><input type="number" id="c-val" step="0.05" min="0" max="1"></div>
-            <div><label>Win rate p</label><input type="number" id="c-p" step="0.01" min="0" max="1"></div>
-            <div><label>Avg win (pts)</label><input type="number" id="c-win" step="0.5" min="0"></div>
-
-            <div class="full"><b class="small" style="color:var(--gold)">Setup D</b></div>
-            <div><label>Frequency / day</label><input type="number" id="d-freq" step="0.5" min="0"></div>
-            <div><label>Win rate p</label><input type="number" id="d-p" step="0.01" min="0" max="1"></div>
-            <div><label>Avg win (pts)</label><input type="number" id="d-win" step="0.5" min="0"></div>
-            <div></div>
-
-            <div class="full"><label>Confluence rate (A∧B∧C → ×4 fires)</label>
-              <input type="number" id="conf" step="0.01" min="0" max="1"></div>
+            <div><label>Trades / day</label><input type="number" id="e-tpd" step="1" min="1"></div>
+            <div><label>Avg win (R)</label><input type="number" id="e-awr" step="0.1" min="0"></div>
+            <div><label>Win rate</label><input type="number" id="e-wr" step="0.01" min="0" max="1"></div>
+            <div><label>High-prob win rate</label><input type="number" id="e-hp" step="0.01" min="0" max="1"></div>
           </div>
           <div class="edge-actions">
             <button id="reset-edge">Reset to illustrative</button>
@@ -179,19 +159,33 @@
       <!-- ---------------- results ---------------- -->
       <div class="results">
 
+        <!-- ===== YEAR-1 PROJECTION (deterministic, +$X/month) ===== -->
+        <div class="panel">
+          <h3>Year 1 projection <span class="muted small" id="year-sub">— assuming +$3,000 / month</span></h3>
+          <div class="chartwrap"><canvas id="yearchart"></canvas></div>
+          <div class="statgrid" style="margin-top:14px">
+            <div class="statbox"><div class="k">Capital at month 12</div><div class="v good" id="y-end">—</div></div>
+            <div class="statbox"><div class="k">Position size at month 12</div><div class="v" id="y-es">—</div></div>
+          </div>
+          <p class="muted small" style="margin-top:10px" id="y-to10x">—</p>
+          <p class="muted small"><b>Flat-rate assumption.</b> This holds profit at your monthly figure regardless
+            of size (deliberately conservative). The Monte Carlo below lets the same edge scale with position size,
+            which compounds faster — at the cost of the drawdowns shown. Illustrative, not a forecast.</p>
+        </div>
+
         <div class="panel">
           <div class="bigstat">
-            <div class="floor mono" id="floor-big">$1,000</div>
-            <div class="muted">hard daily floor — the most this account can lose in a single day.</div>
+            <div class="floor mono" id="floor-big">$500 / ES</div>
+            <div class="muted">daily floor — scales with position size as the engine grows.</div>
           </div>
           <p class="small muted" id="closedform" style="margin-top:12px"></p>
         </div>
 
         <div class="panel">
-          <h3>Path to 10x</h3>
+          <h3>Path to 10x <span class="muted small">— Monte Carlo, 10,000 paths</span></h3>
           <div class="chartwrap"><canvas id="fan"></canvas></div>
-          <p class="muted small">Median (P50) with the P10–P90 band. 10x is reached by
-            <em>time × compounding at the optimum</em>, not by cranking risk.</p>
+          <p class="muted small">Median (P50) with the P10–P90 band. The edge scales with size here, so the path
+            compounds faster than the flat year projection above — read the drawdown alongside it.</p>
         </div>
 
         <div class="statgrid">
@@ -201,12 +195,12 @@
           <div class="statbox"><div class="k">P(edge falsified)</div><div class="v bad" id="r-pfals">—</div></div>
         </div>
 
-        <!-- ===== §F / §2 THE HONEST DOWNSIDE — required, never hidden ===== -->
+        <!-- ===== THE HONEST DOWNSIDE — required, never hidden ===== -->
         <div class="downside">
           <h3>The honest downside</h3>
-          <p class="small"><b>A daily loss limit caps the <em>day</em>, not the <em>month</em>.</b> You can hit
-            −$1,000 on three separate days and be down $3,000. The deck’s own live record already shows a
-            <span class="mono">−23.3%</span> drawdown.</p>
+          <p class="small"><b>The loss limit caps the <em>day</em>, not the <em>month</em>.</b> Multiple losing
+            days compound into a larger drawdown — and because the floor grows with size, a bad stretch at a higher
+            ES count costs more in dollars than the same stretch early on.</p>
           <div class="statgrid" style="margin-top:6px">
             <div class="statbox"><div class="k">Modeled worst-case total drawdown</div><div class="v bad" id="r-maxdd">—</div></div>
             <div class="statbox"><div class="k">Median max drawdown</div><div class="v" id="r-meddd">—</div></div>
@@ -215,33 +209,16 @@
             and compounding — <b>not a forecast, not a guarantee, not a promised multiple.</b></p>
         </div>
 
-        <!-- ===== §4.3 POLICY COMPARISON ===== -->
-        <div class="panel">
-          <h3>Policy comparison <span class="muted small">— speed vs. drawdown &amp; ruin</span></h3>
-          <table class="cmp" id="cmp">
-            <thead><tr><th>Scale-up policy</th><th>Median → 10x</th><th>Max DD</th><th>P(ruin)</th><th>P(falsified)</th></tr></thead>
-            <tbody>
-              <tr><td>Conservative</td><td id="c-med">—</td><td id="c-dd">—</td><td id="c-ruin">—</td><td id="c-fals">—</td></tr>
-              <tr><td>Aggressive</td><td id="a-med">—</td><td id="a-dd">—</td><td id="a-ruin">—</td><td id="a-fals">—</td></tr>
-            </tbody>
-          </table>
-          <p class="muted small" style="margin-top:8px">Because the hard floor caps <em>daily</em> loss identically
-            under either policy, aggression scales the <em>upside</em> and the path — not the daily downside. The
-            table shows the <em>actual</em> drawdown and ruin each policy produces at your edge, so you compare
-            the real cost, not an assumed one.</p>
-        </div>
-
-        <!-- ===== §4.3 RULE-ACTIVITY TELEMETRY ===== -->
+        <!-- ===== RULE-ACTIVITY TELEMETRY ===== -->
         <div class="panel operator-only">
           <h3>Rule-activity telemetry</h3>
           <div class="tel">
-            <div class="statbox"><div class="k">Days floor caught</div><div class="v" id="t-floor">—</div></div>
-            <div class="statbox"><div class="k">3-red sit-outs</div><div class="v" id="t-week">—</div></div>
-            <div class="statbox"><div class="k">4th-day restrictions</div><div class="v" id="t-rest">—</div></div>
-            <div class="statbox"><div class="k">×4 confluence fires</div><div class="v" id="t-conf">—</div></div>
+            <div class="statbox"><div class="k">Days floor hit</div><div class="v" id="t-floor">—</div></div>
+            <div class="statbox"><div class="k">Weekly sit-outs</div><div class="v" id="t-week">—</div></div>
+            <div class="statbox"><div class="k">High-prob-only spells</div><div class="v" id="t-rest">—</div></div>
+            <div class="statbox"><div class="k">Losing days</div><div class="v" id="t-red">—</div></div>
           </div>
-          <p class="muted small" style="margin-top:8px">Rates per 1,000 simulated trading days. A∧B∧C confluence
-            is rare by construction.</p>
+          <p class="muted small" style="margin-top:8px">Rates per 1,000 simulated trading days.</p>
         </div>
 
       </div>
