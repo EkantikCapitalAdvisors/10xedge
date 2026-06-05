@@ -263,6 +263,18 @@
       : 'No trades to measure.';
     const sumOk = totPnl >= totTarget;
     $('tgt-summary').innerHTML = weeks.length ? '<span class="' + (sumOk ? 'pass-tag' : 'flag-tag') + '">' + (sumOk ? 'on pace' : 'behind target') + '</span>' : '';
+
+    // 3-month qualification: scaling unlocks only after N months hitting $3k at 1 ES
+    const months = {};
+    for (const t of trades) { const mk = t.day.slice(0, 7); const o = months[mk] || (months[mk] = { key: mk, pnl: 0 }); o.pnl += t.pnl; }
+    const monthList = Object.values(months).sort((a, b) => a.key.localeCompare(b.key));
+    const need = RULES.scaleQualifyMonths;
+    const qualified = monthList.filter(mo => mo.pnl >= monthlyPerES);
+    const unlocked = qualified.length >= need;
+    $('tgt-qual').innerHTML = '<b>Scaling status:</b> <span class="' + (unlocked ? 'pass-tag' : 'flag-tag') + '">' +
+      (unlocked ? 'UNLOCKED' : 'LOCKED') + '</span> — ' + qualified.length + ' of ' + need +
+      ' qualifying months (a month ≥ ' + money(monthlyPerES) + ' at 1 ES). ' +
+      (unlocked ? 'You may scale +1 ES per margin unit.' : 'Trade 1 ES until ' + need + ' qualifying months are banked.');
   }
 
   function drawCharts(dayList, trades) {

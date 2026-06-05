@@ -26,6 +26,7 @@ const RULES = Object.freeze({
 
   tradingMonthsPerYear: 10,      // 10 trading months ...
   breakMonthsPerYear: 2,         // ... + 2 break months
+  scaleQualifyMonths: 3,         // scaling unlocks only AFTER 3 months of hitting the $3k/1-ES target
 
   brokers: {
     tradovate: { key: 'tradovate', label: 'Tradovate', tag: 'aspirational', marginPerES: 10000 },
@@ -88,16 +89,19 @@ function expectedDollarsPerDayAt(edge, esCountNow) {
 function yearProjection(perES, marginPerES, tradingMonths) {
   const rows = [];
   let capital = RULES.startingCapital;
+  const qualify = RULES.scaleQualifyMonths;       // first N months locked at 1 ES
+  const esAt = (m, cap) => (m <= qualify) ? 1 : esForCapital(cap, marginPerES);
   for (let m = 1; m <= tradingMonths; m++) {
-    const es = esForCapital(capital, marginPerES);
+    const es = esAt(m, capital);
     const monthlyProfit = perES * es;
     capital += monthlyProfit;
     rows.push({
       month: m, es, monthlyProfit,
       cumulative: capital - RULES.startingCapital,
       capital,
-      nextES: esForCapital(capital, marginPerES),
-      dailyFloor: es * RULES.maxLossPerES
+      nextES: esAt(m + 1, capital),
+      dailyFloor: es * RULES.maxLossPerES,
+      qualifying: m <= qualify
     });
   }
   return rows;
@@ -107,9 +111,11 @@ function yearProjection(perES, marginPerES, tradingMonths) {
 function monthsTo10x(perES, marginPerES) {
   if (perES <= 0) return Infinity;
   const target = RULES.startingCapital * RULES.target.multiple;
+  const qualify = RULES.scaleQualifyMonths;
   let capital = RULES.startingCapital;
   for (let m = 1; m <= 600; m++) {
-    capital += perES * esForCapital(capital, marginPerES);
+    const es = (m <= qualify) ? 1 : esForCapital(capital, marginPerES);
+    capital += perES * es;
     if (capital >= target) return m;
   }
   return Infinity;
@@ -150,11 +156,14 @@ function simulatePath(edge, marginPerES, seed) {
   const snapshots = [];
   const tel = { days: 0, floorHits: 0, weekOuts: 0, restrictions: 0, confluenceFires: 0, redDays: 0 };
   let outcome = 'timecap';
+  let tradedDays = 0;
+  const qualifyDays = RULES.scaleQualifyMonths * daysPerMonth;   // scaling locked at 1 ES until then
 
   for (let day = 0; day < RULES.sim.timeCapDays; day++) {
     const onBreak = (day % yearLen) >= breakStart;   // 2-month annual break
-    const es = esForCapital(capital, marginPerES);
-    if (es === 0) { outcome = 'ruin'; capital = 0; break; }
+    const baseES = esForCapital(capital, marginPerES);
+    if (baseES === 0) { outcome = 'ruin'; capital = 0; break; }
+    const es = tradedDays < qualifyDays ? 1 : baseES;   // first 3 trading months locked at 1 ES
 
     const dailyFloor = es * RULES.maxLossPerES;
     let dayPnL = 0, lossDay = false;
@@ -175,7 +184,7 @@ function simulatePath(edge, marginPerES, seed) {
     capital += dayPnL;
     if (capital < 0) capital = 0;
     tel.days++;
-    if (!onBreak) dayInWeek++;
+    if (!onBreak) { dayInWeek++; tradedDays++; }
 
     if (capital > peak) peak = capital;
     const dd = (peak - capital) / peak;

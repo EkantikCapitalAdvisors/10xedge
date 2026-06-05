@@ -103,7 +103,7 @@
       <thead><tr><th>Component</th><th>Rule</th></tr></thead>
       <tbody>
         <tr><td>Position size (margin-gated)</td><td class="mono">Tradovate: 1 ES / $10k · Interactive Brokers: 1 ES / $30k of account</td></tr>
-        <tr><td>Scale-up</td><td class="mono">size grows as the account grows (one ES per margin unit); each ES ≈ $3,000/mo</td></tr>
+        <tr><td>Scale-up</td><td class="mono">unlocks after 3 months hitting $3k/1 ES, then +1 ES per margin unit as the account grows</td></tr>
         <tr><td>Daily loss limit</td><td class="mono">$500 per ES → floor = $500 × current ES count</td></tr>
         <tr><td>Trading calendar</td><td class="mono">10 trading months + 2 break months per year</td></tr>
         <tr><td>Sit-out (weekly)</td><td class="mono">2 losing days in a week → sit out the rest of the week</td></tr>
@@ -194,10 +194,11 @@
             <div><h4 class="tbl-h">Tradovate <span class="badge-asp">1 ES / $10k</span></h4><div id="year-table-trad" style="overflow-x:auto"></div></div>
             <div><h4 class="tbl-h">Interactive Brokers <span class="badge-real">1 ES / $30k</span></h4><div id="year-table-ibkr" style="overflow-x:auto"></div></div>
           </div>
-          <p class="muted small" style="margin-top:12px"><b>10 trading months + 2 break months.</b> Each trading
-            month, size = 1 ES per the broker’s margin unit of account; profit (rate × ES) compounds; break months
-            are flat. Illustrative — a steady per-contract month with no losing stretches; not a forecast. The
-            Monte Carlo below adds the realistic spread and drawdowns.</p>
+          <p class="muted small" style="margin-top:12px"><b>10 trading months + 2 break months.</b> The first
+            <b>3 months are locked at 1 ES</b> (qualification — you must hit $3k/1 ES three times before scaling
+            unlocks); from month 4, size = 1 ES per the broker’s margin unit of account and profit compounds; break
+            months are flat. Illustrative — a steady per-contract month with no losing stretches; not a forecast.
+            The Monte Carlo below adds the realistic spread and drawdowns.</p>
         </div>
 
         <div class="panel">
