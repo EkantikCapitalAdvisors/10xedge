@@ -4,146 +4,150 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>The 10x Account — a defined-downside engine · Ekantik Capital</title>
-<meta name="description" content="A defined daily floor turns an unbounded fear into a single known number — and a positive-expectancy edge compounds above it. Interactive, client-side rules engine.">
-<meta name="robots" content="noindex,nofollow"><!-- §8.7: do not index the holding-out surface until compliance posture is settled -->
+<meta name="description" content="A defined daily floor turns an unbounded fear into one known number — and a positive-expectancy edge compounds above it. An interactive, client-side rules engine.">
+<meta name="robots" content="noindex,nofollow">
+<meta name="theme-color" content="#1B2A4A">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;600;700&family=Cormorant+Garamond:wght@500;600&family=DM+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="styles.css">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;600;700&family=Cormorant+Garamond:wght@500;600&family=DM+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="landing.css">
 </head>
 <body data-mode="operator">
 
-<!-- ============================ TOP BAR ============================ -->
-<div class="topbar">
-  <div class="wrap">
-    <div class="brand"><b>10x</b> Account <span>· ekantik capital</span></div>
-    <!-- Convexity Experiment link intentionally hidden -->
-    <a href="dashboard.html" class="cx-link operator-only">Trade Dashboard →</a>
-    <div class="modes" role="tablist" aria-label="Presentation mode">
+<!-- ===================== COMPLIANCE RIBBON (§6.2) ===================== -->
+<div class="ribbon">
+  <div class="container">Every figure on this page is a <b>hypothetical illustration of the rules</b> — not a
+    forecast, a guarantee, or a performance representation. Nothing here is an offer to sell or a solicitation to
+    buy any security. Founding-member access is by invitation.</div>
+</div>
+
+<!-- ===================== STICKY STATUS / MODE BAR (§6.1) ===================== -->
+<header class="statusbar">
+  <div class="container">
+    <div class="brand"><b>10x</b> Account <span class="chip">Experimental · internal modeling sandbox</span></div>
+    <div class="modes" role="tablist" aria-label="Read depth">
       <button id="mode-operator" class="active" role="tab">Operator</button>
       <button id="mode-investor" role="tab">Investor</button>
     </div>
+    <a href="dashboard.html" class="nav-link operator-only">Trade Dashboard →</a>
   </div>
-</div>
+</header>
 
-<!-- ============================ EXPERIMENTAL BANNER ============================ -->
-<div class="exp-banner" role="note">
-  <div class="wrap">
-    <span class="exp-tag">Experimental</span>
-    Work in progress — an internal modeling sandbox. Every figure is a hypothetical
-    illustration of the rules, not a forecast, a guarantee, or a performance representation.
-  </div>
-</div>
-
-<!-- ============================ §A HERO ============================ -->
-<section class="hero">
-  <div class="wrap">
-    <div class="kicker investor-only">The Edge, in Plain English · Founding Member Briefing</div>
-    <div class="kicker operator-only">Operator cockpit · live execution rules</div>
-
-    <h1 class="investor-only">One number you set.<br>One number you can never breach in a day.</h1>
-    <h1 class="operator-only">The 10x Account — risk architecture cockpit</h1>
-
-    <p class="sub investor-only">The 10x Account is a <b>defined-downside engine</b>: you set the most it can
-      lose in a day, and a positive-expectancy edge compounds above that floor.</p>
-    <p class="sub operator-only">Hard daily floor, circuit breaker, fixed-fractional sizing, and a
-      published sit-out ladder — the literal execution rules of the live prop account, instrumented.</p>
-
+<!-- ===================== HERO ===================== -->
+<section class="sec hero">
+  <div class="container">
+    <span class="tagline">Your Wealth · Our Accountability · Total Transparency</span>
+    <h1 style="margin-top:14px">One number you set.<br>One number you can never breach in a day.</h1>
+    <p class="lead">The 10x Account is a <b>defined-downside engine</b>: you set the most it can lose in a day, and
+      a positive-expectancy edge compounds above that floor — toward a structural ceiling of 10× ($10,000 → $100,000).</p>
     <div class="chips">
-      <div class="chip"><b>Daily floor:</b> you set it</div>
-      <div class="chip"><b>Circuit breaker:</b> automatic</div>
-      <div class="chip"><b>Failure:</b> pre-committed &amp; witnessed</div>
-    </div>
-    <!-- §A note: NO 64.7% / 1.93 / +105R chips here — that is the deck's record, not this account's. -->
-  </div>
-</section>
-
-<!-- ============================ §B THE REFRAME ============================ -->
-<section class="investor-only">
-  <div class="wrap">
-    <h2>The reframe</h2>
-    <p class="muted" style="max-width:760px">Most managers tell you their <em>return</em>. Almost none tell you
-      their <em>floor</em>. We lead with the floor, because the floor is the only thing you actually control
-      before the edge takes over. A hard daily loss limit — “you cannot lose more than this in a day” — is
-      concrete and visceral in a way “fixed-fractional R sizing” never is.</p>
-  </div>
-</section>
-
-<!-- ============================ §C THE MECHANIC ============================ -->
-<section>
-  <div class="wrap">
-    <h2>The three jobs of the daily floor</h2>
-    <div class="three" style="margin-top:28px">
-      <div class="panel ring">
-        <div class="num">1</div>
-        <div><h3>A risk budget</h3><p class="muted small">Each session you risk at most the daily limit.
-          The engine allocates that budget across the day’s trades.</p></div>
-      </div>
-      <div class="panel ring">
-        <div class="num">2</div>
-        <div><h3>A circuit breaker</h3><p class="muted small">Hit −DLL on the day and the session ends.
-          No revenge trades, no spiral — where real edges get killed by their operators.</p></div>
-      </div>
-      <div class="panel ring">
-        <div class="num">3</div>
-        <div><h3>A falsifiability floor</h3><p class="muted small">A pre-committed, observable, binary kill
-          condition for the day — the daily-granularity edge of a witness-locked protocol.</p></div>
-      </div>
+      <div class="pill"><b>Daily floor:</b> you set it</div>
+      <div class="pill"><b>Circuit breaker:</b> automatic</div>
+      <div class="pill"><b>Failure:</b> pre-committed &amp; witnessed</div>
     </div>
   </div>
 </section>
 
-<!-- ============================ DEFINED RULES (operator) ============================ -->
-<section class="operator-only">
-  <div class="wrap">
-    <h2>The defined rules <span class="muted small">(fixed core — <code>RULES</code>)</span></h2>
-    <p class="muted small">No capital buffer — just the margin to run the engine, a profit-funded scale-up, and a
-      loss limit that scales with size. Edge stats are TBD inputs (below).</p>
+<!-- ===================== 01 · THE REFRAME ===================== -->
+<section class="sec">
+  <div class="container">
+    <span class="sec-eyebrow">01 · The Reframe</span>
+    <h2>Floor before return.</h2>
+    <p class="lead">Most managers tell you their <em>return</em>. Almost none tell you their <em>floor</em>. We lead
+      with the floor, because the floor is the only thing you actually control before the edge takes over. A hard
+      daily loss limit is concrete and visceral in a way “fixed-fractional R sizing” never is.</p>
+  </div>
+</section>
+
+<!-- ===================== 02 · THREE JOBS OF THE FLOOR ===================== -->
+<section class="sec">
+  <div class="container">
+    <span class="sec-eyebrow">02 · The Mechanic</span>
+    <h2>The three jobs of the daily floor.</h2>
+    <div class="grid-3" style="margin-top:26px">
+      <div class="card ring"><div class="num">1</div><div><h3>A risk budget</h3><p class="muted small">Each session you risk at most the day’s floor. The engine allocates that budget across the day’s trades.</p></div></div>
+      <div class="card ring"><div class="num">2</div><div><h3>A circuit breaker</h3><p class="muted small">Hit the floor and the session ends — no revenge trades, no spiral. Where real edges get killed by their operators.</p></div></div>
+      <div class="card ring"><div class="num">3</div><div><h3>A falsifiability floor</h3><p class="muted small">A pre-committed, observable, binary kill condition for the day — the daily-granularity edge of a witnessed protocol.</p></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== 03 · THE DEFINED RULES ===================== -->
+<section class="sec">
+  <div class="container">
+    <span class="sec-eyebrow">03 · The Defined Rules</span>
+    <h2>The fixed core <span class="muted small mono">(RULES)</span></h2>
+    <p class="lead">No capital buffer — just the margin to run the engine, a profit-gated scale-up, and a loss limit
+      that scales with size. Edge stats are TBD inputs to the calculator below.</p>
     <table class="rules" style="margin-top:18px">
       <thead><tr><th>Component</th><th>Rule</th></tr></thead>
       <tbody>
         <tr><td>Position size (margin-gated)</td><td class="mono">Tradovate: 1 ES / $10k · Interactive Brokers: 1 ES / $30k of account</td></tr>
         <tr><td>Scale-up</td><td class="mono">unlocks after 3 months hitting $3k/1 ES, then +1 ES per margin unit as the account grows</td></tr>
         <tr><td>Daily loss limit</td><td class="mono">$500 per ES → floor = $500 × current ES count</td></tr>
-        <tr><td>Trading calendar</td><td class="mono">10 trading months + 2 break months per year</td></tr>
-        <tr><td>Sit-out (weekly)</td><td class="mono">2 losing days in a week → sit out the rest of the week</td></tr>
+        <tr><td>Trading calendar</td><td class="mono">10 trading months + 2 reserve months</td></tr>
+        <tr><td>Weekly sit-out</td><td class="mono">2 losing days in a week → sit out the rest of the week</td></tr>
         <tr><td>Restriction</td><td class="mono">3 consecutive losing days → high-probability trades only</td></tr>
         <tr><td>Edge falsification</td><td class="mono">10 consecutive losing days → stand-down (research-only)</td></tr>
         <tr><td>Target</td><td class="mono">10× ($10,000 → $100,000)</td></tr>
       </tbody>
     </table>
-    <p class="muted small" style="margin-top:14px">
-      <b>Active capital is the smallest tier; the engine carries no separate reserve buffer.</b> One full-stop
-      loss equals the day’s floor ($500 × ES), so a losing day ends on the first stop. Position size is gated by
-      broker margin — at <b>Tradovate</b> (1 ES / $10k) the account scales up fast (aspirational); at
-      <b>Interactive Brokers</b> (1 ES / $30k) it scales far slower (realistic). As capital falls, size de-scales
-      with it. The high-probability-only restriction lifts on the next winning day.
-    </p>
   </div>
 </section>
 
-<!-- ============================ §D THE CALCULATOR ============================ -->
-<section id="calc">
-  <div class="wrap">
-    <h2>The calculator <span class="muted small">— what the <em>rules</em> do with <em>your</em> edge</span></h2>
-    <p class="muted investor-only" style="max-width:780px">Set your floor. Dial in an edge — start with our
-      illustrative figures or enter your own — and watch what the rules do with it, ten thousand times over,
-      so you see the spread, not just the dream. <b>Nothing here is a forecast.</b> It’s the compounding math
-      of <em>whatever edge you assume</em>, run inside a fixed floor.</p>
+<!-- ===================== 04 · NO-BUFFER ARCHITECTURE (§6.3) ===================== -->
+<section class="sec">
+  <div class="container">
+    <span class="sec-eyebrow">04 · The Architecture</span>
+    <h2>The floor is the architecture.</h2>
+    <p class="lead">Active capital is the smallest tier; the engine carries <b>no separate reserve</b>. The floor
+      does the job the buffer does elsewhere — floor-defense, not buffer-defense. One full-stop loss equals the
+      day’s floor ($500 × ES), so a losing day ends on the first stop. As the account grows, the floor rises in
+      steps with the ES count; as it falls, size de-scales with it.</p>
+    <svg class="floorviz" viewBox="0 0 760 280" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="The daily floor rises in steps as ES count grows">
+      <text x="24" y="34" font-family="'Cormorant Garamond',serif" font-size="20" font-weight="600" fill="#1B2A4A">Daily floor = $500 × ES — rising in steps as size grows</text>
+      <!-- baseline -->
+      <line x1="60" y1="230" x2="720" y2="230" stroke="#1B2A4A" stroke-width="1.5"/>
+      <!-- stepped floor -->
+      <path d="M 60 200 H 220 V 160 H 380 V 120 H 540 V 80 H 720" fill="none" stroke="#C8A951" stroke-width="3"/>
+      <!-- working-capital block sitting on the floor -->
+      <rect x="80" y="170" width="120" height="30" rx="4" fill="rgba(27,42,74,.10)" stroke="#1B2A4A"/>
+      <text x="140" y="190" text-anchor="middle" font-family="'DM Sans'" font-size="12" fill="#1B2A4A">working capital</text>
+      <!-- step labels -->
+      <g font-family="'JetBrains Mono',monospace" font-size="12" fill="#A8893A">
+        <text x="140" y="218">1 ES · $500</text>
+        <text x="300" y="178">2 ES · $1,000</text>
+        <text x="460" y="138">3 ES · $1,500</text>
+        <text x="620" y="98">4 ES · $2,000</text>
+      </g>
+      <!-- de-scale arrow -->
+      <text x="600" y="215" font-family="'DM Sans'" font-size="11" fill="#5a6478" font-style="italic">← size de-scales as capital declines</text>
+    </svg>
+    <p class="muted small" style="margin-top:10px">Floor-defense vs buffer-defense are two architectures. This page
+      is the floor one — illustrative, not a forecast.</p>
+  </div>
+</section>
+
+<!-- ===================== 05 · THE CALCULATOR ===================== -->
+<section class="sec" id="calculator">
+  <div class="container">
+    <span class="sec-eyebrow">05 · The Calculator</span>
+    <h2>The rules × your edge <span class="illus">illustrative</span></h2>
+    <p class="lead">Set the floor. Dial in an edge — start with our illustrative figures or enter your own — and
+      watch what the rules do with it, ten thousand times over. Nothing here is a forecast; it is the compounding
+      math of <em>whatever edge you assume</em>, run inside a fixed floor. Nothing is stored.</p>
 
     <div class="calc" style="margin-top:22px">
-
-      <!-- ---------------- controls ---------------- -->
-      <div class="panel controls">
-        <label for="capital">Starting capital&nbsp;<span class="muted">C</span></label>
+      <div class="card controls">
+        <label for="capital">Starting capital <span class="muted">C</span></label>
         <input type="number" id="capital" value="10000" readonly>
-        <p class="muted small" style="margin-top:6px">$10,000 — the margin to run 1 ES. Position size grows one ES
-          per profitable month; the daily floor grows with it.</p>
+        <p class="muted small" style="margin-top:6px">$10,000 — the margin to run 1 ES. Size grows one ES per
+          margin unit once scaling unlocks; the daily floor grows with it.</p>
 
         <label>Daily loss limit</label>
-        <div class="bigstat"><div class="floor mono">$500 <small>/ ES</small></div></div>
-        <p class="muted small" style="margin-top:6px">$500 per contract → the day’s floor is $500 × your current
-          ES count. One full-stop loss equals the floor, so a losing day ends on the first stop.</p>
+        <div class="bignum mono" id="floor-big">$500 <small>/ ES</small></div>
+        <p class="muted small" style="margin-top:6px">$500 per contract → the day’s floor is $500 × your current ES
+          count. One full-stop loss equals the floor.</p>
 
         <label for="e-monthly">Profit per ES / month <span class="muted small">— drives both projections</span></label>
         <input type="number" id="e-monthly" value="3000" step="500" min="0">
@@ -154,10 +158,10 @@
           <button data-margin="30000">Interactive Brokers</button>
         </div>
         <p class="muted small" style="margin-top:6px">Tradovate = 1 ES / $10k (aspirational); IBKR = 1 ES / $30k
-          (realistic). The Monte Carlo runs the selected broker.</p>
+          (realistic).</p>
 
         <details class="advanced">
-          <summary>Advanced / Edge assumptions <span class="illus-tag">illustrative</span></summary>
+          <summary>Advanced / Edge assumptions <span class="illus">illustrative</span></summary>
           <p class="muted small" style="margin-top:10px">Drives the Monte Carlo only. Loss is fixed by the stop
             (1R = $500 per ES); the <b>average win (in R)</b> is the open lever.</p>
           <div class="edge-grid">
@@ -172,196 +176,224 @@
           </div>
         </details>
 
-        <button class="btn-run" id="run">Run 10,000 paths</button>
+        <button class="btn" id="run">Run 10,000 paths</button>
         <p class="muted small" id="progress" style="margin-top:10px">&nbsp;</p>
       </div>
 
-      <!-- ---------------- results ---------------- -->
       <div class="results">
-
-        <!-- ===== YEAR PROJECTION — two brokers, 10 trading + 2 break months ===== -->
-        <div class="panel">
-          <h3>Year projection <span class="muted small">— two brokers · 10 trading months + 2 break</span></h3>
-          <p class="muted small">Both assume <b><span id="year-rate">$3,000</span> per ES / month</b>. Position size
-            is gated by broker margin — the only difference between the two paths.</p>
-          <div class="chartwrap"><canvas id="yearchart"></canvas></div>
-          <div class="statgrid" style="margin-top:14px">
-            <div class="statbox"><div class="k">Tradovate · after 10 months <span class="badge-asp">aspirational</span></div><div class="v good" id="y-trad-end">—</div></div>
-            <div class="statbox"><div class="k">Interactive Brokers · after 10 months <span class="badge-real">realistic</span></div><div class="v" id="y-ibkr-end">—</div></div>
-          </div>
-          <p class="muted small" style="margin-top:10px" id="y-to10x">—</p>
-          <div class="two-tables">
-            <div><h4 class="tbl-h">Tradovate <span class="badge-asp">1 ES / $10k</span></h4><div id="year-table-trad" style="overflow-x:auto"></div></div>
-            <div><h4 class="tbl-h">Interactive Brokers <span class="badge-real">1 ES / $30k</span></h4><div id="year-table-ibkr" style="overflow-x:auto"></div></div>
-          </div>
-          <p class="muted small" style="margin-top:12px"><b>10 trading months + 2 break months.</b> The first
-            <b>3 months are locked at 1 ES</b> (qualification — you must hit $3k/1 ES three times before scaling
-            unlocks); from month 4, size = 1 ES per the broker’s margin unit of account and profit compounds; break
-            months are flat. Illustrative — a steady per-contract month with no losing stretches; not a forecast.
-            The Monte Carlo below adds the realistic spread and drawdowns.</p>
+        <div class="card">
+          <h3>Arithmetic sanity check <span class="illus">illustrative</span></h3>
+          <p class="small muted" id="closedform" style="margin-top:8px"></p>
         </div>
-
-        <div class="panel">
-          <div class="bigstat">
-            <div class="floor mono" id="floor-big">$500 / ES</div>
-            <div class="muted">daily floor — scales with position size as the engine grows.</div>
-          </div>
-          <p class="small muted" id="closedform" style="margin-top:12px"></p>
+        <div class="card">
+          <p class="muted small">The defined downside is the floor; the upside is whatever edge you assume,
+            compounded above it. Both projections below are <b>hypothetical illustrations</b>, never a forecast.</p>
         </div>
-
-        <div class="panel">
-          <h3>Path to 10x <span class="muted small">— Monte Carlo, 10,000 paths</span></h3>
-          <div class="chartwrap"><canvas id="fan"></canvas></div>
-          <p class="muted small">Median (P50) with the P10–P90 band, for the broker selected on the left. Unlike the
-            smooth year tables above, this adds the realistic spread — read the drawdown alongside the path.</p>
-        </div>
-
-        <div class="statgrid">
-          <div class="statbox"><div class="k">Median time to 10x</div><div class="v" id="r-median">—</div></div>
-          <div class="statbox"><div class="k">P(reach 10x in horizon)</div><div class="v good" id="r-p10x">—</div></div>
-          <div class="statbox"><div class="k">P(ruin)</div><div class="v bad" id="r-pruin">—</div></div>
-          <div class="statbox"><div class="k">P(edge falsified)</div><div class="v bad" id="r-pfals">—</div></div>
-        </div>
-
-        <!-- ===== THE HONEST DOWNSIDE — required, never hidden ===== -->
-        <div class="downside">
-          <h3>The honest downside</h3>
-          <p class="small"><b>The loss limit caps the <em>day</em>, not the <em>month</em>.</b> Multiple losing
-            days compound into a larger drawdown — and because the floor grows with size, a bad stretch at a higher
-            ES count costs more in dollars than the same stretch early on.</p>
-          <div class="statgrid" style="margin-top:6px">
-            <div class="statbox"><div class="k">Modeled worst-case total drawdown</div><div class="v bad" id="r-maxdd">—</div></div>
-            <div class="statbox"><div class="k">Median max drawdown</div><div class="v" id="r-meddd">—</div></div>
-          </div>
-          <p class="small muted" style="margin-top:10px">“10x” is an aspirational ceiling reached through time
-            and compounding — <b>not a forecast, not a guarantee, not a promised multiple.</b></p>
-        </div>
-
-        <!-- ===== RULE-ACTIVITY TELEMETRY ===== -->
-        <div class="panel operator-only">
-          <h3>Rule-activity telemetry</h3>
-          <div class="tel">
-            <div class="statbox"><div class="k">Days floor hit</div><div class="v" id="t-floor">—</div></div>
-            <div class="statbox"><div class="k">Weekly sit-outs</div><div class="v" id="t-week">—</div></div>
-            <div class="statbox"><div class="k">High-prob-only spells</div><div class="v" id="t-rest">—</div></div>
-            <div class="statbox"><div class="k">Losing days</div><div class="v" id="t-red">—</div></div>
-          </div>
-          <p class="muted small" style="margin-top:8px">Rates per 1,000 simulated trading days.</p>
-        </div>
-
       </div>
     </div>
   </div>
 </section>
 
-<!-- ============================ §E PATH TO 10X (copy) ============================ -->
-<section class="investor-only">
-  <div class="wrap">
-    <h2>Why 10x is a hill, not a cliff</h2>
-    <p class="muted" style="max-width:780px">A small per-trade edge is the snowball. A few hundred trades a
-      year is the hill. A daily floor is what keeps the snowball from rolling off a cliff. Set the edge; the
-      rules decide how safely it rolls. <b>10x is the structural ceiling — never the daily threshold.</b></p>
+<!-- ===================== 06 · YEAR PROJECTION ===================== -->
+<section class="sec">
+  <div class="container">
+    <span class="sec-eyebrow">06 · Year Projection</span>
+    <h2>Two brokers · 10 trading + 2 reserve months <span class="illus">illustrative</span></h2>
+    <p class="lead">Both assume <b><span id="year-rate">$3,000</span> per ES / month</b>. Position size is gated by
+      broker margin — the only difference between the two paths. Scaling is locked at 1 ES for the first 3 months
+      (qualification), then steps up.</p>
+    <div class="card" style="margin-top:18px">
+      <div class="chartwrap"><canvas id="yearchart"></canvas></div>
+      <div class="metric-grid" style="grid-template-columns:1fr 1fr; margin-top:16px">
+        <div class="metric"><div class="k">Tradovate · after 10 months <span class="badge-asp">aspirational</span></div><div class="v good" id="y-trad-end">—</div></div>
+        <div class="metric"><div class="k">Interactive Brokers · after 10 months <span class="badge-real">realistic</span></div><div class="v navy" id="y-ibkr-end">—</div></div>
+      </div>
+      <p class="muted small" style="margin-top:10px" id="y-to10x">—</p>
+      <div class="two-tables">
+        <div><h4 class="tbl-h">Tradovate <span class="badge-asp">1 ES / $10k</span></h4><div id="year-table-trad" style="overflow-x:auto"></div></div>
+        <div><h4 class="tbl-h">Interactive Brokers <span class="badge-real">1 ES / $30k</span></h4><div id="year-table-ibkr" style="overflow-x:auto"></div></div>
+      </div>
+      <p class="muted small" style="margin-top:12px"><b>Compounding table.</b> Once scaling unlocks, size = 1 ES per
+        the broker’s margin unit of account and profit compounds; reserve months are flat. Illustrative — a steady
+        per-contract month with no losing stretches; not a forecast.</p>
+    </div>
   </div>
 </section>
 
-<!-- ============================ §F HONEST DOWNSIDE (copy) ============================ -->
-<section class="investor-only">
-  <div class="wrap">
-    <h2>A skilled boxer still gets hit</h2>
-    <p class="muted" style="max-width:780px">The floor decides how hard, per round. It does not promise you
-      never bleed across the fight. The edge’s <em>existence</em> and its <em>constancy</em> are assumptions
-      the Falsifiability Protocol tests — not facts this page asserts.</p>
+<!-- ===================== 07 · MONTE CARLO ===================== -->
+<section class="sec">
+  <div class="container">
+    <span class="sec-eyebrow">07 · Monte Carlo</span>
+    <h2>10,000 paths — the spread, not the dream <span class="illus">illustrative</span></h2>
+    <div class="card" style="margin-top:18px">
+      <div class="chartwrap"><canvas id="fan"></canvas></div>
+      <p class="muted small">Median (P50) with the P10–P90 band, for the broker selected above. Read the drawdown
+        alongside the path. Every figure is a hypothetical illustration of the rules.</p>
+    </div>
+    <div class="metric-grid" style="margin-top:16px">
+      <div class="metric"><div class="k">Median time to 10x</div><div class="v navy" id="r-median">—</div></div>
+      <div class="metric"><div class="k">P(reach 10x in horizon)</div><div class="v good" id="r-p10x">—</div></div>
+      <div class="metric"><div class="k">P(ruin)</div><div class="v bad" id="r-pruin">—</div></div>
+      <div class="metric"><div class="k">P(edge falsified)</div><div class="v bad" id="r-pfals">—</div></div>
+    </div>
   </div>
 </section>
 
-<!-- ============================ GOVERNANCE ARCHITECTURE (both modes) ============================ -->
-<section>
-  <div class="wrap">
-    <h2>Governance architecture</h2>
-    <p class="muted" style="max-width:820px">The daily floor is not a mood. Two ladders sit beneath it: a
-      <b>sit-out ladder</b> that throttles trading after losses, and a <b>falsifiability protocol</b> that stands
-      the edge down entirely if it stops working. Both are committed to in writing, in advance, and
-      witness-countersigned by Manish&nbsp;Dharod — not discretionary.</p>
+<!-- ===================== 08 · THE HONEST DOWNSIDE ===================== -->
+<section class="sec">
+  <div class="container">
+    <span class="sec-eyebrow">08 · The Honest Downside</span>
+    <h2>A skilled boxer still gets hit.</h2>
+    <div class="downside" style="margin-top:8px">
+      <h3>The loss limit caps the day, not the month.</h3>
+      <p class="small">Multiple losing days compound into a larger drawdown — and because the floor grows with
+        size, a bad stretch at a higher ES count costs more in dollars than the same stretch early on.</p>
+      <div class="metric-grid" style="grid-template-columns:1fr 1fr; margin-top:6px">
+        <div class="metric"><div class="k">Modeled worst-case total drawdown</div><div class="v bad" id="r-maxdd">—</div></div>
+        <div class="metric"><div class="k">Median max drawdown</div><div class="v navy" id="r-meddd">—</div></div>
+      </div>
+      <p class="small muted" style="margin-top:10px">“10x” is an aspirational ceiling reached through time and
+        compounding — <b>not a forecast, not a guarantee, not a promised multiple.</b></p>
+    </div>
 
-    <h3 style="margin-top:30px">Sit-out ladder</h3>
+    <div class="card operator-only" style="margin-top:20px">
+      <h3>Rule-activity telemetry <span class="illus">illustrative</span></h3>
+      <div class="metric-grid" style="margin-top:10px">
+        <div class="metric"><div class="k">Days floor hit</div><div class="v navy" id="t-floor">—</div></div>
+        <div class="metric"><div class="k">Weekly sit-outs</div><div class="v navy" id="t-week">—</div></div>
+        <div class="metric"><div class="k">High-prob-only spells</div><div class="v navy" id="t-rest">—</div></div>
+        <div class="metric"><div class="k">Losing days</div><div class="v navy" id="t-red">—</div></div>
+      </div>
+      <p class="muted small" style="margin-top:8px">Rates per 1,000 simulated trading days.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== 09 · GOVERNANCE (reconciled §6.4) ===================== -->
+<section class="sec">
+  <div class="container">
+    <span class="sec-eyebrow">09 · Governance</span>
+    <h2>Two ladders beneath the floor.</h2>
+    <p class="lead">A sit-out ladder that throttles trading after losses, and a falsifiability protocol that stands
+      the edge down if it stops working. Both are committed to in writing, in advance, and witness-countersigned by
+      Manish&nbsp;Dharod — not discretionary.</p>
+
+    <h3 style="margin-top:28px">Sit-out ladder</h3>
     <table class="rules" style="margin-top:10px">
       <thead><tr><th>Trigger</th><th>Response</th><th>Resume</th></tr></thead>
       <tbody>
-        <tr>
-          <td class="mono">1–2 red days</td>
-          <td>Within tolerance — keep trading the full menu.</td>
-          <td class="muted">n/a</td>
-        </tr>
-        <tr>
-          <td class="mono">3 consecutive red days<br><span class="muted small">(net loss &gt; $500 each)</span></td>
-          <td>Sit out the remainder of the week. No new entries.</td>
-          <td>Following week.</td>
-        </tr>
-        <tr>
-          <td class="mono">4th consecutive red day</td>
-          <td>
-            <span class="operator-only">Restrict to <b>{Setup&nbsp;C-Validated, Setup&nbsp;D}</b> only</span>
-            <span class="investor-only">Restrict to <b>validated setups only</b></span>
-            — until back to profitability.
-          </td>
-          <td>Full setup menu, once profitable again.</td>
-        </tr>
+        <tr><td class="mono">1 losing day</td><td>Within tolerance — keep trading.</td><td class="muted">n/a</td></tr>
+        <tr><td class="mono">2 losing days in a week</td><td>Sit out the rest of the week.</td><td>Following week.</td></tr>
+        <tr><td class="mono">3 consecutive losing days</td><td>Restrict to high-probability trades only.</td><td>Full menu on the next winning day.</td></tr>
       </tbody>
     </table>
 
-    <h3 style="margin-top:30px">Falsifiability layers</h3>
+    <h3 style="margin-top:28px">Falsifiability</h3>
     <table class="rules" style="margin-top:10px">
       <thead><tr><th>Layer</th><th>Condition</th><th>On trigger</th></tr></thead>
       <tbody>
-        <tr>
-          <td><b>Operator</b> <span class="muted small">— fidelity</span></td>
-          <td>Deviation from the published Gate&nbsp;02 + three-tier sit-out architecture.</td>
-          <td>Tiered response, witness-countersigned (Manish&nbsp;Dharod).</td>
-        </tr>
-        <tr>
-          <td><b>Edge</b> <span class="muted small">— expression</span></td>
-          <td class="mono">10 consecutive losing days</td>
-          <td>Edge stand-down → research-only; public Discord notice.</td>
-        </tr>
+        <tr><td><b>Operator</b> <span class="muted small">— fidelity</span></td><td>Deviation from the published sit-out architecture.</td><td>Tiered response, witness-countersigned (Manish Dharod).</td></tr>
+        <tr><td><b>Edge</b> <span class="muted small">— expression</span></td><td class="mono">10 consecutive losing days</td><td>Edge stand-down → research-only.</td></tr>
       </tbody>
     </table>
-    <p class="muted small" style="margin-top:14px">The daily floor is the <em>daily-granularity</em> edge of this same
-      protocol: a pre-committed, observable, binary kill condition for the session.</p>
   </div>
 </section>
 
-<!-- ============================ §H FOUNDING TERMS + CTA ============================ -->
-<section class="investor-only cta">
-  <div class="wrap">
-    <h2>Founding terms</h2>
-    <p class="muted" style="max-width:720px;margin:0 auto">80/20 capital architecture · lifetime flat fee ·
-      capacity priority. The floor is defined. The protocol is published. What’s left is one decision — the
-      daily floor you want your edge to run above.</p>
-    <!-- §8.7: the CTA is the holding-out surface; gated, not a public solicitation. -->
-    <p class="gatenote">Founding-member access is by invitation while the registration posture is resolved.
-      This page is not a public solicitation.</p>
+<!-- ===================== 10 · THE OPERATOR (§6.6) ===================== -->
+<section class="sec">
+  <div class="container">
+    <span class="sec-eyebrow">10 · The Operator</span>
+    <h2>Same operator. Same discipline. Defined downside.</h2>
+    <div class="op-grid">
+      <div class="card op-card"><div class="num">01</div><h3>Cybersecurity origin</h3><p class="muted small">A decade building resilient systems where failure modes are documented before they matter — the same posture applied to risk.</p></div>
+      <div class="card op-card"><div class="num">02</div><h3>Resilient-systems framing</h3><p class="muted small">The floor, the circuit breaker, and the falsifiability protocol are engineered controls, not moods — pre-committed and witnessed.</p></div>
+      <div class="card op-card"><div class="num">03</div><h3>Operator capital</h3><p class="muted small">The rules are the literal execution rules of a live operator account — skin in the game, not a back-test.</p></div>
+    </div>
+    <blockquote class="pullquote">
+      <p>“The best metaphor for the last decade is building aircraft autopilot software. You document failure modes
+        before passengers board.”</p>
+      <p class="attrib">— Hiren Desai · Founder &amp; CIO · Ekantik Capital Advisors</p>
+    </blockquote>
   </div>
 </section>
 
-<!-- ============================ §8 COMPLIANCE ============================ -->
-<section>
-  <div class="wrap">
-    <h2 class="small" style="font-family:'DM Sans';text-transform:uppercase;letter-spacing:1px;color:var(--gold)">Important disclosures</h2>
-    <p class="disclaimer"><b>Hypothetical &amp; illustrative.</b> The edge statistics in this calculator are
-      <b>to be determined</b>. Every figure emitted is a <em>hypothetical illustration of the rules</em>, not a
-      performance representation. The deck’s verified figures are <em>not</em> this account’s expected results.</p>
-    <p class="disclaimer">No guarantees, no forecasts — this is the math of an <em>assumed</em> edge.
-      <span class="warn">A daily loss limit caps daily downside, not cumulative downside;</span> multiple red days
-      compound into a larger drawdown.</p>
-    <p class="disclaimer">The edge’s existence and constancy are assumptions the Protocol tests.
-      Simulated/hypothetical results have inherent limitations and do not represent actual trading. “10x” is an
-      aspirational ceiling, never an expected or likely return.</p>
+<!-- ===================== 11 · PROOF ANCHOR (§6.7, D5) ===================== -->
+<section class="sec">
+  <div class="container">
+    <span class="sec-eyebrow">11 · Proof Anchor</span>
+    <div class="proof">
+      <h3>The edge these rules run on is logged live, in public.</h3>
+      <p class="lead">The rules on this page are built to run above a real, positive-expectancy edge. That edge is
+        recorded live, fill-by-fill, on a separate public experiment — not duplicated here, so this page stays
+        purely hypothetical.</p>
+      <a class="btn-out" href="https://accelerator.ekantikcapital.com" target="_blank" rel="noopener">Watch the live experiment → accelerator.ekantikcapital.com</a>
+    </div>
   </div>
 </section>
 
-<footer>
-  <div class="wrap">10xedge.ekantikcapital.com · Ekantik Capital Advisors LLC · Internal architecture —
-    operator cockpit. Investor-mode guardrails active before any public release.</div>
+<!-- ===================== 12 · ARCHITECTURE AT SCALE (§6.8) ===================== -->
+<section class="sec">
+  <div class="container">
+    <span class="sec-eyebrow">12 · Architecture at Scale</span>
+    <h2>The same shape, at the top of the field.</h2>
+    <div class="grid-3" style="margin-top:22px">
+      <div class="card scale-card"><div class="who">Berkshire Hathaway</div><h3>Permanent-capital discipline</h3><p class="muted small">Survival first; let compounding do the work over time. The floor is the daily-granularity version of never being a forced seller.</p></div>
+      <div class="card scale-card"><div class="who">Renaissance</div><h3>Capped-capacity edge preservation</h3><p class="muted small">A real edge is protected by limiting size, not chasing it. Margin-gated scaling keeps size tethered to what the account can bear.</p></div>
+      <div class="card scale-card"><div class="who">Jane Street</div><h3>Risk-controlled survival</h3><p class="muted small">Defined, pre-committed risk limits on every position. The $500/ES floor and the sit-out ladder are that idea, made literal.</p></div>
+    </div>
+    <p class="muted small" style="margin-top:14px">Cited as architectural reference only — no affiliation, no claim
+      of comparable results.</p>
+  </div>
+</section>
+
+<!-- ===================== 13 · FOUNDING TERMS (frame only, §6.9) ===================== -->
+<section class="sec terms">
+  <div class="container">
+    <span class="sec-eyebrow">13 · Founding Terms</span>
+    <h2>The shape, not the numbers.</h2>
+    <div class="frame">
+      <span>80/20 capital architecture</span>
+      <span>lifetime flat-fee structure</span>
+      <span>capacity priority</span>
+    </div>
+    <p class="muted" style="max-width:680px;margin:0 auto">Founding-member access is by invitation while the
+      registration posture is resolved. Terms are discussed privately. This page is not a public solicitation.</p>
+  </div>
+</section>
+
+<!-- ===================== 14 · REACH OUT (§6.10) ===================== -->
+<section class="sec" id="reach-out">
+  <div class="container">
+    <span class="sec-eyebrow">14 · Reach Out</span>
+    <h2>Start a private conversation.</h2>
+    <p class="lead">Questions about the floor, the rules engine, or how to think about this in your own context?
+      Drop a note. No obligation either side.</p>
+    <!-- NOTE: replace the Formspree endpoint with the real form ID before this collects mail. -->
+    <form class="form" id="reach-form" action="https://formspree.io/f/__FORMSPREE_10XEDGE__" method="POST">
+      <label><span>Name</span><input type="text" name="name" autocomplete="name" required></label>
+      <label><span>Email</span><input type="email" name="email" autocomplete="email" required></label>
+      <label><span>Message</span><textarea name="message" rows="5" required></textarea></label>
+      <button type="submit" class="btn">Send →</button>
+      <p class="micro">No obligation either side. This form collects no financial information. It is not an
+        application, a subscription, or an expression of intent to participate in anything.</p>
+    </form>
+  </div>
+</section>
+
+<!-- ===================== FOOTER ===================== -->
+<footer class="footer">
+  <div class="container">
+    <p><b>Important disclosures.</b> Ekantik Capital Advisors LLC is the publisher of this page. The 10x Account is
+      an internal modeling sandbox. Every figure shown — including the calculator, the year projections, and the
+      Monte Carlo — is a <b>hypothetical illustration of the rules</b>, not a performance representation, and the
+      edge statistics are to be determined. Hypothetical results have inherent limitations and do not represent
+      actual trading.</p>
+    <p>A daily loss limit caps daily downside, not cumulative downside; multiple losing days compound into a larger
+      drawdown. “10x” is an aspirational ceiling, never an expected or promised return. Nothing on this page is an
+      offer to sell or a solicitation to buy any security or interest in any investment product; founding-member
+      access is by invitation. <b>Past performance is not indicative of future results.</b></p>
+    <p>© 2026 Ekantik Capital Advisors LLC · 10xedge.ekantikcapital.com</p>
+  </div>
 </footer>
 
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>

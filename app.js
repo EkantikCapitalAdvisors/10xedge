@@ -116,17 +116,17 @@
       labels,
       datasets: [
         { label: 'Tradovate (1 ES / $10k)', data: calendarSeries(trad), borderColor: '#C8A951', backgroundColor: 'rgba(200,169,81,.12)', borderWidth: 2.6, fill: true, tension: .2, pointRadius: 0 },
-        { label: 'Interactive Brokers (1 ES / $30k)', data: calendarSeries(ibkr), borderColor: '#6FAE8E', borderWidth: 2.2, fill: false, tension: .2, pointRadius: 0 }
+        { label: 'Interactive Brokers (1 ES / $30k)', data: calendarSeries(ibkr), borderColor: '#27406b', borderWidth: 2.2, fill: false, tension: .2, pointRadius: 0 }
       ]
     };
     const opts = {
       responsive: true, maintainAspectRatio: false, animation: false,
       interaction: { mode: 'index', intersect: false },
       scales: {
-        x: { ticks: { color: '#B9C0CF' }, grid: { color: 'rgba(46,67,115,.5)' } },
-        y: { title: { display: true, text: 'account value ($)', color: '#B9C0CF' }, ticks: { color: '#B9C0CF', callback: v => '$' + (v / 1000) + 'k' }, grid: { color: 'rgba(46,67,115,.5)' } }
+        x: { ticks: { color: '#5a6478' }, grid: { color: 'rgba(27,42,74,.10)' } },
+        y: { title: { display: true, text: 'account value ($)', color: '#5a6478' }, ticks: { color: '#5a6478', callback: v => '$' + (v / 1000) + 'k' }, grid: { color: 'rgba(27,42,74,.10)' } }
       },
-      plugins: { legend: { labels: { color: '#F3EFE6', font: { family: 'JetBrains Mono' }, boxWidth: 12 } } }
+      plugins: { legend: { labels: { color: '#1B2A4A', font: { family: 'JetBrains Mono' }, boxWidth: 12 } } }
     };
     if (yrChart) yrChart.destroy();
     yrChart = new Chart($('yearchart'), { type: 'line', data, options: opts });
@@ -174,10 +174,10 @@
       responsive: true, maintainAspectRatio: false, animation: false,
       interaction: { mode: 'index', intersect: false },
       scales: {
-        x: { title: { display: true, text: 'years', color: '#B9C0CF' }, ticks: { color: '#B9C0CF', maxTicksLimit: 8 }, grid: { color: 'rgba(46,67,115,.5)' } },
-        y: { title: { display: true, text: 'equity ($)', color: '#B9C0CF' }, ticks: { color: '#B9C0CF', callback: v => '$' + (v / 1000) + 'k' }, grid: { color: 'rgba(46,67,115,.5)' } }
+        x: { title: { display: true, text: 'years', color: '#5a6478' }, ticks: { color: '#5a6478', maxTicksLimit: 8 }, grid: { color: 'rgba(27,42,74,.10)' } },
+        y: { title: { display: true, text: 'equity ($)', color: '#5a6478' }, ticks: { color: '#5a6478', callback: v => '$' + (v / 1000) + 'k' }, grid: { color: 'rgba(27,42,74,.10)' } }
       },
-      plugins: { legend: { labels: { color: '#F3EFE6', font: { family: 'JetBrains Mono' } } } }
+      plugins: { legend: { labels: { color: '#1B2A4A', font: { family: 'JetBrains Mono' } } } }
     };
     if (mcChart) mcChart.destroy();
     mcChart = new Chart($('fan'), { type: 'line', data, options: opts });
