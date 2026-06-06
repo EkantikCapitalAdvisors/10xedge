@@ -52,35 +52,6 @@ function esForCapital(capital, marginPerES) {
 }
 
 /* ---------------------------------------------------------------------------
-   EDGE — TO BE DEFINED. MUTABLE. ILLUSTRATIVE ONLY.
-   1R = $500 per ES (the stop). avgWinR is the open lever.
-   --------------------------------------------------------------------------- */
-const EDGE_ILLUSTRATIVE = Object.freeze({
-  _label: 'illustrative — not this account’s verified record',
-  tradesPerDay: 2,
-  winRate: 0.50,
-  highProbWinRate: 0.62,
-  avgWinR: 1.4
-});
-
-function cloneEdge(src) {
-  return {
-    tradesPerDay: src.tradesPerDay,
-    winRate: src.winRate,
-    highProbWinRate: src.highProbWinRate,
-    avgWinR: src.avgWinR
-  };
-}
-
-function expectedDollarsPerDayAt(edge, esCountNow) {
-  const p = edge.winRate;
-  const perTradeR = p * edge.avgWinR - (1 - p) * 1;
-  let expTrades = 0, surv = 1;
-  for (let t = 0; t < edge.tradesPerDay; t++) { expTrades += surv; surv *= p; }
-  return perTradeR * expTrades * RULES.maxLossPerES * esCountNow;
-}
-
-/* ---------------------------------------------------------------------------
    Deterministic year projection — margin-gated compounding.
    Each trading month: size = 1 ES per $marginPerES of account; profit = perES × ES.
    Profit compounds; break months are flat (no trading, no profit).
@@ -124,106 +95,11 @@ function monthsTo10x(perES, marginPerES) {
   return monthsToReach(perES, marginPerES, RULES.startingCapital * RULES.target.multiple);
 }
 
-/* ---------------------------------------------------------------------------
-   PRNG — Mulberry32.
-   --------------------------------------------------------------------------- */
-function mulberry32(seed) {
-  let a = seed >>> 0;
-  return function () {
-    a |= 0; a = (a + 0x6D2B79F5) | 0;
-    let t = Math.imul(a ^ (a >>> 15), 1 | a);
-    t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
-    return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
-  };
-}
-
-/* ---------------------------------------------------------------------------
-   Single-path Monte Carlo (margin-gated sizing). Models the 10+2 calendar by
-   idling ~2 months/year. simulatePath(edge, marginPerES, seed).
-   outcome ∈ '10x' | 'ruin' | 'falsified' | 'timecap'
-   --------------------------------------------------------------------------- */
-function simulatePath(edge, marginPerES, seed) {
-  const rng = mulberry32(seed);
-  let capital = RULES.startingCapital;
-  const target = RULES.startingCapital * RULES.target.multiple;
-
-  let peak = capital, maxDDpct = 0;
-  let consecutiveLosing = 0, highProbOnly = false;
-  let weekOutDaysLeft = 0, weeklyLosses = 0, dayInWeek = 0;
-
-  // 10 trading months + 2 break months: idle ~2 of every 12 simulated "months"
-  const daysPerMonth = 21;
-  const breakStart = RULES.tradingMonthsPerYear * daysPerMonth;   // day-of-year where breaks begin
-  const yearLen = (RULES.tradingMonthsPerYear + RULES.breakMonthsPerYear) * daysPerMonth;
-
-  const snapshots = [];
-  const tel = { days: 0, floorHits: 0, weekOuts: 0, restrictions: 0, confluenceFires: 0, redDays: 0 };
-  let outcome = 'timecap';
-  let tradedDays = 0;
-  const qualifyDays = RULES.scaleQualifyMonths * daysPerMonth;   // scaling locked at 1 ES until then
-
-  for (let day = 0; day < RULES.sim.timeCapDays; day++) {
-    const onBreak = (day % yearLen) >= breakStart;   // 2-month annual break
-    const baseES = esForCapital(capital, marginPerES);
-    if (baseES === 0) { outcome = 'ruin'; capital = 0; break; }
-    const es = tradedDays < qualifyDays ? 1 : baseES;   // first 3 trading months locked at 1 ES
-
-    const dailyFloor = es * RULES.maxLossPerES;
-    let dayPnL = 0, lossDay = false;
-
-    if (weekOutDaysLeft > 0) {
-      weekOutDaysLeft--;
-    } else if (!onBreak) {
-      const p = highProbOnly ? edge.highProbWinRate : edge.winRate;
-      for (let t = 0; t < edge.tradesPerDay; t++) {
-        if (rng() < p) {
-          dayPnL += edge.avgWinR * RULES.maxLossPerES * es;
-        } else {
-          dayPnL -= dailyFloor; lossDay = dayPnL < 0; tel.floorHits++; break;
-        }
-      }
-    }
-
-    capital += dayPnL;
-    if (capital < 0) capital = 0;
-    tel.days++;
-    if (!onBreak) { dayInWeek++; tradedDays++; }
-
-    if (capital > peak) peak = capital;
-    const dd = (peak - capital) / peak;
-    if (dd > maxDDpct) maxDDpct = dd;
-    if (day % RULES.sim.snapshotEvery === 0) snapshots.push(capital);
-
-    if (lossDay) {
-      tel.redDays++; consecutiveLosing++; weeklyLosses++;
-      if (consecutiveLosing >= RULES.sitOut.consecutiveLossesForHighProb && !highProbOnly) { highProbOnly = true; tel.restrictions++; }
-      if (weeklyLosses >= RULES.sitOut.weeklyLossesForWeekOut) {
-        const left = RULES.sitOut.tradingDaysPerWeek - dayInWeek;
-        if (left > 0) { weekOutDaysLeft = left; tel.weekOuts++; }
-      }
-    } else if (dayPnL > 0) {
-      consecutiveLosing = 0; highProbOnly = false;
-    }
-
-    if (dayInWeek >= RULES.sitOut.tradingDaysPerWeek) { dayInWeek = 0; weeklyLosses = 0; }
-
-    if (capital >= target) { outcome = '10x'; break; }
-    if (capital <= RULES.sim.ruinFloor) { outcome = 'ruin'; capital = 0; break; }
-    if (consecutiveLosing >= RULES.edgeFalsification.consecutiveLosingDays) { outcome = 'falsified'; break; }
-  }
-
-  return { outcome, days: tel.days, maxDrawdownPct: maxDDpct, finalCapital: capital, snapshots, telemetry: tel };
-}
-
 /* exports */
 if (typeof self !== 'undefined') {
   self.RULES = RULES;
-  self.EDGE_ILLUSTRATIVE = EDGE_ILLUSTRATIVE;
-  self.cloneEdge = cloneEdge;
   self.esForCapital = esForCapital;
-  self.expectedDollarsPerDayAt = expectedDollarsPerDayAt;
   self.yearProjection = yearProjection;
   self.monthsToReach = monthsToReach;
   self.monthsTo10x = monthsTo10x;
-  self.simulatePath = simulatePath;
 }

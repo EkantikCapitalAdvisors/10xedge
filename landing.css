@@ -112,6 +112,11 @@ table.rules tbody tr:hover{background:rgba(200,169,81,.05)}
 .badge-asp,.badge-real{display:inline-block; font-family:'JetBrains Mono',monospace; font-size:.6rem; font-weight:700; letter-spacing:.5px; text-transform:uppercase; padding:2px 7px; border-radius:4px; margin-left:6px}
 .badge-asp{color:var(--navy); background:var(--gold)} .badge-real{color:#fff; background:var(--navy-soft)}
 
+/* ---- rate dial (milestones) ---- */
+.rate-row{display:flex; align-items:center; gap:12px; flex-wrap:wrap; margin-top:18px}
+.rate-row label{font-size:.86rem; color:var(--muted)}
+.rate-row input[type=number]{background:var(--surface); border:1px solid var(--rule); color:var(--navy); font-family:'JetBrains Mono',monospace; padding:9px 12px; border-radius:9px; width:130px}
+
 /* ---- doubling milestones ---- */
 .ms-grid{display:grid; grid-template-columns:repeat(4,1fr); gap:16px}
 .ms-card{background:var(--surface); border:1px solid var(--rule); border-top:3px solid var(--gold); border-radius:14px; padding:18px; text-align:center; box-shadow:0 1px 3px rgba(27,42,74,.05)}

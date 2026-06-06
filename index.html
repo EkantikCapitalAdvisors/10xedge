@@ -88,7 +88,7 @@
         <tr><td>Daily loss limit (DLL)</td><td class="mono">$600 per $10k account · per $30k on Interactive Brokers</td></tr>
         <tr><td>Per-trade stop</td><td class="mono">$500 per ES (1R)</td></tr>
         <tr><td>Trading calendar</td><td class="mono">10 trading months + 2 reserve months</td></tr>
-        <tr><td>Governance</td><td class="mono">sit-out ladder + Operator &amp; Edge falsification — see §09</td></tr>
+        <tr><td>Governance</td><td class="mono">sit-out ladder + Operator &amp; Edge falsification — see §07</td></tr>
         <tr><td>Target</td><td class="mono">10× ($10,000 → $100,000)</td></tr>
       </tbody>
     </table>
@@ -103,7 +103,7 @@
     <p class="lead">Active capital is the smallest tier; the engine carries <b>no separate reserve</b>. The floor
       does the job the buffer does elsewhere — floor-defense, not buffer-defense. Size is <b>margin-gated</b>: one ES
       per $10k of account on Tradovate (per $30k on Interactive Brokers). Each step up adds one contract, so the
-      per-trade stop rises $500 (1R) per step; the daily loss limit caps the day at <b>$600</b> (see §09). As the
+      per-trade stop rises $500 (1R) per step; the daily loss limit caps the day at <b>$600</b> (see §07). As the
       account grows past each margin unit the size steps up; as it falls, size de-scales with it.</p>
     <svg class="floorviz" viewBox="0 0 760 290" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Position size steps up one ES per 10k of account; per-trade stop rises 500 dollars per step">
       <text x="24" y="34" font-family="'Cormorant Garamond',serif" font-size="20" font-weight="600" fill="#1B2A4A">Size steps up one ES per $10k of account (Tradovate)</text>
@@ -131,80 +131,20 @@
   </div>
 </section>
 
-<!-- ===================== 05 · THE CALCULATOR ===================== -->
-<section class="sec" id="calculator">
-  <div class="container">
-    <span class="sec-eyebrow">05 · The Calculator</span>
-    <h2>The rules × your edge <span class="illus">illustrative</span></h2>
-    <p class="lead">Set the floor. Dial in an edge — start with our illustrative figures or enter your own — and
-      watch what the rules do with it, ten thousand times over. Nothing here is a forecast; it is the compounding
-      math of <em>whatever edge you assume</em>, run inside a fixed floor. Nothing is stored.</p>
-
-    <div class="calc" style="margin-top:22px">
-      <div class="card controls">
-        <label for="capital">Starting capital <span class="muted">C</span></label>
-        <input type="number" id="capital" value="10000" readonly>
-        <p class="muted small" style="margin-top:6px">$10,000 — the margin to run 1 ES. Size grows one ES per
-          margin unit once scaling unlocks; the daily floor grows with it.</p>
-
-        <label>Per-trade stop (1R)</label>
-        <div class="bignum mono" id="floor-big">$500 <small>/ ES</small></div>
-        <p class="muted small" style="margin-top:6px">$500 per ES is the per-trade stop the calculator uses; the
-          governing daily loss limit is $600 (see §09 · Risk Management).</p>
-
-        <label for="e-monthly">Profit per ES / month <span class="muted small">— drives both projections</span></label>
-        <input type="number" id="e-monthly" value="3000" step="500" min="0">
-
-        <label>Broker margin <span class="muted small">— for the Monte Carlo</span></label>
-        <div class="seg" id="mc-broker">
-          <button data-margin="10000" class="active">Tradovate</button>
-          <button data-margin="30000">Interactive Brokers</button>
-        </div>
-        <p class="muted small" style="margin-top:6px">Tradovate = 1 ES / $10k (aspirational); IBKR = 1 ES / $30k
-          (realistic).</p>
-
-        <details class="advanced">
-          <summary>Advanced / Edge assumptions <span class="illus">illustrative</span></summary>
-          <p class="muted small" style="margin-top:10px">Drives the Monte Carlo only. Loss is fixed by the stop
-            (1R = $500 per ES); the <b>average win (in R)</b> is the open lever.</p>
-          <div class="edge-grid">
-            <div><label>Trades / day</label><input type="number" id="e-tpd" step="1" min="1"></div>
-            <div><label>Avg win (R)</label><input type="number" id="e-awr" step="0.1" min="0"></div>
-            <div><label>Win rate</label><input type="number" id="e-wr" step="0.01" min="0" max="1"></div>
-            <div><label>High-prob win rate</label><input type="number" id="e-hp" step="0.01" min="0" max="1"></div>
-          </div>
-          <div class="edge-actions">
-            <button id="reset-edge">Reset to illustrative</button>
-            <button id="clear-edge">Clear / enter your own</button>
-          </div>
-        </details>
-
-        <button class="btn" id="run">Run 10,000 paths</button>
-        <p class="muted small" id="progress" style="margin-top:10px">&nbsp;</p>
-      </div>
-
-      <div class="results">
-        <div class="card">
-          <h3>Arithmetic sanity check <span class="illus">illustrative</span></h3>
-          <p class="small muted" id="closedform" style="margin-top:8px"></p>
-        </div>
-        <div class="card">
-          <p class="muted small">The defined downside is the floor; the upside is whatever edge you assume,
-            compounded above it. Both projections below are <b>hypothetical illustrations</b>, never a forecast.</p>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- ===================== 06 · YEAR PROJECTION ===================== -->
+<!-- ===================== 05 · DOUBLING MILESTONES ===================== -->
 <section class="sec">
   <div class="container">
-    <span class="sec-eyebrow">06 · Doubling Milestones</span>
+    <span class="sec-eyebrow">05 · Doubling Milestones</span>
     <h2>Strategic goals — each doubling, mapped. <span class="illus">illustrative</span></h2>
     <p class="lead">The path to 10× is a ladder of doublings. Each milestone is a strategic goal; the months below
-      are when each broker would reach it at <b><span id="year-rate">$3,000</span> per ES / month</b>, with scaling
-      locked at 1 ES for the first 3 months (qualification).</p>
+      are when each broker would reach it — scaling locked at 1 ES for the first 3 months (qualification), then
+      margin-gated (1 ES per $10k Tradovate / $30k IBKR).</p>
+
+    <div class="rate-row">
+      <label for="e-monthly">Profit per ES / month</label>
+      <input type="number" id="e-monthly" value="3000" step="500" min="0">
+      <span class="muted small">drives the milestones &amp; projection · <span id="year-rate">$3,000</span> / ES / mo</span>
+    </div>
 
     <div class="ms-grid" id="milestones" style="margin-top:20px"></div>
 
@@ -227,51 +167,21 @@
   </div>
 </section>
 
-<!-- ===================== 07 · MONTE CARLO ===================== -->
+<!-- ===================== 06 · THE HONEST DOWNSIDE ===================== -->
 <section class="sec">
   <div class="container">
-    <span class="sec-eyebrow">07 · Monte Carlo</span>
-    <h2>10,000 paths — the spread, not the dream <span class="illus">illustrative</span></h2>
-    <div class="card" style="margin-top:18px">
-      <div class="chartwrap"><canvas id="fan"></canvas></div>
-      <p class="muted small">Median (P50) with the P10–P90 band, for the broker selected above. Read the drawdown
-        alongside the path. Every figure is a hypothetical illustration of the rules.</p>
-    </div>
-    <div class="metric-grid" style="margin-top:16px">
-      <div class="metric"><div class="k">Median time to 10x</div><div class="v navy" id="r-median">—</div></div>
-      <div class="metric"><div class="k">P(reach 10x in horizon)</div><div class="v good" id="r-p10x">—</div></div>
-      <div class="metric"><div class="k">P(ruin)</div><div class="v bad" id="r-pruin">—</div></div>
-      <div class="metric"><div class="k">P(edge falsified)</div><div class="v bad" id="r-pfals">—</div></div>
-    </div>
-  </div>
-</section>
-
-<!-- ===================== 08 · THE HONEST DOWNSIDE ===================== -->
-<section class="sec">
-  <div class="container">
-    <span class="sec-eyebrow">08 · The Honest Downside</span>
+    <span class="sec-eyebrow">06 · The Honest Downside</span>
     <h2>A skilled boxer still gets hit.</h2>
     <div class="downside" style="margin-top:8px">
       <h3>The loss limit caps the day, not the month.</h3>
-      <p class="small">Multiple losing days compound into a larger drawdown — and because the floor grows with
-        size, a bad stretch at a higher ES count costs more in dollars than the same stretch early on.</p>
-      <div class="metric-grid" style="grid-template-columns:1fr 1fr; margin-top:6px">
-        <div class="metric"><div class="k">Modeled worst-case total drawdown</div><div class="v bad" id="r-maxdd">—</div></div>
-        <div class="metric"><div class="k">Median max drawdown</div><div class="v navy" id="r-meddd">—</div></div>
-      </div>
+      <p class="small">A $600 daily loss limit bounds one session — but multiple losing days compound into a larger
+        drawdown, and because risk-per-stop grows with size, a bad stretch at a higher ES count costs more in
+        dollars than the same stretch early on. The sit-out ladder (§07) is what throttles those stretches; the
+        falsifiability protocol stands the edge down if it stops working.</p>
       <p class="small muted" style="margin-top:10px">“10x” is an aspirational ceiling reached through time and
-        compounding — <b>not a forecast, not a guarantee, not a promised multiple.</b></p>
-    </div>
-
-    <div class="card operator-only" style="margin-top:20px">
-      <h3>Rule-activity telemetry <span class="illus">illustrative</span></h3>
-      <div class="metric-grid" style="margin-top:10px">
-        <div class="metric"><div class="k">Days floor hit</div><div class="v navy" id="t-floor">—</div></div>
-        <div class="metric"><div class="k">Weekly sit-outs</div><div class="v navy" id="t-week">—</div></div>
-        <div class="metric"><div class="k">High-prob-only spells</div><div class="v navy" id="t-rest">—</div></div>
-        <div class="metric"><div class="k">Losing days</div><div class="v navy" id="t-red">—</div></div>
-      </div>
-      <p class="muted small" style="margin-top:8px">Rates per 1,000 simulated trading days.</p>
+        compounding — <b>not a forecast, not a guarantee, not a promised multiple.</b> The milestone timelines
+        above assume steady performance with no losing stretches; real results will differ. The
+        <a href="dashboard.html">Trade Dashboard</a> is where real fills get scored against these rules.</p>
     </div>
   </div>
 </section>
@@ -279,7 +189,7 @@
 <!-- ===================== 09 · RISK MANAGEMENT & FALSIFICATION ===================== -->
 <section class="sec">
   <div class="container">
-    <span class="sec-eyebrow">09 · Risk Management &amp; Falsification</span>
+    <span class="sec-eyebrow">07 · Risk Management &amp; Falsification</span>
     <h2>The governance architecture.</h2>
     <p class="lead">Four layers sit beneath the floor: a <b>risk-management</b> base, a <b>sit-out</b> ladder that
       throttles trading after losses, and two falsifiability tracks — <b>Operator</b> (am I following my own
@@ -336,7 +246,7 @@
 <!-- ===================== 10 · THE OPERATOR (§6.6) ===================== -->
 <section class="sec">
   <div class="container">
-    <span class="sec-eyebrow">10 · The Operator</span>
+    <span class="sec-eyebrow">08 · The Operator</span>
     <h2>Same operator. Same discipline. Defined downside.</h2>
     <div class="op-grid">
       <div class="card op-card"><div class="num">01</div><h3>Cybersecurity origin</h3><p class="muted small">A decade building resilient systems where failure modes are documented before they matter — the same posture applied to risk.</p></div>
@@ -354,7 +264,7 @@
 <!-- ===================== 11 · ARCHITECTURE AT SCALE (§6.8) ===================== -->
 <section class="sec">
   <div class="container">
-    <span class="sec-eyebrow">11 · Architecture at Scale</span>
+    <span class="sec-eyebrow">09 · Architecture at Scale</span>
     <h2>The same shape, at the top of the field.</h2>
     <div class="grid-3" style="margin-top:22px">
       <div class="card scale-card"><div class="who">Berkshire Hathaway</div><h3>Permanent-capital discipline</h3><p class="muted small">Survival first; let compounding do the work over time. The floor is the daily-granularity version of never being a forced seller.</p></div>
@@ -369,7 +279,7 @@
 <!-- ===================== 13 · FOUNDING TERMS (frame only, §6.9) ===================== -->
 <section class="sec terms">
   <div class="container">
-    <span class="sec-eyebrow">12 · Founding Terms</span>
+    <span class="sec-eyebrow">10 · Founding Terms</span>
     <h2>The shape, not the numbers.</h2>
     <div class="frame">
       <span>80/20 capital architecture</span>
@@ -384,7 +294,7 @@
 <!-- ===================== 14 · REACH OUT (§6.10) ===================== -->
 <section class="sec" id="reach-out">
   <div class="container">
-    <span class="sec-eyebrow">13 · Reach Out</span>
+    <span class="sec-eyebrow">11 · Reach Out</span>
     <h2>Start a private conversation.</h2>
     <p class="lead">Questions about the floor, the rules engine, or how to think about this in your own context?
       Drop a note. No obligation either side.</p>
@@ -404,8 +314,8 @@
 <footer class="footer">
   <div class="container">
     <p><b>Important disclosures.</b> Ekantik Capital Advisors LLC is the publisher of this page. The 10x Account is
-      an internal modeling sandbox. Every figure shown — including the calculator, the year projections, and the
-      Monte Carlo — is a <b>hypothetical illustration of the rules</b>, not a performance representation, and the
+      an internal modeling sandbox. Every figure shown — including the doubling milestones and the year
+      projections — is a <b>hypothetical illustration of the rules</b>, not a performance representation, and the
       edge statistics are to be determined. Hypothetical results have inherent limitations and do not represent
       actual trading.</p>
     <p>A daily loss limit caps daily downside, not cumulative downside; multiple losing days compound into a larger
