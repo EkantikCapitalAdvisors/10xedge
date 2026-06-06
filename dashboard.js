@@ -234,11 +234,11 @@
   }
 
   function renderTargets(trades) {
-    const monthlyPerES = parseFloat($('tgt-monthly').value) || 3000;
+    const quarterlyPerES = parseFloat($('tgt-quarterly').value) || 10000;
     const tradingMonths = parseFloat($('tgt-months').value) || 10;
-    const weeklyPerES = monthlyPerES * 12 / 52;
-    const annualPerES = monthlyPerES * tradingMonths;
-    $('tgt-rates').innerHTML = 'Weekly / ES: <b class="mono">' + money(weeklyPerES) + '</b><br>Annual / ES: <b class="mono">' + money(annualPerES) + '</b>';
+    const weeklyPerES = quarterlyPerES / 13;                 // 13 weeks per quarter
+    const annualPerES = quarterlyPerES * (tradingMonths / 3);
+    $('tgt-rates').innerHTML = 'Weekly / ES: <b class="mono">' + money(weeklyPerES) + '</b><br>Quarterly / ES: <b class="mono">' + money(quarterlyPerES) + '</b><br>Annual / ES: <b class="mono">' + money(annualPerES) + '</b>';
 
     const weeks = buildWeeks(trades);
     let totPnl = 0, totTarget = 0;
@@ -269,11 +269,12 @@
     for (const t of trades) { const mk = t.day.slice(0, 7); const o = months[mk] || (months[mk] = { key: mk, pnl: 0 }); o.pnl += t.pnl; }
     const monthList = Object.values(months).sort((a, b) => a.key.localeCompare(b.key));
     const need = RULES.scaleQualifyMonths;
-    const qualified = monthList.filter(mo => mo.pnl >= monthlyPerES);
+    const qualMonthly = RULES.perESPerMonthDefault;          // $3,000 / 1 ES qualification threshold
+    const qualified = monthList.filter(mo => mo.pnl >= qualMonthly);
     const unlocked = qualified.length >= need;
     $('tgt-qual').innerHTML = '<b>Scaling status:</b> <span class="' + (unlocked ? 'pass-tag' : 'flag-tag') + '">' +
       (unlocked ? 'UNLOCKED' : 'LOCKED') + '</span> — ' + qualified.length + ' of ' + need +
-      ' qualifying months (a month ≥ ' + money(monthlyPerES) + ' at 1 ES). ' +
+      ' qualifying months (a month ≥ ' + money(qualMonthly) + ' at 1 ES). ' +
       (unlocked ? 'You may scale +1 ES per margin unit.' : 'Trade 1 ES until ' + need + ' qualifying months are banked.');
   }
 
@@ -327,7 +328,7 @@
     reader.onload = () => handleText(reader.result);
     reader.readAsText(f);
   });
-  $('tgt-monthly').addEventListener('input', reanalyze);
+  $('tgt-quarterly').addEventListener('input', reanalyze);
   $('tgt-months').addEventListener('input', reanalyze);
 
   // drag & drop
