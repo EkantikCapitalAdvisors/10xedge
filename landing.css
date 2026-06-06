@@ -1,7 +1,7 @@
 /* =============================================================================
-   10xedge — landing page theme (accelerator-grade, light/ivory).
-   Used by index.html only. Operator tools (dashboard.html, convexity.html) keep
-   the dark cockpit theme in styles.css. Tokens per enhancement spec §5.
+   10xedge — landing page theme (premium light/ivory briefing surface).
+   Used by index.html only. Operator tools (dashboard.html) keep the dark
+   cockpit theme in styles.css. Brand tokens per enhancement spec §5.
    ============================================================================= */
 :root{
   --navy:#1B2A4A; --gold:#C8A951; --gold-deep:#A8893A; --ivory:#FAF8F5;
