@@ -112,6 +112,17 @@ table.rules tbody tr:hover{background:rgba(200,169,81,.05)}
 .badge-asp,.badge-real{display:inline-block; font-family:'JetBrains Mono',monospace; font-size:.6rem; font-weight:700; letter-spacing:.5px; text-transform:uppercase; padding:2px 7px; border-radius:4px; margin-left:6px}
 .badge-asp{color:var(--navy); background:var(--gold)} .badge-real{color:#fff; background:var(--navy-soft)}
 
+/* ---- doubling milestones ---- */
+.ms-grid{display:grid; grid-template-columns:repeat(4,1fr); gap:16px}
+.ms-card{background:var(--surface); border:1px solid var(--rule); border-top:3px solid var(--gold); border-radius:14px; padding:18px; text-align:center; box-shadow:0 1px 3px rgba(27,42,74,.05)}
+.ms-card.ms-target{background:var(--navy); border-color:var(--gold); border-top-color:var(--gold)}
+.ms-card.ms-target .ms-mult,.ms-card.ms-target .ms-cap{color:#fff}
+.ms-card.ms-target .ms-row{color:#c3ccdc}
+.ms-mult{font-family:'Playfair Display',serif; font-size:2rem; color:var(--gold-deep); line-height:1}
+.ms-cap{font-size:1rem; color:var(--navy); margin:4px 0 12px}
+.ms-row{font-size:.8rem; color:var(--muted); margin-top:6px; display:flex; gap:6px; align-items:center; justify-content:center}
+@media(max-width:760px){.ms-grid{grid-template-columns:1fr 1fr}}
+
 /* ---- operator ---- */
 .op-grid{display:grid; grid-template-columns:repeat(3,1fr); gap:18px; margin-top:8px}
 .op-card .num{font-family:'JetBrains Mono',monospace; color:var(--gold-deep); font-size:1.3rem}

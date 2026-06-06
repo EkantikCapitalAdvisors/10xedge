@@ -105,6 +105,20 @@
     $('y-to10x').innerHTML = '<b>Months of trading to reach 10× ($100k):</b> ' +
       m10('Tradovate', mT) + ' · ' + m10('Interactive Brokers', mI) + '.';
 
+    // doubling milestones — strategic goals (2x / 4x / 8x / 10x target)
+    const MS = [
+      { mult: '2×', cap: 20000 }, { mult: '4×', cap: 40000 },
+      { mult: '8×', cap: 80000 }, { mult: '10× · target', cap: 100000, target: true }
+    ];
+    const fmtMo = (mo) => !isFinite(mo) ? '—' : 'mo ' + mo + (mo > TRADING ? ' · yr ' + Math.ceil(mo / TRADING) : '');
+    $('milestones').innerHTML = MS.map(x => {
+      const t = monthsToReach(monthly, TRAD, x.cap), i = monthsToReach(monthly, IBKR, x.cap);
+      return '<div class="ms-card' + (x.target ? ' ms-target' : '') + '">' +
+        '<div class="ms-mult">' + x.mult + '</div><div class="ms-cap mono">' + money(x.cap) + '</div>' +
+        '<div class="ms-row"><span class="badge-asp">Trad</span> <span class="mono">' + fmtMo(t) + '</span></div>' +
+        '<div class="ms-row"><span class="badge-real">IBKR</span> <span class="mono">' + fmtMo(i) + '</span></div></div>';
+    }).join('');
+
     $('year-table-trad').innerHTML = yearTableHTML(trad);
     $('year-table-ibkr').innerHTML = yearTableHTML(ibkr);
 

@@ -107,18 +107,21 @@ function yearProjection(perES, marginPerES, tradingMonths) {
   return rows;
 }
 
-/* Trading months to cross 10× ($100k account) under a given margin + rate. */
-function monthsTo10x(perES, marginPerES) {
+/* Trading months for a given margin + rate to first reach a target account value. */
+function monthsToReach(perES, marginPerES, targetCapital) {
   if (perES <= 0) return Infinity;
-  const target = RULES.startingCapital * RULES.target.multiple;
   const qualify = RULES.scaleQualifyMonths;
   let capital = RULES.startingCapital;
+  if (capital >= targetCapital) return 0;
   for (let m = 1; m <= 600; m++) {
     const es = (m <= qualify) ? 1 : esForCapital(capital, marginPerES);
     capital += perES * es;
-    if (capital >= target) return m;
+    if (capital >= targetCapital) return m;
   }
   return Infinity;
+}
+function monthsTo10x(perES, marginPerES) {
+  return monthsToReach(perES, marginPerES, RULES.startingCapital * RULES.target.multiple);
 }
 
 /* ---------------------------------------------------------------------------
@@ -220,6 +223,7 @@ if (typeof self !== 'undefined') {
   self.esForCapital = esForCapital;
   self.expectedDollarsPerDayAt = expectedDollarsPerDayAt;
   self.yearProjection = yearProjection;
+  self.monthsToReach = monthsToReach;
   self.monthsTo10x = monthsTo10x;
   self.simulatePath = simulatePath;
 }
