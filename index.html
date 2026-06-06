@@ -84,11 +84,10 @@
       <tbody>
         <tr><td>Position size (margin-gated)</td><td class="mono">Tradovate: 1 ES / $10k · Interactive Brokers: 1 ES / $30k of account</td></tr>
         <tr><td>Scale-up</td><td class="mono">unlocks after 3 months hitting $3k/1 ES, then +1 ES per margin unit as the account grows</td></tr>
-        <tr><td>Daily loss limit</td><td class="mono">$500 per ES → floor = $500 × current ES count</td></tr>
+        <tr><td>Daily loss limit (DLL)</td><td class="mono">$600 per $10k account · per $30k on Interactive Brokers</td></tr>
+        <tr><td>Per-trade stop</td><td class="mono">$500 per ES (1R)</td></tr>
         <tr><td>Trading calendar</td><td class="mono">10 trading months + 2 reserve months</td></tr>
-        <tr><td>Weekly sit-out</td><td class="mono">2 losing days in a week → sit out the rest of the week</td></tr>
-        <tr><td>Restriction</td><td class="mono">3 consecutive losing days → high-probability trades only</td></tr>
-        <tr><td>Edge falsification</td><td class="mono">10 consecutive losing days → stand-down (research-only)</td></tr>
+        <tr><td>Governance</td><td class="mono">sit-out ladder + Operator &amp; Edge falsification — see §09</td></tr>
         <tr><td>Target</td><td class="mono">10× ($10,000 → $100,000)</td></tr>
       </tbody>
     </table>
@@ -101,11 +100,11 @@
     <span class="sec-eyebrow">04 · The Architecture</span>
     <h2>The floor is the architecture.</h2>
     <p class="lead">Active capital is the smallest tier; the engine carries <b>no separate reserve</b>. The floor
-      does the job the buffer does elsewhere — floor-defense, not buffer-defense. One full-stop loss equals the
-      day’s floor ($500 × ES), so a losing day ends on the first stop. As the account grows, the floor rises in
-      steps with the ES count; as it falls, size de-scales with it.</p>
-    <svg class="floorviz" viewBox="0 0 760 280" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="The daily floor rises in steps as ES count grows">
-      <text x="24" y="34" font-family="'Cormorant Garamond',serif" font-size="20" font-weight="600" fill="#1B2A4A">Daily floor = $500 × ES — rising in steps as size grows</text>
+      does the job the buffer does elsewhere — floor-defense, not buffer-defense. Each full-stop loss risks $500 per
+      ES (1R), and the daily loss limit caps the day at <b>$600</b> (see §09). As the account grows, risk-per-stop
+      rises in steps with the ES count; as it falls, size de-scales with it.</p>
+    <svg class="floorviz" viewBox="0 0 760 280" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Per-trade stop rises in steps as ES count grows">
+      <text x="24" y="34" font-family="'Cormorant Garamond',serif" font-size="20" font-weight="600" fill="#1B2A4A">Per-trade stop = $500 × ES — rising in steps as size grows</text>
       <!-- baseline -->
       <line x1="60" y1="230" x2="720" y2="230" stroke="#1B2A4A" stroke-width="1.5"/>
       <!-- stepped floor -->
@@ -144,10 +143,10 @@
         <p class="muted small" style="margin-top:6px">$10,000 — the margin to run 1 ES. Size grows one ES per
           margin unit once scaling unlocks; the daily floor grows with it.</p>
 
-        <label>Daily loss limit</label>
+        <label>Per-trade stop (1R)</label>
         <div class="bignum mono" id="floor-big">$500 <small>/ ES</small></div>
-        <p class="muted small" style="margin-top:6px">$500 per contract → the day’s floor is $500 × your current ES
-          count. One full-stop loss equals the floor.</p>
+        <p class="muted small" style="margin-top:6px">$500 per ES is the per-trade stop the calculator uses; the
+          governing daily loss limit is $600 (see §09 · Risk Management).</p>
 
         <label for="e-monthly">Profit per ES / month <span class="muted small">— drives both projections</span></label>
         <input type="number" id="e-monthly" value="3000" step="500" min="0">
@@ -269,33 +268,60 @@
   </div>
 </section>
 
-<!-- ===================== 09 · GOVERNANCE (reconciled §6.4) ===================== -->
+<!-- ===================== 09 · RISK MANAGEMENT & FALSIFICATION ===================== -->
 <section class="sec">
   <div class="container">
-    <span class="sec-eyebrow">09 · Governance</span>
-    <h2>Two ladders beneath the floor.</h2>
-    <p class="lead">A sit-out ladder that throttles trading after losses, and a falsifiability protocol that stands
-      the edge down if it stops working. Both are committed to in writing, in advance, and witness-countersigned by
-      Manish&nbsp;Dharod — not discretionary.</p>
+    <span class="sec-eyebrow">09 · Risk Management &amp; Falsification</span>
+    <h2>The governance architecture.</h2>
+    <p class="lead">Four layers sit beneath the floor: a <b>risk-management</b> base, a <b>sit-out</b> ladder that
+      throttles trading after losses, and two falsifiability tracks — <b>Operator</b> (am I following my own
+      process?) and <b>Edge</b> (is the edge still working?). All are committed to in writing, in advance, and
+      witness-countersigned by Manish&nbsp;Dharod — not discretionary.</p>
 
-    <h3 style="margin-top:28px">Sit-out ladder</h3>
+    <!-- A · Risk Management -->
+    <h3 style="margin-top:30px">A · Risk Management <span class="muted small">— the base</span></h3>
     <table class="rules" style="margin-top:10px">
-      <thead><tr><th>Trigger</th><th>Response</th><th>Resume</th></tr></thead>
+      <thead><tr><th>Control</th><th>Rule</th></tr></thead>
       <tbody>
-        <tr><td class="mono">1 losing day</td><td>Within tolerance — keep trading.</td><td class="muted">n/a</td></tr>
-        <tr><td class="mono">2 losing days in a week</td><td>Sit out the rest of the week.</td><td>Following week.</td></tr>
-        <tr><td class="mono">3 consecutive losing days</td><td>Restrict to high-probability trades only.</td><td>Full menu on the next winning day.</td></tr>
+        <tr><td>Daily loss limit (DLL)</td><td class="mono">$600 per $10K account · per $30K on Interactive Brokers</td></tr>
+        <tr><td>Worst-case drawdown</td><td class="mono">~$3,000 per $10,000 (rolling)</td></tr>
+        <tr><td>Per-trade stop</td><td class="mono">$500 per ES (1R)</td></tr>
       </tbody>
     </table>
 
-    <h3 style="margin-top:28px">Falsifiability</h3>
+    <!-- B · Sit-Out -->
+    <h3 style="margin-top:30px">B · Sit-Out ladder <span class="muted small">— throttle after losses</span></h3>
     <table class="rules" style="margin-top:10px">
-      <thead><tr><th>Layer</th><th>Condition</th><th>On trigger</th></tr></thead>
+      <thead><tr><th>Trigger</th><th>Response</th></tr></thead>
       <tbody>
-        <tr><td><b>Operator</b> <span class="muted small">— fidelity</span></td><td>Deviation from the published sit-out architecture.</td><td>Tiered response, witness-countersigned (Manish Dharod).</td></tr>
-        <tr><td><b>Edge</b> <span class="muted small">— expression</span></td><td class="mono">10 consecutive losing days</td><td>Edge stand-down → research-only.</td></tr>
+        <tr><td class="mono">2 DLL breaches</td><td>Restrict to Set A or B only · ½ size for the next 2–5 trades.</td></tr>
+        <tr><td class="mono">3rd DLL breach</td><td>Sit out the rest of the week — no trades, or 1 MES only.</td></tr>
       </tbody>
     </table>
+
+    <!-- C · Operator Falsification -->
+    <h3 style="margin-top:30px">C · Operator Falsification <span class="muted small">— fidelity: am I following the process?</span></h3>
+    <p class="muted small">Routine adherence + process adherence, tracked across: <b>Morning routine · Pre-trade
+      routine · Entry/Exit · Sit-down · Risk management.</b></p>
+    <table class="rules" style="margin-top:10px">
+      <thead><tr><th>Trigger</th><th>Consequence</th></tr></thead>
+      <tbody>
+        <tr><td class="mono">2 breaches</td><td>Constrained for the week.</td></tr>
+        <tr><td class="mono">3 breaches within 5 days</td><td>Reduce to 1 MES per trade.</td></tr>
+      </tbody>
+    </table>
+
+    <!-- D · Edge Falsification -->
+    <h3 style="margin-top:30px">D · Edge Falsification <span class="muted small">— expression: is the edge still positive?</span></h3>
+    <table class="rules" style="margin-top:10px">
+      <thead><tr><th>Trigger</th><th>Response</th></tr></thead>
+      <tbody>
+        <tr><td class="mono">Rolling 100-trade EV &lt; 0</td><td rowspan="2">Setup is <b>retired for the week</b>, then re-proven in a <b>virtual account until EV &gt; 0</b>, then brought back live.</td></tr>
+        <tr><td class="mono">4 consecutive losses on a setup</td></tr>
+      </tbody>
+    </table>
+    <p class="muted small" style="margin-top:12px">Illustrative governance architecture — the engineered controls
+      that bound the strategy. Not a forecast or a performance representation.</p>
   </div>
 </section>
 
