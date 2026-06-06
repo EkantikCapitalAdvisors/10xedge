@@ -101,30 +101,33 @@
     <span class="sec-eyebrow">04 · The Architecture</span>
     <h2>The floor is the architecture.</h2>
     <p class="lead">Active capital is the smallest tier; the engine carries <b>no separate reserve</b>. The floor
-      does the job the buffer does elsewhere — floor-defense, not buffer-defense. Each full-stop loss risks $500 per
-      ES (1R), and the daily loss limit caps the day at <b>$600</b> (see §09). As the account grows, risk-per-stop
-      rises in steps with the ES count; as it falls, size de-scales with it.</p>
-    <svg class="floorviz" viewBox="0 0 760 280" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Per-trade stop rises in steps as ES count grows">
-      <text x="24" y="34" font-family="'Cormorant Garamond',serif" font-size="20" font-weight="600" fill="#1B2A4A">Per-trade stop = $500 × ES — rising in steps as size grows</text>
+      does the job the buffer does elsewhere — floor-defense, not buffer-defense. Size is <b>margin-gated</b>: one ES
+      per $10k of account on Tradovate (per $30k on Interactive Brokers). Each step up adds one contract, so the
+      per-trade stop rises $500 (1R) per step; the daily loss limit caps the day at <b>$600</b> (see §09). As the
+      account grows past each margin unit the size steps up; as it falls, size de-scales with it.</p>
+    <svg class="floorviz" viewBox="0 0 760 290" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Position size steps up one ES per 10k of account; per-trade stop rises 500 dollars per step">
+      <text x="24" y="34" font-family="'Cormorant Garamond',serif" font-size="20" font-weight="600" fill="#1B2A4A">Size steps up one ES per $10k of account (Tradovate)</text>
       <!-- baseline -->
       <line x1="60" y1="230" x2="720" y2="230" stroke="#1B2A4A" stroke-width="1.5"/>
-      <!-- stepped floor -->
+      <!-- stepped size/stop line -->
       <path d="M 60 200 H 220 V 160 H 380 V 120 H 540 V 80 H 720" fill="none" stroke="#C8A951" stroke-width="3"/>
       <!-- working-capital block sitting on the floor -->
       <rect x="80" y="170" width="120" height="30" rx="4" fill="rgba(27,42,74,.10)" stroke="#1B2A4A"/>
       <text x="140" y="190" text-anchor="middle" font-family="'DM Sans'" font-size="12" fill="#1B2A4A">working capital</text>
-      <!-- step labels -->
-      <g font-family="'JetBrains Mono',monospace" font-size="12" fill="#A8893A">
-        <text x="140" y="218">1 ES · $500</text>
-        <text x="300" y="178">2 ES · $1,000</text>
-        <text x="460" y="138">3 ES · $1,500</text>
-        <text x="620" y="98">4 ES · $2,000</text>
+      <!-- step labels: account level → ES · per-trade stop -->
+      <g font-family="'JetBrains Mono',monospace" font-size="11.5" fill="#A8893A">
+        <text x="140" y="218">$10k → 1 ES · $500</text>
+        <text x="300" y="178">$20k → 2 ES · $1,000</text>
+        <text x="460" y="138">$30k → 3 ES · $1,500</text>
+        <text x="620" y="98">$40k → 4 ES · $2,000</text>
       </g>
-      <!-- de-scale arrow -->
-      <text x="600" y="215" font-family="'DM Sans'" font-size="11" fill="#5a6478" font-style="italic">← size de-scales as capital declines</text>
+      <!-- x-axis label -->
+      <text x="390" y="262" text-anchor="middle" font-family="'DM Sans'" font-size="12" fill="#5a6478">account value →</text>
+      <text x="715" y="262" text-anchor="end" font-family="'DM Sans'" font-size="11" fill="#5a6478" font-style="italic">← de-scales as the account declines</text>
     </svg>
-    <p class="muted small" style="margin-top:10px">Floor-defense vs buffer-defense are two architectures. This page
-      is the floor one — illustrative, not a forecast.</p>
+    <p class="muted small" style="margin-top:10px">Steps shown for Tradovate (1 ES / $10k); on Interactive Brokers a
+      step is every $30k. Floor-defense vs buffer-defense are two architectures — this page is the floor one.
+      Illustrative, not a forecast.</p>
   </div>
 </section>
 
