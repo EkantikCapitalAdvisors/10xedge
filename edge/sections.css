@@ -400,6 +400,21 @@
 }
 
 /* --- the figure ---------------------------------------------------------- */
+/* Return and drawdown are set as peers. A return shown without the drawdown it
+   was earned through is half a claim, so neither is allowed to dominate. */
+.rec-pair {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--s-6);
+}
+.rec-pair__i + .rec-pair__i {
+  padding-left: var(--s-6);
+  border-left: 1px solid var(--line);
+}
+/* Gold marks the earned result; the drawdown is ink. It is not a lesser number,
+   but the page's gold ration belongs to what the engine produced. */
+.rec-pct--dd { color: var(--ink); }
+
 .rec-pct {
   display: flex;
   align-items: baseline;
@@ -511,6 +526,11 @@
   .rec-figure__sub { max-width: 46ch; }
 }
 @media (max-width: 460px) {
+  .rec-pair { grid-template-columns: minmax(0, 1fr); gap: var(--s-5); }
+  .rec-pair__i + .rec-pair__i {
+    padding-left: 0; padding-top: var(--s-5);
+    border-left: 0; border-top: 1px solid var(--line);
+  }
   .rec-stats { gap: var(--s-4); }
   .rec-stat__k { letter-spacing: .1em; }
   .rec-track__date { font-size: 1.25rem; }
@@ -1150,6 +1170,15 @@
     flex-direction: column;
     justify-content: flex-end;
   }
+}
+
+/* The evidence line under LOAD LIMIT: the rule, then the record against the rule.
+   Set apart by a hairline so it reads as corroboration, not as more rule text. */
+#ruin .ruin-evidence {
+  margin-top: var(--s-4);
+  padding-top: var(--s-4);
+  border-top: 1px solid var(--line-2);
+  color: var(--ink-2);
 }
 
 /* ===== 06-tripwires.css ============================================== */

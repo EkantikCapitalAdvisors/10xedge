@@ -150,13 +150,26 @@
     <div class="rec-body">
 
       <div class="rec-figure" data-reveal>
-        <p class="fig fig--lg fig--gold rec-pct">
-          <span class="rec-pct__sign">+</span><span data-fig="returnPct">49.9</span><span class="rec-pct__aff">%</span>
-        </p>
-        <p class="rec-figure__label">realised, net of all costs</p>
+
+        <div class="rec-pair">
+          <div class="rec-pair__i">
+            <p class="fig fig--lg fig--gold rec-pct">
+              <span class="rec-pct__sign">+</span><span data-fig="returnPct">49.9</span><span class="rec-pct__aff">%</span>
+            </p>
+            <p class="rec-figure__label">returned, net of all costs</p>
+          </div>
+          <div class="rec-pair__i">
+            <p class="fig fig--lg rec-pct rec-pct--dd">
+              <span class="rec-pct__sign">&minus;</span><span data-fig="maxDrawdownPct">8.3</span><span class="rec-pct__aff">%</span>
+            </p>
+            <p class="rec-figure__label">deepest drawdown along the way</p>
+          </div>
+        </div>
+
         <p class="rec-figure__sub">
-          on the <span class="mono"><span data-fig="tradedEquity">$20,000</span></span> account the record was traded on &mdash;
-          the same dollars are a different percentage on a different balance, so the balance is stated.
+          Both measured on the <span class="mono"><span data-fig="tradedEquity">$20,000</span></span> portfolio the record
+          was traded on &mdash; the same dollars are a different percentage on a different balance, so the balance is
+          stated. The drawdown is the worst peak-to-trough on the realised curve, not a modelled one.
         </p>
       </div>
 
@@ -536,7 +549,8 @@
       <li class="card card--ruled ruin-card" data-reveal>
         <p class="card__k"><span class="n">1</span>LOAD LIMIT</p>
         <p class="card__q">How much stress before it breaks?</p>
-        <p class="card__b">A wing is rated far beyond any storm &mdash; you never fly near the limit. Here: one capped chip (R) per trade, deliberate over-capitalization, and a hard 20% ceiling on total risk at any moment.</p>
+        <p class="card__b">A wing is rated far beyond any storm &mdash; you never fly near the limit. Here: one capped chip (R) per trade, deliberate over-capitalization, a hard 20% ceiling on total risk at any moment, and drawdown caps of <span class="mono">$1,000</span> in any week and <span class="mono">$2,000</span> in any month on the <span class="mono">$20,000</span> portfolio.</p>
+        <p class="card__b ruin-evidence" data-risk-controls>Those caps were written into the rules after this record was logged &mdash; and the record already sits inside them. Across the <span class="mono">246</span> trades the worst week lost <span class="mono">$938</span> and the worst month <span class="mono">$132</span>. Neither cap was reached, let alone crossed.</p>
       </li>
 
       <li class="card card--ruled ruin-card" data-reveal style="--d:70ms">

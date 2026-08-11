@@ -144,7 +144,41 @@ nobody gated, which is the failure the CEG constraint exists to prevent.
 - [ ] Material drift (win rate ±0.5pp, profit factor ±0.03, trade count ±10%) requires counsel
       re-review before republishing.
 
-## ⚠️ Claim to verify before ship — Discord attribution
+## ⚠️ Open verification items — all block ship
+
+`lint.mjs` fails the build while any of these is unresolved. The gates are structural, not
+advisory: the page cannot be built clean until each is answered.
+
+### 1. Traded equity — ✅ RESOLVED
+Confirmed by the operator 2026-08-11: the 246-trade record was traded on a **$20,000 portfolio**.
+The page states the balance beside the percentage, because the same $9,984 of realised P&L is
++49.9% on $20,000 and +20.0% on $50,000.
+- [ ] Residual note, still to settle: **10 of the 246 trades risked more than 2.5% of $20,000**, the
+      largest $1,000 = 5.0%. The deck's ruin figure is simulated *at* a 2.5% per-trade ceiling, so
+      that simulation is more disciplined than the record it draws from. Average risk was $232
+      (1.2%), consistent with the deck. The page must not imply every historical trade sat inside
+      2.5% — confirm the current copy does not.
+
+### 2. Cost model — ❌ OPEN
+The page says "net of all costs". That rests on an **inferred** $1.50/trade round-turn (the value
+reconciling gross PF 1.507 to the deck's net 1.49).
+- [ ] Confirm the actual round-turn commission, then set `costModel.verified` in `figures.json`.
+
+### 3. Tightened risk rules — ❌ OPEN
+The operator reported new drawdown caps of **$1,000 in any week and $2,000 in any month** on the
+$20,000 portfolio (tightened from the deck's appendix figure of $1,000 weekly / $2,500 monthly).
+The record already conforms — worst losing week −$938, worst losing month −$132, zero breaches of
+either cap — and the page says so.
+- [ ] **Countersignature.** This page publishes a Fidelity Gate promising *every rule change is
+      countersigned and disclosed before it runs*. Tightening the risk rules is a rule change.
+      Manish Dharod must countersign and it must be disclosed before the page describes the caps as
+      being in force. Then set `riskControls.countersigned`.
+- [ ] **Broker-enforced or self-imposed?** The deck called these "broker-enforced hard caps". A
+      broker-enforced cap is a mechanism; a self-imposed cap is a rule the operator must honour.
+      These are materially different claims. Set `riskControls.brokerEnforced` to the truth and make
+      the copy match — the page must imply no enforcement that does not exist.
+
+### 4. Discord attribution — ❌ OPEN
 
 The page states every figure is *"measured from one live futures engine — 246 trades called in real
 time in our Discord channel, Feb–Aug 2026."* In the journal, the `source` field splits:

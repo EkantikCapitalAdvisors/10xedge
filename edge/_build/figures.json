@@ -19,22 +19,35 @@
     "returnPct": 49.9,
     "windowDays": 182,
     "windowStart": "Feb 4",
-    "windowEnd": "Aug 5"
+    "windowEnd": "Aug 5",
+    "maxDrawdownPct": 8.3
   },
   "tolerance": {
     "_comment": "Drift beyond these thresholds is reported as MATERIAL and requires counsel re-review before the page is republished.",
     "winRatePctAbs": 0.5,
     "profitFactorAbs": 0.03,
     "tradesPctRel": 0.1,
-    "returnPctAbs": 1.0
+    "returnPctAbs": 1.0,
+    "maxDrawdownPctAbs": 0.5
   },
   "tradedEquity": {
     "usd": 20000,
     "display": "$20,000",
-    "_comment": "The account balance the 246-trade record was actually traded on. THIS IS A PUBLISHED CLAIM, not a modelling choice: the same $9,984 of realised P&L is +49.9% on $20,000 and +20.0% on $50,000. The feed carries no equity or balance field, so this cannot be derived and must be supplied and verified by the operator. The deck's own 'avg risk $232 (1.2%)' implies ~$19,333, which is why $20,000 is the placeholder \u2014 but see conflict below.",
-    "_conflict": "At $20,000, 10 of the 246 trades risked more than the 2.5% per-trade ceiling this page publishes; the largest risked $1,000 = 5.0%, double the ceiling. At $50,000 none of them breach it. Either the traded balance was larger than $20,000, or the 2.5% ceiling was exceeded on 10 occasions and the page's ruin figure ('computed at the 2.5% per-trade ceiling') does not describe what was actually traded. Resolve before publishing.",
-    "verified": false,
-    "verifiedBy": null,
-    "verifiedOn": null
+    "_comment": "Confirmed by the operator on 2026-08-11: the 246-trade record was traded on a $20,000 portfolio. This is a published claim \u2014 the same $9,984 of realised P&L would be +20.0% on $50,000.",
+    "_conflict": "PARTIALLY RESOLVED. Balance confirmed. Remaining note: 10 of the 246 trades risked more than 2.5% of $20,000 (largest $1,000 = 5.0%). The deck's ruin figure is simulated AT a 2.5% per-trade ceiling, so that simulation is more disciplined than the record it draws from. The page must not imply every historical trade sat inside 2.5%. Average risk was $232 = 1.2%, consistent with the deck.",
+    "verified": true,
+    "verifiedBy": "Hiren Desai (operator)",
+    "verifiedOn": "2026-08-11"
+  },
+  "riskControls": {
+    "weeklyLossCapUsd": 1000,
+    "monthlyLossCapUsd": 2000,
+    "_comment": "Tightened rules reported by the operator 2026-08-11: no more than $1,000 of drawdown in any week and $2,000 in any month, on the $20,000 portfolio (5% weekly, 10% monthly). The 246-trade record ALREADY CONFORMS: worst losing week -$938, worst losing month -$132, zero breaches of either cap. So these formalise observed behaviour rather than contradict it.",
+    "_supersedes": "The deck's appendix stated $1,000 weekly and $2,500 monthly. The monthly cap is tightened from $2,500 to $2,000.",
+    "brokerEnforced": null,
+    "_brokerEnforcedNote": "UNKNOWN and material. The deck called these 'broker-enforced hard caps'. A broker-enforced cap is a mechanism; a self-imposed cap is a rule that depends on the operator honouring it. The page must describe whichever is true and must not imply enforcement that does not exist.",
+    "countersigned": false,
+    "_countersignNote": "This page publishes a Fidelity Gate stating 'every rule change is countersigned and disclosed before it runs'. Tightening the risk rules IS a rule change. It requires Manish Dharod's countersignature and disclosure before it is described on the page as being in force.",
+    "verified": false
   }
 }

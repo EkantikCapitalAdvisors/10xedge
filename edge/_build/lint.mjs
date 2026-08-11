@@ -294,6 +294,15 @@ if (existsSync(figPath)) {
     const eq = fig.tradedEquity || {};
     if (!eq.verified)
       F('UNVERIFIED-CLAIM', `the page publishes a percentage return but tradedEquity.verified is false — ${eq.display || '?'} is a placeholder, not a measured balance. ${eq._conflict ? 'CONFLICT: ' + eq._conflict : ''}`);
+    /* Risk-rule changes are themselves claims. The page publishes a Fidelity Gate
+       promising every rule change is countersigned and disclosed before it runs. */
+    const rc = fig.riskControls || {};
+    if (/data-risk-controls/.test(htmlRaw)) {
+      if (!rc.countersigned)
+        F('UNVERIFIED-CLAIM', 'the page describes tightened risk rules but riskControls.countersigned is false — the page\'s own Fidelity Gate requires every rule change to be countersigned and disclosed before it runs');
+      if (rc.brokerEnforced === null || rc.brokerEnforced === undefined)
+        F('UNVERIFIED-CLAIM', 'riskControls.brokerEnforced is unknown — a broker-enforced cap is a mechanism, a self-imposed cap is a rule the operator must honour. The page must state whichever is true and imply no enforcement that does not exist');
+    }
     if (!(fig.costModel || {}).verified)
       F('UNVERIFIED-CLAIM', 'the page publishes a net-of-costs percentage but costModel.verified is false — the round-turn cost is inferred, not confirmed');
     /* The stated balance and the stated per-trade ceiling must be mutually consistent. */

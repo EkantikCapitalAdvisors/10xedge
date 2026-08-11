@@ -186,3 +186,12 @@
     justify-content: flex-end;
   }
 }
+
+/* The evidence line under LOAD LIMIT: the rule, then the record against the rule.
+   Set apart by a hairline so it reads as corroboration, not as more rule text. */
+#ruin .ruin-evidence {
+  margin-top: var(--s-4);
+  padding-top: var(--s-4);
+  border-top: 1px solid var(--line-2);
+  color: var(--ink-2);
+}
