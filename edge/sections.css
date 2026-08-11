@@ -26,10 +26,10 @@
   min-height: min(100svh, 60rem);
 }
 
-/* Body copy on navy: the shared dark-band --ink-2 (.70) lands at 3.3:1.
-   The hero's lede and status text must clear 4.5:1, so the token is retuned
-   for this band only — same hue, more presence. */
-.band--dark.hero { --ink-2: rgba(250, 248, 245, .82); }
+/* No local contrast override. The shared dark-band --ink-2 (ivory .70 over navy)
+   measures 7.34:1, comfortably past AA — an earlier 3.3:1 reading was wrong, and
+   retuning one band's token would only desynchronise the hero from the other
+   dark bands. Light-band tokens were the ones that needed correcting. */
 
 /* --- Atmosphere --------------------------------------------------------- */
 .hero__atmos {
@@ -372,6 +372,16 @@
     align-items: end;
   }
 }
+
+/* Verification link — the dashboard makes the three numbers checkable. */
+.proof-verify {
+  margin-top: var(--s-5);
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--s-3);
+}
+.proof-verify__note { max-width: 54ch; }
 
 /* ===== 03-house.css ================================================== */
 /* ---------- 03 · THE HOUSE, NOT THE GAMBLER -----------------------------
@@ -1199,6 +1209,10 @@
   max-width: 26em;
 }
 
+/* The dashboard plots the rolling-100 gate reference at $0 — the exact
+   threshold this gate describes. Linked here so the claim is checkable. */
+.tw-verify { margin-top: var(--s-4); }
+
 /* ===== 07-capacity.css =============================================== */
 /* ---------- 07 · CAPPED IN DOLLARS, NOT PEOPLE ---------------------------
    The scarcity beat. It has to carry voltage without a single urgency
@@ -1970,7 +1984,7 @@
   margin-top: clamp(var(--s-8), 4.5vw, var(--s-9));
   padding-top: clamp(var(--s-6), 3vw, var(--s-7));
   margin-inline: auto;
-  max-width: 21em;
+  max-width: 19em;
   font-family: 'Cormorant Garamond', 'Iowan Old Style', Georgia, serif;
   font-size: clamp(1.45rem, 1.13rem + 1.2vw, 2.2rem);
   font-weight: 400;
@@ -1984,9 +1998,9 @@
   position: absolute;
   top: 0;
   left: 50%;
+  transform: translateX(-50%);
   width: 48px;
   height: 1px;
-  margin-left: -24px;
   background: var(--line);
 }
 #watch .cta-eq strong {
@@ -2039,7 +2053,7 @@
 #watch .cta-clarify {
   margin-top: var(--s-5);
   margin-inline: auto;
-  max-width: 46ch;
+  max-width: 52ch;
   font-size: var(--t-sm);
   line-height: 1.6;
   color: var(--ink-3);
@@ -2055,7 +2069,6 @@
 #watch .cta-verify__a {
   padding-top: .95rem;
   padding-bottom: .45rem;
-  text-align: left;
 }
 
 /* =========================================================================
@@ -2169,4 +2182,254 @@
     border-left: 1px solid var(--line-2);
     padding-left: var(--s-7);
   }
+}
+
+/* ===== 11-footer.css ================================================= */
+/* =============================================================================
+   11 — DISCLOSURE FOOTER  (#disclosures)  — DEEP NAVY
+   ---------------------------------------------------------------------------
+   Composition — one rail, four rows:
+
+     >=1024px   | Ekantik Capital Advisors |  anchors · anchors · anchors
+                |  ──                      |  Hiren Desai · Founder · email · tel
+                |                          | ------------------------------------
+                | Open the trade journal → |  snapshot caveat
+                | ======================================================
+                | IMPORTANT DISCLOSURES    |  disclosure  |  disclosure
+                |                          |  disclosure  |  disclosure
+                | ------------------------------------------------------
+                | private & confidential · © 2026
+
+     <=1023px   the same four rows, each collapsed to a single column, in the
+                same order. Nothing reflows out of sequence.
+
+   The 14rem left rail is the footer's spine: wordmark, then affordance, then
+   section label, all landing on one vertical. The right field carries every
+   piece of running text. That is the whole idea — a ledger, not a sitemap.
+
+   Legibility: the disclosure prose is 13px/1.62 in --ink-3 on --navy-900.
+   Measured: rgba(250,248,245,.52) composited over #131F38 is ~#8B909A, which
+   is 5.06:1 against #131F38 — clear of the 4.5:1 floor, so --ink-3 stands and
+   the --ink-2 fallback is not needed. Run-in labels step up to --ink-2 so a
+   reader scanning for one paragraph can find it without a size change.
+
+   Gold budget: ONE mark in the entire footer — the 28px hairline under the
+   wordmark. Nothing else here is gold: not the rules, not the links, not the
+   verification affordance. A disclosure block is the last place on the page
+   that should ask for attention.
+
+   Typeface law: no JetBrains Mono anywhere in this section. Mono is reserved
+   for *displayed* engine figures; the numerals here (246, 200,000, ~1.4–1.7,
+   $3M) sit inside legal prose as words, not as data points, and setting them
+   in mono would read as a second claim rather than a qualification. The phone
+   number and the copyright year are likewise DM Sans — neither is measured.
+   ========================================================================= */
+
+#disclosures {
+  /* The spine. One value, used by all four rows. */
+  --disc-rail: 14rem;
+  --disc-gap: clamp(var(--s-6), 4vw, var(--s-9));
+  /* A footer should settle, not float: trim the symmetric band padding at the
+     bottom so the page ends on the copyright rather than on empty navy. */
+  padding-bottom: clamp(var(--s-7), 4vw, var(--s-9));
+}
+
+/* ---------- The shared row geometry -------------------------------------- */
+
+#disclosures .disc-row {
+  display: grid;
+  gap: var(--s-5);
+}
+
+@media (min-width: 64em) {
+  #disclosures .disc-row {
+    grid-template-columns: minmax(0, var(--disc-rail)) minmax(0, 1fr);
+    column-gap: var(--disc-gap);
+    align-items: start;
+  }
+}
+
+/* Row separators. Two weights, deliberately: --line marks the change of
+   register (colophon → disclosures), --line-2 marks a change of subject
+   within a register. */
+#disclosures .disc-verify {
+  margin-top: clamp(var(--s-6), 3.5vw, var(--s-8));
+  padding-top: clamp(var(--s-5), 3vw, var(--s-6));
+  border-top: 1px solid var(--line-2);
+}
+#disclosures .disc-body {
+  margin-top: clamp(var(--s-7), 4.5vw, var(--s-9));
+  padding-top: clamp(var(--s-6), 3.5vw, var(--s-7));
+  border-top: 1px solid var(--line);
+}
+
+/* ---------- Row 1 · wordmark --------------------------------------------- */
+
+#disclosures .disc-mark { display: block; }
+
+#disclosures .disc-mark__n {
+  display: block;
+  font-family: 'Cormorant Garamond', 'Iowan Old Style', Georgia, 'Times New Roman', serif;
+  font-weight: 400;
+  font-size: 1.125rem;
+  line-height: 1.2;
+  letter-spacing: .012em;
+  color: var(--ink);
+  text-wrap: balance;
+}
+
+/* The single permitted gold mark in this section. */
+#disclosures .disc-mark__rule {
+  display: block;
+  width: 28px;
+  height: 1px;
+  margin-top: var(--s-3);
+  background: var(--gold);
+  transition: width .28s var(--ease);
+}
+#disclosures .disc-mark:hover .disc-mark__rule { width: 44px; }
+@media (prefers-reduced-motion: reduce) {
+  #disclosures .disc-mark:hover .disc-mark__rule { width: 28px; }
+}
+
+/* `.eyebrow` leaves display alone; the sub-mark must be a block for its top
+   margin to take and for it to clear the gold hairline above it. */
+#disclosures .disc-mark__s { display: block; margin-top: var(--s-3); }
+
+/* ---------- Row 1 · field: anchors, then contact ------------------------- */
+
+#disclosures .disc-field {
+  display: grid;
+  gap: clamp(var(--s-5), 2.4vw, var(--s-6));
+}
+
+#disclosures .disc-nav__list {
+  display: flex;
+  flex-wrap: wrap;
+  column-gap: clamp(var(--s-5), 2.2vw, var(--s-7));
+  row-gap: var(--s-1);
+  margin: 0;
+}
+/* Hover underline is a border, not text-decoration: these anchors become flex
+   boxes at narrow widths for the 44px target, and text-decoration does not
+   paint inside a flex container. */
+#disclosures .disc-nav a {
+  display: inline-block;
+  font-size: var(--t-xs);
+  font-weight: 500;
+  letter-spacing: .01em;
+  color: var(--ink-2);
+  border-bottom: 1px solid transparent;
+  transition: color .2s var(--ease-io), border-color .2s var(--ease-io);
+}
+#disclosures .disc-nav a:hover {
+  color: var(--ink);
+  border-bottom-color: var(--ink-4);
+}
+
+#disclosures .disc-contact {
+  font-style: normal;
+  font-size: var(--t-xs);
+  line-height: 1.6;
+  color: var(--ink-3);
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+#disclosures .disc-contact__n { color: var(--ink-2); font-weight: 500; }
+#disclosures .disc-contact a {
+  display: inline-block;
+  color: var(--ink-3);
+  border-bottom: 1px solid transparent;
+  transition: color .2s var(--ease-io), border-color .2s var(--ease-io);
+}
+#disclosures .disc-contact a:hover {
+  color: var(--ink);
+  border-bottom-color: var(--ink-4);
+}
+#disclosures .disc-sep { display: none; }
+
+/* Stacked below 768px: every anchor and every contact link is a 44px row. */
+@media (max-width: 47.99em) {
+  #disclosures .disc-nav__list { column-gap: var(--s-6); }
+  #disclosures .disc-nav a,
+  #disclosures .disc-contact a {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+  }
+}
+
+/* From 768px the contact collapses to one middot-separated line. */
+@media (min-width: 48em) {
+  #disclosures .disc-contact {
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-items: baseline;
+    column-gap: .55em;
+    row-gap: var(--s-1);
+  }
+  #disclosures .disc-sep { display: inline; color: var(--ink-4); }
+}
+
+/* ---------- Row 2 · verification ----------------------------------------- */
+
+#disclosures .disc-snapshot { max-width: 56ch; }
+
+/* Below the rail split the link is a standalone control, so give it a real
+   tap target; the system's 2px underline offset grows with it. */
+@media (max-width: 63.99em) {
+  #disclosures .verify-link { padding-block: .5rem; }
+}
+
+/* ---------- Row 3 · the disclosures --------------------------------------- */
+
+#disclosures .disc-label {
+  color: var(--ink-2);
+  /* Optical: the eyebrow's cap-height sits high in its line box, so nudge it
+     down onto the first line of prose in the field beside it. */
+  padding-top: .2em;
+}
+
+#disclosures .disc-p {
+  font-size: var(--t-xs);
+  line-height: 1.62;
+  letter-spacing: .004em;
+  color: var(--ink-3);
+  text-wrap: pretty;
+  break-inside: avoid;
+  margin-bottom: clamp(var(--s-4), 1.6vw, var(--s-5));
+}
+#disclosures .disc-p:last-child { margin-bottom: 0; }
+
+#disclosures .disc-k {
+  color: var(--ink-2);
+  font-weight: 500;
+  letter-spacing: .012em;
+}
+
+/* Two real columns of legal text, read down then across, with a hairline
+   between them. A 13px measure of ~48 characters per column — narrower than
+   the page's prose, which is correct: disclosures are scanned, not read
+   linearly, and a short measure makes a paragraph findable. */
+@media (min-width: 64em) {
+  #disclosures .disc-cols {
+    columns: 2;
+    column-gap: clamp(var(--s-7), 3.4vw, var(--s-9));
+    column-rule: 1px solid var(--line-2);
+    orphans: 3;
+    widows: 3;
+  }
+}
+
+/* ---------- Row 4 · colophon terminus ------------------------------------ */
+
+#disclosures .disc-copy {
+  margin-top: clamp(var(--s-6), 3.5vw, var(--s-8));
+  padding-top: clamp(var(--s-4), 2vw, var(--s-5));
+  border-top: 1px solid var(--line-2);
+  font-size: var(--t-xs);
+  line-height: 1.6;
+  color: var(--ink-3);
+  letter-spacing: .01em;
 }

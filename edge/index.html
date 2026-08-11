@@ -50,7 +50,7 @@
         <p class="lede hero__lede" data-reveal style="--d:160ms">What a small, repeatable, Discord-logged advantage is actually worth &mdash; and the one honest condition the whole thing rests on. In plain English.</p>
 
         <div class="hero__actions" data-reveal style="--d:240ms">
-          <a class="btn btn--gold hero__cta" href="#watch">
+          <a class="btn btn--gold hero__cta" href="https://discord.gg/GprT4S8Vrj" target="_blank" rel="noopener">
             <svg class="btn__icon" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
               <path d="M16.25 3.75H3.75A2 2 0 0 0 1.75 5.75v6.5a2 2 0 0 0 2 2h2.1l2.77 3.02a.5.5 0 0 0 .76 0l2.77-3.02h2.1a2 2 0 0 0 2-2v-6.5a2 2 0 0 0-2-2Z"/>
               <path d="M5.9 7.9h8.2M5.9 10.9h5.1"/>
@@ -125,6 +125,14 @@
 
       <p class="attrib proof-attrib" data-reveal style="--d:80ms">
         Every figure on this page is measured from one live futures engine &mdash; <span class="mono">246</span> trades called in real time in our Discord channel, Feb&ndash;Aug 2026, net of all costs. Past performance is not indicative of future results.
+      </p>
+
+      <p class="proof-verify" data-reveal style="--d:160ms">
+        <a class="verify-link" href="https://accelerator.ekantikcapital.com/experiment.html" target="_blank" rel="noopener">
+          Check every figure against the live instrumentation
+          <span class="arw" aria-hidden="true">&rarr;</span>
+        </a>
+        <span class="attrib proof-verify__note">These three numbers are a fixed snapshot of the first <span class="mono">246</span> trades. The dashboard reads the same journal, live, and keeps counting &mdash; so its totals will have moved past them.</span>
       </p>
 
     </div>
@@ -507,6 +515,12 @@
         <p class="eyebrow tw-k">EXPRESSION GATE</p>
         <h3 class="h3 tw-q">Is the edge still positive?</h3>
         <p class="body tw-b">If rolling-<span class="mono">100</span>-trade expectancy crosses <span class="mono">$0</span>, new trading stops &mdash; research-only until the edge is re-proven out-of-sample.</p>
+        <p class="tw-verify">
+          <a class="verify-link" href="https://accelerator.ekantikcapital.com/experiment.html" target="_blank" rel="noopener">
+            The gate line is plotted live on the dashboard
+            <span class="arw" aria-hidden="true">&rarr;</span>
+          </a>
+        </p>
       </div>
 
       <div class="tw-gate tw-gate--b" data-reveal style="--d:80ms">
@@ -754,7 +768,7 @@
 
   </div>
 </section>
-<section class="band band--dark cta" id="watch" aria-labelledby="cta-title">
+<section class="band band--dark" id="watch" aria-labelledby="cta-title">
 
   <div class="cta__atmos" aria-hidden="true"></div>
 
@@ -781,8 +795,7 @@
     <div class="cta-act">
 
       <div class="cta-act__row" data-reveal>
-        <!-- TODO: Discord invite URL — confirmed value lives in CONTENT-LOCK.md; drop it in here. -->
-        <a class="btn btn--gold cta-primary" href="#" data-discord>
+        <a class="btn btn--gold cta-primary" href="https://discord.gg/GprT4S8Vrj" target="_blank" rel="noopener">
           <svg class="btn__icon cta-primary__glyph" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
             <path d="M16.25 3.75H3.75A2 2 0 0 0 1.75 5.75v6.5a2 2 0 0 0 2 2h2.1l2.77 3.02a.5.5 0 0 0 .76 0l2.77-3.02h2.1a2 2 0 0 0 2-2v-6.5a2 2 0 0 0-2-2Z"/>
             <path d="M5.9 7.9h8.2M5.9 10.9h5.1"/>
@@ -813,9 +826,7 @@
          opens and closes on the identical statement.
          =============================================================== -->
     <div class="cta-status" data-reveal>
-      <span class="badge cta-status__badge">
-        <span class="dot" aria-hidden="true"></span>Stage 1 of 4 &mdash; Prove
-      </span>
+      <span class="badge cta-status__badge"><span class="dot" aria-hidden="true"></span>Stage 1 of 4 &mdash; Prove</span>
       <p class="sm cta-status__t">Signals are logged for observation and education. CTA registration (NFA / Series 3) is in progress. <strong>No capital is managed, and no investment is offered or solicited, before the structure and licensing gates clear.</strong></p>
     </div>
 
@@ -838,7 +849,83 @@
 </section>
 </main>
 
-<!-- MISSING SECTION: 11-footer -->
+<footer class="band band--dark band--deep band--tight" id="disclosures" aria-labelledby="disc-title">
+  <div class="wrap">
+
+    <h2 class="sr-only" id="disc-title">Important disclosures</h2>
+
+    <!-- ROW 1 — colophon. Left rail: the wordmark. Right field: the page's own
+         anchors, then the contact line. The rail/field split established here is
+         held by every row below it. -->
+    <div class="disc-row disc-colophon" data-reveal>
+
+      <a class="disc-mark" href="#top">
+        <span class="disc-mark__n">Ekantik Capital Advisors</span>
+        <span class="disc-mark__rule" aria-hidden="true"></span>
+        <span class="eyebrow disc-mark__s">The Structural Edge</span>
+      </a>
+
+      <div class="disc-field">
+        <nav class="disc-nav" aria-label="Sections of this page">
+          <ul class="disc-nav__list" role="list">
+            <li><a href="#proof">Three numbers</a></li>
+            <li><a href="#house">The house</a></li>
+            <li><a href="#ruin">Ruin</a></li>
+            <li><a href="#tripwires">Tripwires</a></li>
+            <li><a href="#capacity">Capacity</a></li>
+            <li><a href="#road">The road</a></li>
+            <li><a href="#watch">Watch it live</a></li>
+          </ul>
+        </nav>
+
+        <address class="disc-contact">
+          <span class="disc-contact__n">Hiren Desai</span>
+          <span class="disc-sep" aria-hidden="true">&middot;</span>
+          <span>Founder &amp; Chief Investment Officer</span>
+          <span class="disc-sep" aria-hidden="true">&middot;</span>
+          <a href="mailto:hd@ekantikcapital.com">hd@ekantikcapital.com</a>
+          <span class="disc-sep" aria-hidden="true">&middot;</span>
+          <a href="tel:+17634821077">(763) 482-1077</a>
+        </address>
+      </div>
+    </div>
+
+    <!-- ROW 2 — the verification surface. A quiet text link, never a button and
+         never gold: the page converts to one action, and this is not it. -->
+    <div class="disc-row disc-verify" data-reveal style="--d:80ms">
+      <a class="verify-link" href="https://accelerator.ekantikcapital.com/experiment.html" target="_blank" rel="noopener">
+        <span>Open the public trade journal</span>
+        <span class="sr-only">(opens in a new tab)</span>
+        <span class="arw" aria-hidden="true">&rarr;</span>
+      </a>
+      <p class="xs disc-snapshot">The page&rsquo;s figures are a fixed snapshot of the first 246 trades. The dashboard is live and keeps counting, so its totals will have moved past them.</p>
+    </div>
+
+    <!-- ROW 3 — the disclosures themselves. Two real columns from 1024px up, one
+         below; run-in labels so a reader can find the paragraph they need. -->
+    <div class="disc-row disc-body" data-reveal style="--d:160ms">
+      <p class="eyebrow disc-label">Important Disclosures</p>
+
+      <div class="disc-cols">
+        <p class="disc-p"><strong class="disc-k">Educational purposes only.</strong> This page is for general educational and informational purposes. It is not investment, legal, or tax advice, and it is not an offer or solicitation to buy or sell any security, futures contract, or investment product.</p>
+
+        <p class="disc-p"><strong class="disc-k">Pre-licensing status.</strong> Ekantik Capital Advisors LLC is not currently registered as a Commodity Trading Advisor. CTA registration &mdash; NFA membership and Series 3 &mdash; is in progress. No capital is managed, and no investment is offered or solicited, before the structure and licensing gates clear. Signals published in Discord are logged for observation and education only.</p>
+
+        <p class="disc-p"><strong class="disc-k">About the track record.</strong> Figures reflect 246 live trades over approximately six months (Feb&ndash;Aug 2026) in a single market regime, called in real time in our Discord channel and net of all costs. The trades are not independently broker-reconciled; the Discord log is timestamped but is not an audited record. This is a limited, single-regime record. Past performance is not indicative of future results; the edge may weaken or disappear.</p>
+
+        <p class="disc-p"><strong class="disc-k">Risk-adjusted figures.</strong> The Sharpe estimate (~1.4&ndash;1.7) is trade-derived and conditional on the edge persisting &mdash; not the naive pre-haircut figure. No specific rate of return is promised or implied. Renaissance Medallion and aviation-safety (Airbus) figures are reported or estimated third-party context, not audited, and are used only as scale and analogy.</p>
+
+        <p class="disc-p"><strong class="disc-k">Ruin and capacity figures.</strong> Ruin and drawdown figures are Monte-Carlo simulations &mdash; 200,000 five-year paths, with win/loss outcomes drawn from the Discord-logged record, losses capped near 1R, and trades treated as independent &mdash; conditional on the edge being real out-of-sample. Live results can exceed the model. &ldquo;Engineered toward zero&rdquo; describes a design and risk-management philosophy, not an assurance that ruin will be avoided. Capacity figures ($3M at launch, stretching toward approximately $5M) are the strategy&rsquo;s own estimate and may be revised down as the edge is measured live.</p>
+
+        <p class="disc-p"><strong class="disc-k">Risk of loss.</strong> Trading futures involves a substantial risk of loss and is not suitable for every investor. You can lose money, and losses can exceed the amount initially committed. Only risk capital should be used.</p>
+      </div>
+    </div>
+
+    <!-- ROW 4 — the colophon's last line. -->
+    <p class="disc-copy" data-reveal style="--d:240ms">This material is private and confidential. &copy; 2026 Ekantik Capital Advisors LLC.</p>
+
+  </div>
+</footer>
 
 <script src="motion.js" defer></script>
 </body>

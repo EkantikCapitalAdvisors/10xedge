@@ -186,3 +186,7 @@
   margin-top: clamp(var(--s-7), 4.5vw, var(--s-9));
   max-width: 26em;
 }
+
+/* The dashboard plots the rolling-100 gate reference at $0 — the exact
+   threshold this gate describes. Linked here so the claim is checkable. */
+.tw-verify { margin-top: var(--s-4); }

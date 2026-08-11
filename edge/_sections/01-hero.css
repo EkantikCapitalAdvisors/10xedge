@@ -25,10 +25,10 @@
   min-height: min(100svh, 60rem);
 }
 
-/* Body copy on navy: the shared dark-band --ink-2 (.70) lands at 3.3:1.
-   The hero's lede and status text must clear 4.5:1, so the token is retuned
-   for this band only — same hue, more presence. */
-.band--dark.hero { --ink-2: rgba(250, 248, 245, .82); }
+/* No local contrast override. The shared dark-band --ink-2 (ivory .70 over navy)
+   measures 7.34:1, comfortably past AA — an earlier 3.3:1 reading was wrong, and
+   retuning one band's token would only desynchronise the hero from the other
+   dark bands. Light-band tokens were the ones that needed correcting. */
 
 /* --- Atmosphere --------------------------------------------------------- */
 .hero__atmos {

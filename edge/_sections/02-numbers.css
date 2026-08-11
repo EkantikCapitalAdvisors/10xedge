@@ -160,3 +160,13 @@
     align-items: end;
   }
 }
+
+/* Verification link — the dashboard makes the three numbers checkable. */
+.proof-verify {
+  margin-top: var(--s-5);
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--s-3);
+}
+.proof-verify__note { max-width: 54ch; }

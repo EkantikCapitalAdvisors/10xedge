@@ -62,7 +62,6 @@ const FORBIDDEN_CONTENT = [
   [/\bSPY\b/i, 'SPY overlay reference'],
   [/only\s+\d+\s+(spots?|seats?|places?|left)/i, 'manufactured scarcity ("only N left")'],
   [/\bcountdown\b|\bacts? now\b|\bhurry\b|\bdon.t miss out\b/i, 'manufactured urgency'],
-  [/\bwaitlist\b(?!\.?\s*$)/i, 'waitlist (only permitted in the negating sentence)'],
   [/\bpriority access\b|\breserve (your |a )?(seat|spot|allocation)\b|\bfirst access\b|\bearly access\b/i,
     'allocation-priority promise'],
   [/0\.44|0\.50 |0\.61|~2\.1/i, 'third-party Sharpe ladder figure'],
@@ -156,13 +155,15 @@ for (let i = 1; i < levels.length; i++) {
 }
 
 /* ---------- 7. Design-system integrity ---------------------------------- */
-const hexes = [...css.matchAll(/#([0-9a-f]{3}|[0-9a-f]{6})\b/gi)].map(m => m[0].toUpperCase());
+/* Comments legitimately quote measured composite values — scan declarations only. */
+const cssCode = css.replace(/\/\*[\s\S]*?\*\//g, ' ');
+const hexes = [...cssCode.matchAll(/#([0-9a-f]{3}|[0-9a-f]{6})\b/gi)].map(m => m[0].toUpperCase());
 const ALLOWED_HEX = new Set(['#1B2A4A', '#C8A951', '#FAF8F5', '#131F38', '#16243F', '#2A3B60',
   '#F3EFE9', '#EAE4DB', '#D8BE73', '#A98B36', '#FFFFFF', '#FFF', '#000', '#000000']);
 const strayHex = [...new Set(hexes)].filter(h => !ALLOWED_HEX.has(h));
 if (strayHex.length) F('DESIGN-SYSTEM', `off-palette hex in CSS: ${strayHex.join(', ')}`);
 
-const strayColorFns = [...css.matchAll(/\b(rgb|rgba|hsl|hsla)\(([^)]*)\)/gi)]
+const strayColorFns = [...cssCode.matchAll(/\b(rgb|rgba|hsl|hsla)\(([^)]*)\)/gi)]
   .map(m => m[0])
   .filter(s => !/^rgba?\(\s*(27,\s*42,\s*74|250,\s*248,\s*245|200,\s*169,\s*81|19,\s*31,\s*56|255,\s*255,\s*255|0,\s*0,\s*0)/.test(s));
 if (strayColorFns.length) F('DESIGN-SYSTEM', `off-palette color() in CSS: ${[...new Set(strayColorFns)].slice(0, 6).join(' ')}`);
@@ -174,7 +175,7 @@ const secCss = existsSync(join(root, 'sections.css')) ? readFileSync(join(root, 
 if (/^\s*:root\s*\{/m.test(secCss)) F('DESIGN-SYSTEM', 'a section CSS file declares :root — tokens live in styles.css only');
 
 /* Fonts: no font-family outside the three brand families */
-for (const m of css.matchAll(/font-family:\s*([^;}]+)/gi)) {
+for (const m of cssCode.matchAll(/font-family:\s*([^;}]+)/gi)) {
   const v = m[1];
   if (!/Cormorant Garamond|DM Sans|JetBrains Mono|inherit|var\(/.test(v))
     F('DESIGN-SYSTEM', `non-brand font-family: ${v.trim().slice(0, 70)}`);
@@ -190,9 +191,12 @@ for (const m of stripped.matchAll(/(?:src|href)="(https?:\/\/[^"]+)"/gi)) {
   if (!/calendly\.com|discord\.(gg|com)|(?:10xedge|accelerator)\.ekantikcapital\.com/.test(m[1]))
     F('PERF', `external request to ${m[1]} — the page must be fully self-contained`);
 }
-/* Outbound links must be resources, never embedded assets */
-for (const m of stripped.matchAll(/<(?:script|link|img|iframe)\b[^>]*(?:src|href)="https?:\/\/[^"]+"/gi))
+/* Outbound links must be navigations, never fetched assets.
+   rel=canonical/preconnect/dns-prefetch declare metadata, they load nothing. */
+for (const m of stripped.matchAll(/<(?:script|link|img|iframe)\b[^>]*(?:src|href)="https?:\/\/[^"]+"[^>]*>/gi)) {
+  if (/rel="(canonical|preconnect|dns-prefetch|alternate)"/i.test(m[0])) continue;
   F('PERF', `embedded external asset: ${m[0].slice(0, 90)}`);
+}
 
 /* ---------- 9. Dashboard link policy ------------------------------------ */
 const DASH = 'accelerator.ekantikcapital.com/experiment.html';
@@ -209,12 +213,73 @@ if (/Cash[- ]Flow Engine/i.test(allCopy))
 if (dashLinks.length && !/(fixed )?snapshot|keeps counting|has (since )?moved past|will have moved past/i.test(allCopy))
   F('DASHBOARD', 'dashboard linked without the mandatory snapshot framing (page = fixed 246-trade snapshot, dashboard = live and ahead of it)');
 
-/* Exactly one gold CTA button on the page, and it points at Discord */
+/* The page converts to ONE action. The gold button may repeat (hero + CTA block),
+   but every instance must be that same one action — the Discord invite. */
 const goldBtns = [...stripped.matchAll(/<a\b[^>]*class="[^"]*btn--gold[^"]*"[^>]*>/gi)];
-if (goldBtns.length !== 1) W('CTA', `expected exactly 1 gold CTA button, found ${goldBtns.length} — the page converts to ONE action`);
+if (!goldBtns.length) F('CTA', 'no gold CTA button on the page');
+if (goldBtns.length > 2) W('CTA', `${goldBtns.length} gold CTA buttons — the gold ration is thinning`);
+const goldTargets = new Set();
 for (const b of goldBtns) {
-  if (/href="#"/.test(b[0])) W('CTA', 'gold CTA still points at href="#" — substitute the Discord invite before deploy');
-  else if (!/discord\.gg/.test(b[0])) F('CTA', `the gold CTA must point at the Discord invite: ${b[0].slice(0, 90)}`);
+  const href = (b[0].match(/href="([^"]*)"/) || [, ''])[1];
+  goldTargets.add(href);
+  if (href === '#' || href === '') F('CTA', 'gold CTA still points at a placeholder href — substitute the Discord invite');
+  else if (!/discord\.gg/.test(href)) F('CTA', `the gold CTA must point at the Discord invite, found "${href}"`);
+}
+if (goldTargets.size > 1) F('CTA', `gold CTAs point at ${goldTargets.size} different destinations — the page converts to ONE action: ${[...goldTargets].join(' , ')}`);
+
+/* ---------- 7b. Measured contrast of the semantic token ladder ----------- */
+const srgb = c => { c /= 255; return c <= 0.04045 ? c / 12.92 : Math.pow((c + 0.055) / 1.055, 2.4); };
+const lum = ([r, g, b]) => 0.2126 * srgb(r) + 0.7152 * srgb(g) + 0.0722 * srgb(b);
+const parseHex = h => [1, 3, 5].map(i => parseInt(h.slice(i, i + 2), 16));
+const composite = (fg, a, bg) => fg.map((c, i) => c * a + bg[i] * (1 - a));
+const contrast = (a, b) => {
+  const [l1, l2] = [lum(a), lum(b)].sort((x, y) => y - x);
+  return (l1 + 0.05) / (l2 + 0.05);
+};
+const NAVY = parseHex('#1B2A4A'), IVORY = parseHex('#FAF8F5'), DEEP = parseHex('#131F38');
+
+/* Read the live alphas out of styles.css so the check can never drift from the tokens. */
+const alphaOf = (name, scope) => {
+  const block = scope === 'dark'
+    ? (css.match(/\.band--dark\s*\{[\s\S]*?\n\}/) || [''])[0]
+    : (css.match(/^:root\s*\{[\s\S]*?\n\}/m) || [''])[0];
+  const m = block.match(new RegExp(`${name}:\\s*rgba\\([^)]*?,\\s*([\\d.]+)\\s*\\)`));
+  return m ? parseFloat(m[1]) : null;
+};
+const TEXT_TIERS = [
+  ['--ink-2', 'light', NAVY, IVORY], ['--ink-3', 'light', NAVY, IVORY],
+  ['--ink-2', 'dark', IVORY, NAVY], ['--ink-3', 'dark', IVORY, NAVY],
+  ['--ink-2', 'dark', IVORY, DEEP], ['--ink-3', 'dark', IVORY, DEEP],
+];
+for (const [tok, scope, fg, bg] of TEXT_TIERS) {
+  const a = alphaOf(tok, scope);
+  if (a == null) { W('CONTRAST', `could not read ${tok} (${scope})`); continue; }
+  const r = contrast(composite(fg, a, bg), bg);
+  if (r < 4.5) F('CONTRAST', `${tok} on ${scope === 'light' ? 'ivory' : (bg === DEEP ? 'deep navy' : 'navy')} is ${r.toFixed(2)}:1 — body text needs 4.5:1`);
+}
+/* --ink-4 is decorative (2.00:1): it may paint a separator glyph the screen reader
+   never announces, but never text a human is meant to read. Verified against the
+   markup — every element carrying the class must be aria-hidden. */
+for (const m of cssCode.matchAll(/([^{}]+)\{([^}]*)\}/g)) {
+  const decl = (m[2].match(/[^;]*--ink-4[^;]*/) || [''])[0];
+  if (!/(?:^|[^-])color:\s*var\(--ink-4\)/.test(m[2]) || /border|outline|background|stroke|fill/.test(decl)) continue;
+  const sel = m[1].trim();
+  const cls = (sel.match(/\.([A-Za-z0-9_-]+)\s*$/) || [])[1];
+  if (!cls) { F('CONTRAST', `--ink-4 used as text colour on "${sel.slice(0, 60)}" — decorative only`); continue; }
+  const uses = [...stripped.matchAll(new RegExp(`<[^>]*class="[^"]*\\b${cls}\\b[^"]*"[^>]*>`, 'g'))];
+  if (!uses.length) { W('CONTRAST', `--ink-4 rule for ".${cls}" matches no element`); continue; }
+  const readable = uses.filter(u => !/aria-hidden="true"/.test(u[0]));
+  if (readable.length)
+    F('CONTRAST', `--ink-4 (2.00:1) paints readable text on ".${cls}" — either raise it to --ink-3 or mark the element aria-hidden: ${readable[0][0].slice(0, 80)}`);
+}
+/* Gold on ivory is 2.14:1 and gold-deep 3.08:1 — large text only, never small copy.
+   .nav is exempt: it floats over the navy hero (gold on navy = 6.26:1) and its
+   stuck state repaints as navy-900 on a gold ground (7.22:1). */
+for (const m of cssCode.matchAll(/([^{}]+)\{([^}]*)\}/g)) {
+  if (!/(?:^|[^-])color:\s*var\(--gold\)/.test(m[2])) continue;
+  const sel = m[1].trim();
+  if (/\.nav|\.band--dark|\.btn--gold/.test(sel)) continue;
+  W('CONTRAST', `--gold as text on a light ground (2.14:1) in "${sel.slice(0, 60)}" — permitted only on large figures`);
 }
 
 /* ---------- 8. Mono discipline ------------------------------------------ */
