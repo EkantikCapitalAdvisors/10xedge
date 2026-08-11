@@ -81,8 +81,9 @@ reversible in the HTML and effectively irreversible in caches, archives and scre
 ## Build and functional gates
 
 - [ ] `node _build/build.mjs` run; `index.html` and `sections.css` regenerated from `_sections/`.
-- [ ] **Discord invite URL substituted** — the CTA currently ships `href="#"` with a `TODO` comment.
-      The page must not go live with a dead primary CTA.
+- [x] **Discord invite URL substituted** — both gold CTAs point at `discord.gg/GprT4S8Vrj`,
+      taken from the dashboard's own "Follow the live trades" link. Re-verify the invite has not
+      expired immediately before launch.
 - [ ] Calendly link verified live: `https://calendly.com/hd-ekantikcapital/30min`.
 - [ ] `mailto:` and `tel:` links verified.
 - [ ] Zero external network requests (fonts are self-hosted; verify in devtools Network panel).
