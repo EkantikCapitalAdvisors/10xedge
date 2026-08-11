@@ -282,6 +282,26 @@ for (const m of cssCode.matchAll(/([^{}]+)\{([^}]*)\}/g)) {
   W('CONTRAST', `--gold as text on a light ground (2.14:1) in "${sel.slice(0, 60)}" — permitted only on large figures`);
 }
 
+/* ---------- 7c. Unverified denominators may not be published ------------- */
+/* A percentage return is only a fact if its denominator is a fact. The trade feed
+   carries no equity field, so the balance cannot be derived — it must be supplied
+   and verified by the operator. Until it is, the page cannot ship. */
+const figPath = join(root, '_build', 'figures.json');
+if (existsSync(figPath)) {
+  const fig = JSON.parse(readFileSync(figPath, 'utf8'));
+  const publishesPct = /data-fig="returnPct"/.test(htmlRaw);
+  if (publishesPct) {
+    const eq = fig.tradedEquity || {};
+    if (!eq.verified)
+      F('UNVERIFIED-CLAIM', `the page publishes a percentage return but tradedEquity.verified is false — ${eq.display || '?'} is a placeholder, not a measured balance. ${eq._conflict ? 'CONFLICT: ' + eq._conflict : ''}`);
+    if (!(fig.costModel || {}).verified)
+      F('UNVERIFIED-CLAIM', 'the page publishes a net-of-costs percentage but costModel.verified is false — the round-turn cost is inferred, not confirmed');
+    /* The stated balance and the stated per-trade ceiling must be mutually consistent. */
+    if (!new RegExp(String(eq.usd || '').replace(/\B(?=(\d{3})+(?!\d))/g, ',')).test(allCopy))
+      W('UNVERIFIED-CLAIM', 'the traded balance is not stated in the visible copy next to the percentage');
+  }
+}
+
 /* ---------- 8. Mono discipline ------------------------------------------ */
 /* .mono/.fig must not wrap the indicative day ranges (they are estimates, not engine output) */
 for (const m of stripped.matchAll(/<[^>]*class="[^"]*\b(?:mono|fig)\b[^"]*"[^>]*>([^<]{0,40})</gi)) {

@@ -1,8 +1,6 @@
 {
   "_comment": "Engine-derived figures for the landing page. `locked` is what the page currently states and what counsel reviewed. `refresh.mjs` recomputes `live` from the public trade journal and reports drift; it only rewrites the page when run with --apply, and any rewrite re-opens the CEG gate.",
-
   "source": "https://accelerator.ekantikcapital.com/data/tenx_trades.json",
-
   "costModel": {
     "roundTurnUsd": 1.5,
     "_comment": "The public feed carries NO commission/fee field, so a net profit factor cannot be derived from it. This is the operator-supplied round-turn cost. It is not a guess: $1.50/trade is the value that reconciles the record's gross profit factor (1.507) to the deck's stated net figure (1.49), which is consistent with a blended ES/MES commission. If the real cost differs, the net profit factor on the page is wrong and MUST be corrected here, not on the page.",
@@ -10,7 +8,6 @@
     "verifiedBy": null,
     "verifiedOn": null
   },
-
   "locked": {
     "trades": 246,
     "winRatePct": 58.9,
@@ -18,13 +15,26 @@
     "profitFactorNet": 1.49,
     "windowLabel": "Feb&ndash;Aug 2026",
     "tradesPerYear": 491,
-    "edgePerTradeR": 0.24
+    "edgePerTradeR": 0.24,
+    "returnPct": 49.9,
+    "windowDays": 182,
+    "windowStart": "Feb 4",
+    "windowEnd": "Aug 5"
   },
-
   "tolerance": {
     "_comment": "Drift beyond these thresholds is reported as MATERIAL and requires counsel re-review before the page is republished.",
     "winRatePctAbs": 0.5,
     "profitFactorAbs": 0.03,
-    "tradesPctRel": 0.1
+    "tradesPctRel": 0.1,
+    "returnPctAbs": 1.0
+  },
+  "tradedEquity": {
+    "usd": 20000,
+    "display": "$20,000",
+    "_comment": "The account balance the 246-trade record was actually traded on. THIS IS A PUBLISHED CLAIM, not a modelling choice: the same $9,984 of realised P&L is +49.9% on $20,000 and +20.0% on $50,000. The feed carries no equity or balance field, so this cannot be derived and must be supplied and verified by the operator. The deck's own 'avg risk $232 (1.2%)' implies ~$19,333, which is why $20,000 is the placeholder \u2014 but see conflict below.",
+    "_conflict": "At $20,000, 10 of the 246 trades risked more than the 2.5% per-trade ceiling this page publishes; the largest risked $1,000 = 5.0%, double the ceiling. At $50,000 none of them breach it. Either the traded balance was larger than $20,000, or the 2.5% ceiling was exceeded on 10 occasions and the page's ruin figure ('computed at the 2.5% per-trade ceiling') does not describe what was actually traded. Resolve before publishing.",
+    "verified": false,
+    "verifiedBy": null,
+    "verifiedOn": null
   }
 }
