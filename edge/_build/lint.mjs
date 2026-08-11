@@ -78,10 +78,10 @@ if (wl.length > 1) W('CHECK', `"waitlist" appears ${wl.length}×  — only the n
 
 /* ---------- 3. Required strings (mandatory statements) ------------------- */
 const REQUIRED = [
-  [/246 trades is six months of one kind of market\s*[—-]\s*promising, not yet proven/i, 'the sample caveat, verbatim'],
-  [/58\.9\s?%/, '58.9% exact win rate'],
-  [/\$\s?1\.44/, '$1.44 profit factor (restated net of confirmed Tradovate Free-plan costs)'],
-  [/\b246\b/, '246 live trades'],
+  [/149 trades is six months of one kind of market\s*[—-]\s*promising, not yet proven/i, 'the sample caveat, verbatim'],
+  [/62\.4\s?%/, '62.4% exact win rate'],
+  [/\$\s?1\.69/, '$1.69 profit factor (net of Tradovate Free-plan costs, Discord-only basis)'],
+  [/\b149\b/, '149 live trades'],
   [/computed, not promised/i, '"computed, not promised"'],
   [/1 in 200,000/i, '< 1 in 200,000 ruin figure'],
   [/1\.4\s*[–-]\s*1\.7/, 'Sharpe ~1.4–1.7'],
@@ -115,14 +115,17 @@ if (!/measured from one live futures engine/i.test(allCopy))
 
 /* ---------- 4. Figure integrity ----------------------------------------- */
 /* No rounding up: 58.9 must never be written as 59.0/60; 1.49 never 1.5 as the profit factor */
-if (/\b59\.0\s?%|\b60\s?%\s*of trades/i.test(allCopy)) F('FIGURE-DRIFT', 'win rate rounded beyond 58.9%');
-if (/\$\s?1\.49/.test(allCopy)) F('FIGURE-DRIFT', 'profit factor restated to $1.44 net of real costs — $1.49 was computed against a cost ~3.5x below the account\'s actual all-in rate');
-if (/\b250\+? (live )?trades|\b246\+/i.test(allCopy)) F('FIGURE-DRIFT', 'trade count inflated beyond 246');
+if (/\b62\.5\s?%|\b63\s?%\s*of trades/i.test(allCopy)) F('FIGURE-DRIFT', 'win rate rounded beyond 62.4%');
+if (/\$\s?1\.(49|44)\b/.test(allCopy)) F('FIGURE-DRIFT', 'superseded profit factor on the page — the current figure is $1.69 on the 149-trade Discord-only record, net of confirmed Tradovate Free-plan costs');
+/* Match only genuine inflation ("over 160 trades", "150+ trades"), never mere
+   adjacency — the §02b stats grid puts "187" (days live) next to "Trades logged". */
+if (/(?:over|more than|nearly|almost)\s+1[5-9]\d\s+(?:live\s+)?trades|\b1[5-9]\d\+\s*(?:live\s+)?trades|\b149\+/i.test(allCopy))
+  F('FIGURE-DRIFT', 'trade count inflated beyond 149');
 if (/sharpe[^.]{0,24}~?1\.5\b/i.test(allCopy) && !/1\.4\s*[–-]\s*1\.7/.test(allCopy))
   F('FIGURE-DRIFT', 'Sharpe stated as ~1.5 without the 1.4–1.7 range');
 /* 59% headline requires the 58.9% exact subline */
-if (/\b59\s?%/.test(allCopy) && !/58\.9\s?%\s*exactly/i.test(allCopy))
-  F('FIGURE-DRIFT', '"59%" headline used without the "58.9% exactly" subline');
+if (/\b62\s?%/.test(allCopy) && !/62\.4\s?%\s*exactly/i.test(allCopy))
+  F('FIGURE-DRIFT', '"62%" headline used without the "62.4% exactly" subline');
 
 /* ---------- 5. Section 08 must contain zero digits ----------------------- */
 const s8 = stripped.match(/<section[^>]*id="expressions"[\s\S]*?<\/section>/i);

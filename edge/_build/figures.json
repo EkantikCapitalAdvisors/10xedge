@@ -4,35 +4,40 @@
   "costModel": {
     "plan": "Tradovate Free",
     "commissionPerSide": {
-      "ES": 1.29,
-      "MES": 0.39
+      "ES": 1.29
     },
     "exchangeClearingPerSide": {
-      "ES": 1.33,
-      "MES": 0.37
+      "ES": 1.33
     },
     "nfaPerSide": 0.01,
-    "blendedRoundTurnUsd": 5.33,
-    "totalCostUsd": 1311,
-    "_comment": "Confirmed by the operator 2026-08-11: the account is on the Tradovate Free plan. All-in cost is commission + CME exchange/clearing + NFA, per side, doubled for a round turn, multiplied by contracts. The record is 169 ES contracts and 274 MES contracts across 246 trades. Exchange/clearing rates are published non-member Globex figures and should be reconciled against an actual Tradovate statement before ship.",
+    "blendedRoundTurnUsd": 5.26,
+    "totalCostUsd": 784,
+    "_comment": "Tradovate Free plan, confirmed by the operator 2026-08-11. The Discord-only record is 149 ES trades at 1 contract each, so the all-in round turn is a flat 2 x ($1.29 commission + $1.33 exchange/clearing + $0.01 NFA) = $5.26. Total cost $784. Exchange/clearing are published non-member Globex rates and should be reconciled against an actual Tradovate statement before ship.",
     "_supersedes": "The earlier inferred $1.50/trade was wrong by roughly 3.5x. It was reverse-engineered to reproduce the deck's stated 1.49 profit factor, which is itself the figure that turned out to be optimistic.",
     "verified": true,
     "verifiedBy": "Hiren Desai (operator)",
     "verifiedOn": "2026-08-11"
   },
   "locked": {
-    "trades": 246,
-    "winRatePct": 58.9,
-    "winRateHeadlinePct": 59,
-    "profitFactorNet": 1.44,
+    "trades": 149,
+    "winRatePct": 62.4,
+    "winRateHeadlinePct": 62,
+    "profitFactorNet": 1.69,
+    "profitFactorGross": 1.77,
     "windowLabel": "Feb&ndash;Aug 2026",
-    "tradesPerYear": 491,
-    "edgePerTradeR": 0.21,
-    "returnPct": 42.3,
-    "windowDays": 182,
+    "tradesPerYear": 291,
+    "edgePerTradeR": 0.27,
+    "casinoMultiple": 5,
+    "returnPct": 41.0,
+    "maxDrawdownPct": 5.8,
+    "windowDays": 187,
     "windowStart": "Feb 4",
-    "windowEnd": "Aug 5",
-    "maxDrawdownPct": 11.3
+    "windowEnd": "Aug 10",
+    "worstWeekUsd": 571,
+    "worstMonthUsd": 155,
+    "tradesAboveCeiling": 10,
+    "maxRiskPctOfEquity": 5.0,
+    "avgRiskUsd": 261
   },
   "tolerance": {
     "_comment": "Drift beyond these thresholds is reported as MATERIAL and requires counsel re-review before the page is republished.",
@@ -62,18 +67,30 @@
     "_countersignNote": "Operator confirmed 2026-08-11 that the rule change is countersigned. NOTE: this covers the RULE CHANGE only. The separate page-level blocker - Manish countersigning the sentence that names him and the authority it describes - remains open in the deploy checklist.",
     "verified": true,
     "countersignedBy": "Manish Dharod",
-    "countersignedOn": "2026-08-11"
+    "countersignedOn": "2026-08-11",
+    "_recomputed": "On the 149-trade Discord-only record, net of costs: worst week -$571, worst month -$155. Both still comfortably inside the $1,000 / $2,000 caps."
   },
   "_correction": {
     "on": "2026-08-11",
-    "what": "Every net-of-costs figure was restated downward after the real Tradovate cost was established.",
-    "changes": {
-      "profitFactorNet": "1.49 -> 1.44",
-      "returnPctOn20k": "49.9 -> 42.3",
-      "maxDrawdownPct": "8.3 -> 11.3",
-      "edgePerTradeR": "0.24 -> 0.21",
-      "centsPerDollarRisked": "~24c -> ~21c"
+    "what": "Two restatements in sequence. (1) Every net-of-costs figure was restated downward once the real Tradovate cost was established. (2) The record was then narrowed to Discord-called trades only, which moved most figures back up.",
+    "from246to149": {
+      "trades": "246 -> 149",
+      "winRatePct": "58.9 -> 62.4",
+      "profitFactorNet": "1.44 -> 1.69",
+      "returnPctOn20k": "42.3 -> 41.0",
+      "maxDrawdownPct": "11.3 -> 5.8",
+      "edgePerTradeR": "0.21 -> 0.27",
+      "tradesPerYear": "491 -> 291",
+      "casinoMultiple": "4.5x -> 5x",
+      "windowDays": "182 -> 187",
+      "windowEnd": "Aug 5 -> Aug 10"
     },
-    "why": "The journal's dollar_pl is gross. The deck's '$1.49 collected per $1.00 lost, net of every cost' and '+0.24R net of all costs' were computed against a cost far below the account's actual all-in rate. At the confirmed Free-plan rate the figures are as restated. The win rate (58.9%) is unchanged: it counts trade outcomes gross, which is the ordinary convention and what the deck's wording describes."
+    "why": "Narrowing to Discord-only makes the page's central attribution literally true of every trade counted. It also removes the broker-sourced trades, which were the weaker half, so most figures rise. The return falls slightly (42.3 -> 41.0) because the excluded trades were still net positive in dollars. This direction of movement must be disclosed on the page."
+  },
+  "scope": {
+    "basis": "Discord-called trades only",
+    "trades": 149,
+    "_comment": "2026-08-11: the record was narrowed to Discord-called trades only, so the page's central attribution ('called in real time in our Discord channel') is literally true of every trade counted. The dashboard was re-published on the same basis. The feed carries 151 rows; the dashboard reports 149 closed trades, excluding trade_num F8 (a $450 win, 2/11) and F38 (a -$50 loss, 4/13). Reconciled: on that 149 basis every dashboard KPI matches to within $1.",
+    "_selectionNote": "MATERIAL AND MUST BE DISCLOSED. The excluded broker-sourced trades were the WEAKER half of the prior record (net R/trade +0.123 vs +0.264; net profit factor 1.16 vs 1.64). Narrowing to Discord-only therefore RAISES every headline figure. The rationale is sound - it makes the attribution literally true and removes an unverifiable claim - but the effect is favourable, and a skeptical reader who saw the earlier 246-trade record will notice. The page must disclose the narrowing and its direction."
   }
 }

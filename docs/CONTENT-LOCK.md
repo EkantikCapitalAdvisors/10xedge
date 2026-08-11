@@ -42,7 +42,39 @@ Every performance figure on the page must sit within visual reach of one of thes
 - "One allocation could close the door on everyone."
 - "A low ceiling is exactly what a real edge looks like."
 
-## RESTATEMENT — 2026-08-11
+## RESTATEMENT #2 — 2026-08-11 · DISCORD-ONLY BASIS (supersedes everything below)
+The record was narrowed to **Discord-called trades only**, so the page's central attribution is now
+literally true of every trade counted. The dashboard was republished on the same basis: 149 closed
+trades, Feb 4 – Aug 10 2026. (The feed carries 151 rows; the dashboard excludes F8, a $450 win, and
+F38, a −$50 loss. On the 149 basis every dashboard KPI reconciles to within $1.)
+
+All 149 are ES at one contract, so the all-in cost is a flat **$5.26** round turn
+(2 × [$1.29 commission + $1.33 exchange/clearing + $0.01 NFA]), **$784 total**.
+
+| Figure | 246-trade basis | **149-trade Discord-only** |
+|---|---|---|
+| Trades | 246 | **149** |
+| Win rate | 58.9% | **62.4%** (headline 62%) |
+| Profit factor, net | $1.44 | **$1.69** (gross 1.77) |
+| Return on $20,000 | +42.3% | **+41.0%** |
+| Deepest drawdown | −11.3% | **−5.8%** |
+| Edge per trade | +0.21R | **+0.27R** (~27¢ per $1 risked) |
+| Trades per year | ~491 | **~291** |
+| Casino multiple | ~4.5× | **~5×** |
+| Window | 182 days | **187 days**, Feb 4 – Aug 10 |
+| Worst week / month | −$988 / −$210 | **−$571 / −$155** |
+
+### ⚠️ SELECTION DIRECTION — MANDATORY DISCLOSURE
+The excluded broker-sourced trades were the **weaker** half (net +0.123R/trade vs +0.264R; net
+profit factor 1.16 vs 1.64). Narrowing to Discord-only therefore **raised** most headline figures.
+The rationale is sound — it makes the attribution literally true and removes an unverifiable claim —
+but the effect is favourable, and a reader who saw the broader record would notice.
+**The footer must state the direction of the change.** It does, under
+*"Basis of the record, and how it was narrowed."* Removing that paragraph is an automatic FAIL.
+
+---
+
+## RESTATEMENT #1 — 2026-08-11 (superseded by #2 above, retained for audit)
 The account was confirmed to be on the **Tradovate Free plan**. All-in cost is commission
 ($1.29/side ES, $0.39/side MES) + CME exchange/clearing (~$1.33/side ES, ~$0.37/side MES) + NFA
 ($0.01/side), doubled per round turn, times contracts. Across 169 ES and 274 MES contracts over 246
