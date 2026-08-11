@@ -1,0 +1,30 @@
+{
+  "_comment": "Engine-derived figures for the landing page. `locked` is what the page currently states and what counsel reviewed. `refresh.mjs` recomputes `live` from the public trade journal and reports drift; it only rewrites the page when run with --apply, and any rewrite re-opens the CEG gate.",
+
+  "source": "https://accelerator.ekantikcapital.com/data/tenx_trades.json",
+
+  "costModel": {
+    "roundTurnUsd": 1.5,
+    "_comment": "The public feed carries NO commission/fee field, so a net profit factor cannot be derived from it. This is the operator-supplied round-turn cost. It is not a guess: $1.50/trade is the value that reconciles the record's gross profit factor (1.507) to the deck's stated net figure (1.49), which is consistent with a blended ES/MES commission. If the real cost differs, the net profit factor on the page is wrong and MUST be corrected here, not on the page.",
+    "verified": false,
+    "verifiedBy": null,
+    "verifiedOn": null
+  },
+
+  "locked": {
+    "trades": 246,
+    "winRatePct": 58.9,
+    "winRateHeadlinePct": 59,
+    "profitFactorNet": 1.49,
+    "windowLabel": "Feb&ndash;Aug 2026",
+    "tradesPerYear": 491,
+    "edgePerTradeR": 0.24
+  },
+
+  "tolerance": {
+    "_comment": "Drift beyond these thresholds is reported as MATERIAL and requires counsel re-review before the page is republished.",
+    "winRatePctAbs": 0.5,
+    "profitFactorAbs": 0.03,
+    "tradesPctRel": 0.1
+  }
+}

@@ -119,3 +119,46 @@ reversible in the HTML and effectively irreversible in caches, archives and scre
       the page's entire credibility rests on a reader finding a real log when they arrive.
 - [ ] Diary the date; the "246 trades · Feb–Aug 2026" window will need updating as the record grows,
       and every update re-triggers the CEG gate.
+
+---
+
+## Figure refresh (build-time)
+
+`edge/_build/refresh.mjs` pulls the live trade journal, recomputes the engine figures, and reports
+drift against what the page states. It is deliberately **human-initiated and build-time only** — the
+page never fetches anything at runtime. A figure that rewrites itself in the browser emits a claim
+nobody gated, which is the failure the CEG constraint exists to prevent.
+
+- [ ] `node _build/refresh.mjs` (dry run) before every republish.
+- [ ] **Verify the cost model.** `figures.json` carries `costModel.roundTurnUsd: 1.50`, currently
+      `verified: false`. The public feed has NO commission field, so the net profit factor cannot be
+      derived from it — $1.50/trade is the value that reconciles the record's gross profit factor
+      (1.507) to the deck's stated net 1.49. **The page's `$1.49` rests entirely on this
+      assumption.** Confirm the real round-turn cost, then set `verified`, `verifiedBy`, `verifiedOn`.
+- [ ] After any `--apply`: re-read the sample caveat by hand. *"246 trades is six months of one kind
+      of market"* ties a count to a duration and to a regime claim — a new count can falsify the
+      sentence around it, and no substitution can detect that.
+- [ ] After any `--apply`: `node build.mjs && node lint.mjs`, then re-run the CEG compliance critic
+      over the whole page.
+- [ ] Material drift (win rate ±0.5pp, profit factor ±0.03, trade count ±10%) requires counsel
+      re-review before republishing.
+
+## ⚠️ Claim to verify before ship — Discord attribution
+
+The page states every figure is *"measured from one live futures engine — 246 trades called in real
+time in our Discord channel, Feb–Aug 2026."* In the journal, the `source` field splits:
+
+- **141 trades tagged `discord`** — Feb–Jun, all ES
+- **107 trades tagged `tradovate`** — 1 Jul–6 Aug, mostly MES
+
+Those July–August trades may well have been posted live in Discord and later reconciled against the
+broker — the dashboard states every fill is posted by hand as the order goes in, and `source` may
+only record the ingestion path. But it is not verifiable from the data, and the page's entire
+credibility rests on that one sentence.
+
+- [ ] Confirm whether all 246/248 trades were called in Discord **before** the outcome was known.
+- [ ] If not, the attribution sentence must be corrected — it is locked verbatim from the deck and
+      must not be quietly softened or quietly sharpened.
+- [ ] Related: the deck's disclosure says the trades are *"not independently broker-reconciled"*, yet
+      107 rows come directly from Tradovate. That line may now understate the actual rigour and
+      should be re-checked against reality.
