@@ -98,12 +98,14 @@
 }
 .cap-m { display: block; background: var(--cap-mark); }
 
-/* One explicit row so the single mark can span the whole rectangle. Same
-   width, same height, same grid — one mark instead of 150. */
-.cap-field--one { grid-template-rows: minmax(0, 1fr); }
-.cap-m--whole {
-  grid-column: 1 / -1;
-  grid-row: 1 / -1;
+/* Same width, same height, same rectangle — 10 marks instead of 150, so the
+   eye reads the ratio rather than a colour change. Two rows of five keeps each
+   mark large enough to register as a whole allocation. */
+.cap-field--few {
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  grid-template-rows: repeat(2, minmax(0, 1fr));
+}
+.cap-m--big {
   background: var(--navy);
   border-radius: var(--radius);
 }

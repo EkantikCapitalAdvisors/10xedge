@@ -7,19 +7,20 @@
       <p class="lede" data-reveal style="--d:160ms">Capacity is consumed by capital, not headcount. Capped at <span class="mono">$3M</span> to start, stretching toward a <span class="mono">~$5M</span> ceiling as the edge proves out live.</p>
     </header>
 
-    <!-- ================= THE 150-VS-1 =================================
+    <!-- ================= THE 150-VS-10 ================================
          The centrepiece. Two fields of identical width and height, each
          standing for the same $3,000,000. The first is divided into 150
-         real marks; the second is one undivided block. The mandated
-         sentence is not printed beside the diagram — it IS the diagram:
-         label, count, label, count read in order as
-         "At the $20,000 minimum, 150 fit. At $3,000,000, one does."
+         real marks at the $20,000 minimum; the second into 10 at the
+         $300,000 maximum. The sentence is not printed beside the diagram —
+         it IS the diagram: label, count, label, count read in order as
+         "At the $20,000 minimum, 150 fit. At the $300,000 maximum, ten do."
+         The per-account cap is what stops one allocation taking the room.
          ================================================================= -->
     <div class="cap-tension">
 
       <div class="cap-plot">
 
-        <p class="sr-only">Each row below shows the same $3,000,000 of capacity at identical size: first divided into 150 equal slots, then as a single undivided block.</p>
+        <p class="sr-only">Each row below shows the same $3,000,000 of capacity at identical size: first divided into 150 equal slots at the $20,000 minimum allocation, then into 10 at the $300,000 maximum.</p>
 
         <div class="cap-row" data-reveal>
           <div class="cap-row__head">
@@ -32,17 +33,18 @@
 
         <div class="cap-row" data-reveal style="--d:80ms">
           <div class="cap-row__head">
-            <p class="cap-row__k">At <span class="mono">$3,000,000</span>,</p>
-            <p class="cap-row__v"><span class="cap-row__word">one</span> <span class="cap-row__u">does.</span></p>
+            <p class="cap-row__k">At the <span class="mono">$300,000</span> maximum,</p>
+            <p class="cap-row__v"><span class="cap-row__word">ten</span> <span class="cap-row__u">do.</span></p>
           </div>
-          <div class="cap-field cap-field--one" aria-hidden="true"><i class="cap-m cap-m--whole"></i></div>
+          <!-- Exactly 10 marks. -->
+          <div class="cap-field cap-field--few" aria-hidden="true"><i class="cap-m cap-m--big"></i><i class="cap-m cap-m--big"></i><i class="cap-m cap-m--big"></i><i class="cap-m cap-m--big"></i><i class="cap-m cap-m--big"></i><i class="cap-m cap-m--big"></i><i class="cap-m cap-m--big"></i><i class="cap-m cap-m--big"></i><i class="cap-m cap-m--big"></i><i class="cap-m cap-m--big"></i></div>
         </div>
 
       </div>
 
-      <p class="cap-nolimit" data-reveal>Minimum allocation <span class="mono">$20,000</span>. <strong>There is no per-account limit.</strong></p>
+      <p class="cap-nolimit" data-reveal>Minimum allocation <span class="mono">$20,000</span>. <strong>Maximum <span class="mono">$300,000</span> per account</strong> &mdash; a tenth of the room, so no single allocation can take it.</p>
 
-      <p class="caveat cap-punch" data-reveal>One allocation could close the door on everyone.</p>
+      <p class="caveat cap-punch" data-reveal>Ten allocations could close the door on everyone else.</p>
 
     </div>
 

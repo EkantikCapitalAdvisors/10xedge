@@ -37,10 +37,25 @@ Every performance figure on the page must sit within visual reach of one of thes
 | Aviation | `≈28` → `~0.2` fatal accidents per million flights, 1960 → 2024, `≈100×` | "(Airbus data)" — industry-reported context |
 | Medallion | `~$10B · capped` | "≈ 2,000× smaller than Medallion" / "three orders of magnitude earlier" |
 
-### Permitted derived scarcity arithmetic (explicitly authorised by the brief)
-- "at the $20,000 minimum, 150 fit; at $3,000,000, one does."   ($3M ÷ $20k = 150. Exact.)
-- "One allocation could close the door on everyone."
-- "A low ceiling is exactly what a real edge looks like."
+### Permitted derived scarcity arithmetic — REVISED 2026-08-11 (per-account cap added)
+The operator introduced a **$300,000 per-account maximum**, superseding the earlier
+"no per-account limit". Two consequences, both mandatory:
+- `$3,000,000 ÷ $20,000 = 150` · `$3,000,000 ÷ $300,000 = 10`
+- **"At the $20,000 minimum, 150 fit. At the $300,000 maximum, ten do."**
+- **"Ten allocations could close the door on everyone else."**
+- "A low ceiling is exactly what a real edge looks like." (unchanged)
+
+**RETIRED AND NOW FORBIDDEN**, because the cap makes them false:
+- ~~"There is no per-account limit."~~ — a limit now exists.
+- ~~"One allocation could close the door on everyone."~~ — under a $300,000 cap the floor
+  is ten allocations. `lint.mjs` fails the build if either string reappears.
+
+### Live capacity meters — FORBIDDEN
+No element of this page may display capacity as filling, reserved, pledged, or committed on the
+basis of form submissions, expressions of interest, or any other non-binding indication. Interest
+is not capital; the page's own claim is that capacity is consumed by capital. A meter driven by
+unverified input is neither observable nor binary, implies the allocation priority the CTA
+explicitly disclaims, and constitutes solicitation behaviour before the licensing gate clears.
 
 ## RESTATEMENT #2 — 2026-08-11 · DISCORD-ONLY BASIS (supersedes everything below)
 The record was narrowed to **Discord-called trades only**, so the page's central attribution is now

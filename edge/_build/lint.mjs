@@ -88,9 +88,10 @@ const REQUIRED = [
   [/\$3\s?M|\$3,000,000/i, '$3M capacity'],
   [/\$5\s?M|\$5,000,000/i, '~$5M ceiling'],
   [/\$20,000/, '$20,000 minimum'],
-  [/no per[- ]account limit/i, 'no per-account limit'],
-  [/150 fit/i, 'the 150-vs-1 line'],
-  [/one allocation could close the door on everyone/i, '"One allocation could close the door on everyone"'],
+  [/maximum\s*(<[^>]*>)?\s*\$300,000\s*(<[^>]*>)?\s*per account/i, 'the $300,000 per-account maximum'],
+  [/150 fit/i, 'the 150-vs-10 line, first half'],
+  [/ten\s*(<[^>]*>)?\s*do\./i, 'the 150-vs-10 line, second half'],
+  [/ten allocations could close the door on everyone else/i, 'the scarcity punch line (restated for the $300,000 cap)'],
   [/a low ceiling is exactly what a real edge looks like/i, 'the low-ceiling line'],
   [/observation is the only open position/i, 'the equalizer'],
   [/no one can allocate/i, 'the equalizer, first clause'],
@@ -126,6 +127,13 @@ if (/sharpe[^.]{0,24}~?1\.5\b/i.test(allCopy) && !/1\.4\s*[–-]\s*1\.7/.test(al
 /* 59% headline requires the 58.9% exact subline */
 if (/\b62\s?%/.test(allCopy) && !/62\.4\s?%\s*exactly/i.test(allCopy))
   F('FIGURE-DRIFT', '"62%" headline used without the "62.4% exactly" subline');
+
+/* The per-account cap superseded the no-limit claim on 2026-08-11. Both the old
+   wording and the old arithmetic are now false and must never reappear. */
+if (/no per[- ]account limit/i.test(allCopy))
+  F('FIGURE-DRIFT', '"no per-account limit" is superseded — a $300,000 per-account maximum now applies');
+if (/one allocation could close the door/i.test(allCopy))
+  F('FIGURE-DRIFT', 'the one-allocation-takes-all line is false under the $300,000 cap; the floor is ten allocations');
 
 /* ---------- 5. Section 08 must contain zero digits ----------------------- */
 const s8 = stripped.match(/<section[^>]*id="expressions"[\s\S]*?<\/section>/i);
