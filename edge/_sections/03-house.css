@@ -23,6 +23,14 @@
   --house-pad-y: clamp(var(--s-5), 2.4vw, var(--s-7));
   --house-pad-x: clamp(var(--s-4), 2vw, var(--s-6));
 
+  /* Optical: the 13px spine label and the ~23px value line have line boxes of
+     very different heights, so an equal padding-top leaves the label's baseline
+     ~11px ABOVE the value it names — it floats instead of heading the row.
+     This drops it onto the value's baseline and tracks the fluid value size
+     (half the line-box delta, plus the ascender delta between the two sizes). */
+  --house-spine-drop: calc(
+    var(--house-val-lh) / 2 + var(--house-val) * .455 - var(--t-xs) * 1.105);
+
   /* Table geometry — reused verbatim by .house-foot so the closing lines
      hang off the same three tracks. */
   --house-w-spine: 22%;
@@ -166,7 +174,8 @@
   /* Spine — quieter than at stacked widths, because the column headers now
      carry the labelling and the rule names only need to hold the gutter. */
   .house-spine {
-    padding: var(--house-pad-y) var(--s-5) var(--house-pad-y) 0;
+    padding: calc(var(--house-pad-y) + var(--house-spine-drop))
+             var(--s-5) var(--house-pad-y) 0;
     font-size: var(--t-xs);
     letter-spacing: .145em;
     color: var(--ink-2);
