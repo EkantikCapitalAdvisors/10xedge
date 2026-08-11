@@ -70,11 +70,14 @@
   --t-display: clamp(3.1rem, 1.55rem + 5.4vw, 6.75rem);
   --t-h2:      clamp(2.15rem, 1.42rem + 2.55vw, 3.9rem);
   --t-h3:      clamp(1.4rem, 1.16rem + .82vw, 1.95rem);
+  /* The section-closing pull statement. One component, one job, ONE size — it
+     recurs in six sections and previously shipped at six different sizes. */
+  --t-pull:    clamp(1.35rem, 1.05rem + 1.35vw, 2.15rem);
   --t-lede:    clamp(1.1rem, 1.01rem + .3vw, 1.3rem);
   --t-body:    clamp(1rem, .97rem + .1vw, 1.0625rem);
   --t-sm:      .9375rem;
   --t-xs:      .8125rem;
-  --t-eyebrow: .6875rem;
+  --t-eyebrow: .8125rem;   /* 13px — the absolute floor; nothing on this page is smaller */
 
   --t-fig-xl:  clamp(3.4rem, 1.9rem + 5.2vw, 6.5rem);
   --t-fig-lg:  clamp(2.1rem, 1.5rem + 2.1vw, 3.25rem);
@@ -146,10 +149,14 @@ strong, b { font-weight: 500; }
 .band--dark ::selection { background: rgba(200, 169, 81, .34); color: var(--ivory); }
 
 :focus-visible {
-  outline: 2px solid var(--gold);
+  /* Gold alone is 2.14:1 on ivory. A navy ring with a gold inner halo clears
+     3:1 against both the ivory and the navy grounds. */
+  outline: 2px solid var(--ink);
   outline-offset: 3px;
+  box-shadow: 0 0 0 5px rgba(200, 169, 81, .45);
   border-radius: 2px;
 }
+.band--dark :focus-visible { outline-color: var(--ivory); }
 
 .skip {
   position: absolute; left: 50%; top: -100px; transform: translateX(-50%);
@@ -223,7 +230,7 @@ strong, b { font-weight: 500; }
   font-size: var(--t-eyebrow);
   font-weight: 500;
   line-height: 1.2;
-  letter-spacing: .175em;
+  letter-spacing: .14em;   /* reduced with the size bump so the tracked cap-line holds its optical width */
   text-transform: uppercase;
   color: var(--ink-3);
   margin: 0;
@@ -274,8 +281,20 @@ strong, b { font-weight: 500; }
 .mono {
   font-family: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
   font-variant-numeric: tabular-nums;
-  font-size: .94em;
+  font-size: 1em;   /* never smaller than its host — mono must not shrink a figure below the floor */
   letter-spacing: -.02em;
+}
+
+/* Numerals that are NOT engine output. JetBrains Mono is this page's attribution
+   signal — it means "we measured this". Third-party figures (casino geometry,
+   Airbus, Medallion), policy values (minimum, cap, ceiling) and derived
+   arithmetic (150, 10, 2,000×) get tabular alignment without borrowing that
+   signal. */
+.num--ext,
+.num--rule {
+  font-variant-numeric: tabular-nums;
+  font-feature-settings: 'tnum' 1;
+  letter-spacing: -.005em;
 }
 
 /* ---------- 6. Rules & seams -------------------------------------------- */
@@ -310,7 +329,7 @@ strong, b { font-weight: 500; }
 }
 .card__k .n {
   font-family: 'JetBrains Mono', ui-monospace, monospace;
-  color: var(--accent-ink);
+  color: var(--ink-3);
   letter-spacing: 0;
 }
 .card__q {
@@ -348,9 +367,11 @@ strong, b { font-weight: 500; }
 .caveat {
   position: relative;
   padding: var(--s-5) 0 var(--s-5) var(--s-6);
-  border-left: 2px solid var(--accent-ink);
+  /* Ink, not gold. Gold is rationed to the H1 accent, the CTA and engine-measured
+     figures; a rule beside a sentence is decoration and does not qualify. */
+  border-left: 2px solid var(--line);
   font-family: 'Cormorant Garamond', Georgia, serif;
-  font-size: clamp(1.25rem, 1.05rem + .8vw, 1.7rem);
+  font-size: var(--t-pull);
   line-height: 1.32;
   letter-spacing: -.012em;
   color: var(--ink);
@@ -379,9 +400,9 @@ strong, b { font-weight: 500; }
 .btn--gold {
   background: var(--gold);
   color: var(--navy-900);
-  box-shadow: 0 1px 2px rgba(19, 31, 56, .18), 0 12px 28px -14px rgba(200, 169, 81, .7);
+  box-shadow: var(--shadow-1);
 }
-.btn--gold:hover { background: var(--gold-soft); box-shadow: 0 2px 4px rgba(19,31,56,.2), 0 18px 40px -16px rgba(200,169,81,.85); }
+.btn--gold:hover { background: var(--gold-soft); box-shadow: var(--shadow-2); }
 
 .btn--ghost {
   background: transparent;
@@ -429,12 +450,12 @@ strong, b { font-weight: 500; }
 }
 .dot {
   width: 6px; height: 6px; border-radius: 50%;
-  background: var(--gold); flex: none;
+  background: var(--ink-2); flex: none;
   position: relative;
 }
 .dot::after {
   content: ''; position: absolute; inset: -4px;
-  border-radius: 50%; border: 1px solid var(--gold);
+  border-radius: 50%; border: 1px solid var(--ink-2);
   opacity: 0; animation: ping 2.8s var(--ease-io) infinite;
 }
 @keyframes ping {
@@ -462,7 +483,7 @@ strong, b { font-weight: 500; }
   white-space: nowrap;
 }
 .nav__mark .sub {
-  font-family: 'DM Sans', sans-serif; font-size: .625rem; letter-spacing: .19em;
+  font-family: 'DM Sans', sans-serif; font-size: .8125rem; letter-spacing: .16em;
   text-transform: uppercase; opacity: .55; display: block; margin-top: 1px;
 }
 .nav__cta {
@@ -492,6 +513,12 @@ strong, b { font-weight: 500; }
 }
 [data-reveal].is-in { opacity: 1; transform: none; }
 .no-js [data-reveal] { opacity: 1; transform: none; }
+
+/* Above-the-fold content NEVER animates in. The headline must be painted on the
+   first frame — a reader should not wait 700ms for the reason they are here.
+   This is CSS-first rather than JS-corrected, so there is no flash before the
+   deferred script runs. */
+#top [data-reveal] { opacity: 1; transform: none; transition: none; }
 
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
