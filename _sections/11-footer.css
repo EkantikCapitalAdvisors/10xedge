@@ -26,9 +26,13 @@
    and the law uses the whole measure, in columns.
 
    Measure: legal text is scanned, not read linearly, so a short measure is
-   what makes a paragraph findable. One column at phone width, two from 768px,
-   three from 1024px — the line stays between ~44 and ~50 characters at every
-   width instead of running 95 across an uncapped 709px wrap.
+   what makes a paragraph findable. One column at phone width (capped), two
+   from 640px, three from 1024px — the set line stays between ~41 and ~61
+   characters at every width instead of running 100 across an uncapped 709px
+   wrap. The columns balance rather than break only between paragraphs: a
+   ragged 220px shortfall in the last column, underscored by a column rule
+   that runs past the text, reads as a bug. Continuous flow with orphans and
+   widows at 3 is how a prospectus sets itself.
 
    Legibility: the disclosure prose is 13px/1.62 in --ink-3 on --navy-900.
    Measured: rgba(250,248,245,.52) composited over #131F38 is ~#8B909A, which
@@ -137,7 +141,9 @@
   display: flex;
   flex-wrap: wrap;
   column-gap: clamp(var(--s-5), 2.2vw, var(--s-7));
-  row-gap: 0;
+  /* The anchors carry their own 12px of vertical padding, so the rows already
+     sit 24px apart; 4px is only there to keep two focus rings off each other. */
+  row-gap: var(--s-1);
   margin: 0;
 }
 
@@ -209,16 +215,24 @@
 /* ---------- Row 2 · verification ----------------------------------------- */
 
 /* The link sits in the 15rem rail and must hold one line: broken across two,
-   the inline-flex arrow stays on line 1 and opens ~110px of dead space. */
-#disclosures .verify-link { white-space: nowrap; }
+   the inline-flex arrow stays on line 1 and opens ~110px of dead space.
+   `justify-self` keeps the rule under the words instead of stretching it the
+   full width of the grid track, where it would read as a divider. */
+#disclosures .verify-link {
+  justify-self: start;
+  white-space: nowrap;
+  position: relative;
+}
+/* The 1px rule 2px under the word IS the affordance, so the 44px target is an
+   invisible hit area rather than padding — padding would float that rule ten
+   pixels below the text and turn it into a stray hairline. 27.8 + 18 = 45.8. */
+#disclosures .verify-link::after {
+  content: '';
+  position: absolute;
+  inset: -9px -4px;
+}
 
 #disclosures .disc-snapshot { max-width: 56ch; }
-
-/* Below the rail split the link is a standalone control, so give it a real
-   tap target; the system's 2px underline offset grows with it. */
-@media (max-width: 63.99em) {
-  #disclosures .verify-link { padding-block: .5rem; }
-}
 
 /* ---------- Row 3 · the disclosures --------------------------------------- */
 
@@ -232,7 +246,6 @@
   letter-spacing: .004em;
   color: var(--ink-3);
   text-wrap: pretty;
-  break-inside: avoid;
   margin-bottom: clamp(var(--s-4), 1.6vw, var(--s-5));
 }
 #disclosures .disc-p:last-child { margin-bottom: 0; }
@@ -243,13 +256,15 @@
   letter-spacing: .012em;
 }
 
-/* One column below 768px, where the wrap is already a short measure — capped
-   so the 640–767px range cannot run past ~68 characters. */
-@media (max-width: 47.99em) {
-  #disclosures .disc-cols { max-width: 68ch; }
+/* One column below 640px, where the wrap is already a short measure. The cap
+   only bites between ~530 and 639px, where an uncapped wrap would run 83
+   characters. 29rem is ~65 characters of 13px DM Sans — `ch` cannot be used
+   here, since this box inherits the 17px body size and its `ch` is 11.6px. */
+@media (max-width: 39.99em) {
+  #disclosures .disc-cols { max-width: 29rem; }
 }
 
-@media (min-width: 48em) {
+@media (min-width: 40em) {
   #disclosures .disc-cols {
     columns: 2;
     column-gap: clamp(var(--s-6), 3.2vw, var(--s-8));
