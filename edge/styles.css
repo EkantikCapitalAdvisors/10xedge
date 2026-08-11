@@ -380,6 +380,27 @@ strong, b { font-weight: 500; }
 
 .btn__icon { width: 1.05em; height: 1.05em; flex: none; }
 
+/* ---------- 9b. Verification link ---------------------------------------
+   Points at the live instrumentation dashboard. Deliberately NOT a button and
+   never gold: the page converts to one action, and this is not it. It is the
+   "check us" affordance that makes the claims observable. */
+.verify-link {
+  display: inline-flex; align-items: baseline; gap: .5em;
+  font-size: var(--t-sm);
+  font-weight: 500;
+  color: var(--ink-2);
+  border-bottom: 1px solid var(--line);
+  padding-bottom: 2px;
+  transition: color .2s var(--ease-io), border-color .2s var(--ease-io);
+}
+.verify-link:hover { color: var(--ink); border-bottom-color: var(--ink-3); }
+.verify-link .arw {
+  transition: transform .22s var(--ease);
+  will-change: transform;
+}
+.verify-link:hover .arw { transform: translateX(3px); }
+@media (prefers-reduced-motion: reduce) { .verify-link:hover .arw { transform: none; } }
+
 /* ---------- 10. Status badge (soft-launch) ------------------------------- */
 .badge {
   display: inline-flex; align-items: center; gap: .7em;

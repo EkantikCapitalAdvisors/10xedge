@@ -1,0 +1,210 @@
+/* =============================================================================
+   04 — THE SHAPE OF A REAL EDGE  (#shape)  — DARK BAND
+   A conceptual diagram, not a chart. Two hand-drawn SVGs, not one: a landscape
+   plot >=880px and a redrawn portrait plot below it. Rescaling one artboard down
+   to 346px would drop every label under 10px, so the small screen gets its own
+   composition instead of a shrunken copy of the large one. Label sizes are set
+   in user units and tuned per artboard so that rendered type never falls below
+   ~11px at the narrowest width each SVG is ever shown at.
+   All plot marks are pure geometry — no axis values, because there are none.
+   ============================================================================= */
+
+#shape {
+  /* Frontier grey is set at .40 alpha ivory (3.4:1 on navy) — above the 3:1
+     floor for meaningful graphics, below --ink-3 so it stays behind the text. */
+  --sh-frontier: rgba(250, 248, 245, .40);
+  /* Gold is rationed. It appears once, on the measured point, as a fill plus
+     two concentric hairlines — emphasis by structure, not by glow. */
+  --sh-gold-ring: rgba(200, 169, 81, .42);
+  --sh-gold-halo: rgba(200, 169, 81, .17);
+  --sh-gold-lift: rgba(200, 169, 81, .30);
+}
+
+/* ---------- The "this is not data" flag --------------------------------- */
+/* A label plus a hairline that runs to the edge of the measure: it frames the
+   plot the way a plate caption frames a plate, and it reads before the chart. */
+
+#shape .shape-flag {
+  display: flex;
+  align-items: center;
+  gap: var(--s-4);
+}
+#shape .shape-flag::after {
+  content: "";
+  flex: 1 1 auto;
+  height: 1px;
+  background: linear-gradient(90deg, var(--line), transparent);
+}
+
+/* ---------- Plot frame --------------------------------------------------- */
+
+#shape .shape-plot-wrap { margin-top: clamp(var(--s-6), 4vw, var(--s-8)); }
+
+#shape .shape-plot {
+  display: block;
+  width: 100%;
+  height: auto;
+  overflow: visible;
+}
+
+/* The portrait artboard is 480 units wide. Letting it render wider than ~500px
+   would inflate its labels past the body size, so it is capped and centred. */
+#shape .shape-plot--compact {
+  max-width: 500px;
+  margin-inline: auto;
+}
+#shape .shape-plot--wide { display: none; }
+
+@media (min-width: 880px) {
+  #shape .shape-plot--wide { display: block; }
+  #shape .shape-plot--compact { display: none; }
+}
+
+/* ---------- Plot marks --------------------------------------------------- */
+
+#shape .shape-ax line {
+  stroke: var(--line);
+  stroke-width: 1;
+}
+
+/* A true dotted line: a near-zero dash with a round cap renders as a disc of
+   the stroke width, so the frontier reads as a run of dots, not a dashed rule. */
+#shape .shape-frontier {
+  fill: none;
+  stroke: var(--sh-frontier);
+  stroke-width: 2.25;
+  stroke-linecap: round;
+  stroke-dasharray: .5 9;
+}
+
+#shape .shape-leader {
+  stroke: var(--sh-frontier);
+  stroke-width: 1;
+}
+
+#shape .shape-assets circle { fill: var(--ink-3); }
+
+/* Hollow, so "no edge" is legible as a different class of point, not just a
+   dot in a different place. The key beneath reuses the same two classes. */
+#shape .shape-retail {
+  fill: none;
+  stroke: var(--ink-3);
+  stroke-width: 1.5;
+}
+
+#shape .shape-hero__dot { fill: var(--gold); }
+#shape .shape-hero__ring {
+  fill: none;
+  stroke: var(--sh-gold-ring);
+  stroke-width: 1.25;
+}
+#shape .shape-hero__halo {
+  fill: none;
+  stroke: var(--sh-gold-halo);
+  stroke-width: 1;
+}
+
+/* The dashed drop holds risk constant and measures the step up off the line —
+   it is the whole argument of the section in one hairline. */
+#shape .shape-lift {
+  stroke: var(--sh-gold-lift);
+  stroke-width: 1.25;
+  stroke-linecap: round;
+  stroke-dasharray: 2 6;
+}
+
+/* ---------- Plot type ---------------------------------------------------- */
+/* Sizes are SVG user units. Rendered size = unit x (rendered width / viewBox
+   width). Wide board (1040u) is shown from 880px up, where the scale bottoms
+   out at ~0.78 — so 14.5u is ~11.4px there and ~14.6px at 1440. Compact board
+   (480u) bottoms out at ~0.72 at 390px — so 16u is ~11.5px. Nothing in either
+   board ever renders below 11px. */
+
+#shape .shape-plot text {
+  font-family: 'DM Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+  font-weight: 400;
+  fill: var(--ink-3);
+}
+
+#shape .shape-t-axis    { font-size: 16px;   letter-spacing: .05em;  fill: var(--ink-3); }
+#shape .shape-t-asset   { font-size: 14.5px; letter-spacing: .01em;  fill: var(--ink-3); }
+#shape .shape-t-region  { font-size: 14.5px; letter-spacing: .05em;  fill: var(--ink-3); }
+#shape .shape-t-retail  { font-size: 15px;   letter-spacing: .01em;  fill: var(--ink-2); font-weight: 500; }
+#shape .shape-t-hero    { font-size: 20px;   letter-spacing: .16em;  fill: var(--gold);  font-weight: 500; }
+#shape .shape-t-herosub { font-size: 14.5px; letter-spacing: .012em; fill: var(--ink-2); }
+
+#shape .shape-plot--compact .shape-t-axis    { font-size: 17px; }
+#shape .shape-plot--compact .shape-t-asset   { font-size: 16px; }
+#shape .shape-plot--compact .shape-t-region  { font-size: 16px; }
+#shape .shape-plot--compact .shape-t-retail  { font-size: 16px; }
+#shape .shape-plot--compact .shape-t-hero    { font-size: 19px; letter-spacing: .15em; }
+#shape .shape-plot--compact .shape-t-herosub { font-size: 16px; }
+
+/* ---------- Key + footnote ----------------------------------------------- */
+/* The key is not decoration: it restates the three locked plot labels as real
+   HTML type, so the two most load-bearing labels survive at any width and for
+   anyone who cannot resolve 11px inside an image. */
+
+#shape .shape-foot {
+  margin-top: clamp(var(--s-7), 5vw, var(--s-9));
+  padding-top: var(--s-6);
+  border-top: 1px solid var(--line);
+  display: grid;
+  gap: var(--s-7);
+}
+
+#shape .shape-key { display: grid; gap: var(--s-5); }
+
+#shape .shape-key__i {
+  display: grid;
+  grid-template-columns: 26px minmax(0, 1fr);
+  column-gap: var(--s-4);
+  align-items: start;
+}
+
+/* .42em pushes the 14px-tall mark onto the optical centre of the first line of
+   the label rather than its box top. overflow visible keeps the 6.25r ring
+   whole inside a 14-unit box. */
+#shape .shape-key__mark {
+  width: 26px;
+  height: 14px;
+  margin-top: .42em;
+  overflow: visible;
+}
+
+#shape .shape-key__t {
+  display: block;
+  font-size: var(--t-sm);
+  font-weight: 500;
+  line-height: 1.4;
+  letter-spacing: .01em;
+  color: var(--ink);
+}
+/* The hero key is the only place gold appears in running text here, and it is
+   the measured point — tracked up to match the plot label it echoes. */
+#shape .shape-key__t--hero {
+  color: var(--accent-ink);
+  letter-spacing: .13em;
+}
+
+#shape .shape-key__d {
+  display: block;
+  margin-top: var(--s-1);
+  font-size: var(--t-xs);
+  line-height: 1.58;
+  color: var(--ink-3);
+  text-wrap: pretty;
+}
+
+#shape .shape-note { max-width: 56ch; }
+
+/* ---------- >=900px: key and footnote share the base line ---------------- */
+
+@media (min-width: 900px) {
+  #shape .shape-foot {
+    grid-template-columns: minmax(0, .95fr) minmax(0, 1.05fr);
+    column-gap: clamp(var(--s-8), 6vw, var(--s-11));
+    align-items: start;
+  }
+  #shape .shape-key__d { max-width: 34ch; }
+}

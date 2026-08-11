@@ -1,0 +1,188 @@
+/* =============================================================================
+   06 — TWO WAYS IT DIES. TWO TRIPWIRES.  (#tripwires)  — DEEPEST NAVY BAND
+   ---------------------------------------------------------------------------
+   Composition, deliberately not three identical cards:
+
+     [ EXPRESSION GATE │ FIDELITY GATE ]   two tall ruled columns, peers,
+                                           divided by one vertical hairline
+     ───────────────────────────────────   the seam
+     INDEPENDENT WITNESS  ·  [ signature plate ]   full width, external check
+     ───────────────────────────────────
+     the consequence line, set with weight
+     ⎸ the closing punch (.caveat)
+
+   The two gates are internal instruments and are drawn with nothing but rules
+   and air. The witness is the only element in the section that sits on a
+   raised field inside a border — because it is the only check that is not
+   ours. That contrast, not a third card, is what marks it as external.
+
+   Colour: strictly monochrome ivory-on-navy. Gold appears exactly once, as
+   the 2px left rule of .caveat on the closing punch — the design system's own
+   honesty-inversion device, landing on the honesty-inversion sentence. No
+   engine-measured figure appears in this section, so gold is spent nowhere
+   else: not on the seam, not on the gate labels, not on the thresholds.
+
+   Numerals: $0, 100 and 24 are RULE thresholds, not engine output. They are
+   set in .mono at full --ink weight 500 so they read as instrument settings —
+   never in gold, which is reserved for measured results elsewhere on the page.
+
+   Contrast on this band: nothing readable falls below --ink-2 (.70 ivory).
+   The one exception is the decorative, aria-hidden signature glyph.
+   ========================================================================= */
+
+#tripwires {
+  /* Optical inset either side of the vertical divider — half the visual gap. */
+  --tw-inset: clamp(var(--s-5), 3.6vw, var(--s-9));
+  /* The section's structural beat between major blocks. */
+  --tw-drop: clamp(var(--s-8), 5vw, var(--s-10));
+}
+
+/* ---------- The two gates ------------------------------------------------ */
+
+#tripwires .tw-gates {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--s-8);
+}
+
+#tripwires .tw-gate {
+  border-top: 1px solid var(--line);
+  padding-top: var(--s-6);
+}
+
+/* ---------- Glyphs -------------------------------------------------------
+   Hand-drawn, geometric, currentColor, 1.25 stroke. Rendered 1:1 against the
+   56×36 viewBox so the stroke lands at exactly 1.25px — no scaling blur.
+   A: a threshold line with a curve crossing it, ringed at the crossing.
+   B: a three-row checklist, the top row ticked.
+   C: a dashed boundary with an arrow entering from outside it. */
+
+#tripwires .tw-glyph {
+  width: 56px;
+  height: 36px;
+  color: var(--ink-2);
+  margin-bottom: var(--s-5);
+}
+
+/* ---------- Shared block type (both gates and the witness) --------------- */
+
+#tripwires .tw-k { color: var(--ink-2); }
+
+#tripwires .tw-q { margin-top: var(--s-4); }
+
+#tripwires .tw-b {
+  margin-top: var(--s-4);
+  max-width: 34em;
+  text-wrap: pretty;
+}
+
+/* Thresholds sit in ink, at medium weight — instrument settings, not data. */
+#tripwires .tw-b .mono,
+#tripwires .tw-consequence .mono {
+  color: var(--ink);
+  font-weight: 500;
+}
+
+/* ---------- Two columns ------------------------------------------------- */
+/* 46em, not 52em, so the 768px case gets the paired reading it was written
+   for. The gates stretch to a common height, which lets the single divider
+   hairline run past the shorter column and hold the pair as one apparatus. */
+
+@media (min-width: 46em) {
+  #tripwires .tw-gates {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0;
+  }
+  #tripwires .tw-gate { padding-bottom: var(--tw-drop); }
+  #tripwires .tw-gate--a { padding-right: var(--tw-inset); }
+  #tripwires .tw-gate--b {
+    padding-left: var(--tw-inset);
+    border-left: 1px solid var(--line-2);
+  }
+}
+
+/* ---------- The seam ----------------------------------------------------- */
+
+#tripwires .tw-seam { margin-top: var(--tw-drop); }
+
+/* ---------- Independent witness ------------------------------------------ */
+
+#tripwires .tw-witness {
+  margin-top: clamp(var(--s-7), 4vw, var(--s-9));
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--s-7);
+}
+
+#tripwires .tw-witness__p strong {
+  color: var(--ink);
+  font-weight: 500;
+}
+
+/* The signature plate — the section's only bordered object, by design. */
+#tripwires .tw-sign {
+  background: var(--bg-raise);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-lg);
+  padding: clamp(var(--s-5), 2.4vw, var(--s-6));
+}
+#tripwires .tw-sign .tw-glyph {
+  color: var(--ink-3);
+  margin-bottom: clamp(var(--s-6), 3vw, var(--s-8));
+}
+#tripwires .tw-sign__name {
+  font-family: 'Cormorant Garamond', 'Iowan Old Style', Georgia, 'Times New Roman', serif;
+  font-weight: 400;
+  font-size: clamp(1.5rem, 1.3rem + .58vw, 1.85rem);
+  line-height: 1.08;
+  letter-spacing: -.014em;
+  color: var(--ink);
+}
+/* The rule a signature is written above, not a border. */
+#tripwires .tw-sign__rule {
+  display: block;
+  height: 1px;
+  background: var(--line);
+  margin: var(--s-4) 0 var(--s-3);
+}
+#tripwires .tw-sign__role {
+  font-size: var(--t-xs);
+  line-height: 1.55;
+  letter-spacing: .008em;
+  color: var(--ink-2);
+  max-width: 28ch;
+  text-wrap: pretty;
+}
+
+@media (min-width: 60em) {
+  #tripwires .tw-witness {
+    grid-template-columns: minmax(0, 1fr) minmax(17rem, 21rem);
+    column-gap: clamp(var(--s-7), 5vw, var(--s-10));
+    align-items: start;
+  }
+}
+
+/* ---------- The consequence line ----------------------------------------
+   DM Sans at 500 and full ink: this is a rule of operation, so it is set as
+   an instruction, not as a serif aside — which keeps it from competing with
+   the Cormorant punch directly beneath it. */
+
+#tripwires .tw-consequence {
+  margin-top: var(--tw-drop);
+  padding-top: clamp(var(--s-6), 3vw, var(--s-7));
+  border-top: 1px solid var(--line);
+  font-weight: 500;
+  font-size: clamp(1.0625rem, .97rem + .42vw, 1.3rem);
+  line-height: 1.45;
+  letter-spacing: -.008em;
+  color: var(--ink);
+  max-width: 30em;
+  text-wrap: pretty;
+}
+
+/* ---------- The closing punch -------------------------------------------- */
+
+#tripwires .tw-punch {
+  margin-top: clamp(var(--s-7), 4.5vw, var(--s-9));
+  max-width: 26em;
+}

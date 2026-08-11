@@ -1,0 +1,76 @@
+<section class="band" id="ruin" aria-labelledby="ruin-title">
+  <div class="wrap">
+
+    <header class="sec-head">
+      <p class="eyebrow" data-reveal>HOW RUIN IS ENGINEERED OUT</p>
+      <h2 class="sec-title" id="ruin-title" data-reveal style="--d:80ms">Built the Way Aircraft Are Built</h2>
+      <p class="lede" data-reveal style="--d:160ms">Aviation engineered the crash &asymp;100&times; rarer since 1960. Ruin here is engineered out of the math before any trade &mdash; not &lsquo;we try to avoid ruin,&rsquo; but a simulated number: 200,000 paths, five years, at the 2.5% per-trade ceiling.</p>
+    </header>
+
+    <div class="ruin-lead">
+
+      <div class="ruin-head">
+        <p class="fig fig--lg fig--gold ruin-fig" data-reveal>&lt; 1 <span class="ruin-fig__in">in</span> 200,000</p>
+        <p class="ruin-sub" data-reveal style="--d:80ms">simulated 5-year risk of ruin at the 2.5% per-trade ceiling</p>
+        <p class="ruin-verdict" data-reveal style="--d:160ms">Effectively zero &mdash; computed, not promised.</p>
+      </div>
+
+      <figure class="ruin-exhibit" data-reveal style="--d:240ms">
+
+        <p class="eyebrow ruin-exhibit__k">AVIATION ALREADY DID THIS</p>
+
+        <div class="ruin-plot">
+          <p class="ruin-plot__pt ruin-plot__pt--from">
+            <span class="mono ruin-plot__v">&asymp;28</span>
+            <span class="ruin-plot__yr">1960</span>
+          </p>
+          <svg class="ruin-plot__curve" viewBox="0 0 200 76" aria-hidden="true" focusable="false">
+            <path class="ruin-plot__axis" d="M0 67 H200" vector-effect="non-scaling-stroke"/>
+            <path class="ruin-plot__arc" d="M5 8 C 44 48, 74 62, 195 66" vector-effect="non-scaling-stroke"/>
+            <circle class="ruin-plot__dot" cx="5" cy="8" r="3.5"/>
+            <circle class="ruin-plot__dot" cx="195" cy="66" r="3.5"/>
+          </svg>
+          <p class="ruin-plot__pt ruin-plot__pt--to">
+            <span class="mono ruin-plot__v">~0.2</span>
+            <span class="ruin-plot__yr">2024</span>
+          </p>
+        </div>
+
+        <figcaption class="xs ruin-exhibit__cap">Fatal accidents per million flights &mdash; &asymp;28 &rarr; ~0.2, a &asymp;100&times; engineered drop (Airbus data). Industry-reported context, not a claim about this strategy.</figcaption>
+
+      </figure>
+
+    </div>
+
+    <ul class="grid grid--4 ruin-grid">
+
+      <li class="card card--ruled ruin-card" data-reveal>
+        <p class="card__k"><span class="n">1</span>LOAD LIMIT</p>
+        <p class="card__q">How much stress before it breaks?</p>
+        <p class="card__b">A wing is rated far beyond any storm &mdash; you never fly near the limit. Here: one capped chip (R) per trade, deliberate over-capitalization, and a hard 20% ceiling on total risk at any moment.</p>
+      </li>
+
+      <li class="card card--ruled ruin-card" data-reveal style="--d:70ms">
+        <p class="card__k"><span class="n">2</span>THE BACKUPS</p>
+        <p class="card__q">Will anything catch a failure?</p>
+        <p class="card__b">Independent backups that don&rsquo;t share a failure mode. One gate watches the edge for decay; another watches the operator for drift. No single point of failure &mdash; including us.</p>
+      </li>
+
+      <li class="card card--ruled ruin-card" data-reveal style="--d:140ms">
+        <p class="card__k"><span class="n">3</span>THE SAFE DEFAULT</p>
+        <p class="card__q">What happens automatically when something fails?</p>
+        <p class="card__b">A tripped gate defaults to smaller size or a full stand-down &mdash; by rule, not willpower. It never depends on anyone being heroic in the moment.</p>
+      </li>
+
+      <li class="card card--ruled ruin-card ruin-card--living" data-reveal style="--d:210ms">
+        <p class="card__k"><span class="n">4</span>THE LIVING TEST</p>
+        <p class="card__q">The question the sky never asks.</p>
+        <p class="card__b">A wing&rsquo;s physics never changes &mdash; certify it once, done. A market adapts. So the system keeps testing itself, every day, with kill-criteria that never retire. The first three keep the account alive &mdash; this one keeps it right.</p>
+      </li>
+
+    </ul>
+
+    <p class="attrib attrib--boxed ruin-attrib" data-reveal>The output: <span class="mono">&lt; 1 in 200,000</span> simulated 5-year ruin at the 2.5% per-trade ceiling &mdash; computed, not promised. Ruin and drawdown figures are Monte-Carlo simulations over 200,000 five-year paths, with win/loss outcomes drawn from the same 246 Discord-logged trades (Feb&ndash;Aug 2026, net of all costs) and conditional on the edge being real out-of-sample. Live results can exceed the model.</p>
+
+  </div>
+</section>

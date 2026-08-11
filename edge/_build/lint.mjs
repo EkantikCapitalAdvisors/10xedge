@@ -187,8 +187,34 @@ for (const m of stripped.matchAll(/\sstyle="([^"]*)"/gi)) {
 
 /* No external network requests */
 for (const m of stripped.matchAll(/(?:src|href)="(https?:\/\/[^"]+)"/gi)) {
-  if (!/calendly\.com|discord\.(gg|com)|10xedge\.ekantikcapital\.com/.test(m[1]))
+  if (!/calendly\.com|discord\.(gg|com)|(?:10xedge|accelerator)\.ekantikcapital\.com/.test(m[1]))
     F('PERF', `external request to ${m[1]} — the page must be fully self-contained`);
+}
+/* Outbound links must be resources, never embedded assets */
+for (const m of stripped.matchAll(/<(?:script|link|img|iframe)\b[^>]*(?:src|href)="https?:\/\/[^"]+"/gi))
+  F('PERF', `embedded external asset: ${m[0].slice(0, 90)}`);
+
+/* ---------- 9. Dashboard link policy ------------------------------------ */
+const DASH = 'accelerator.ekantikcapital.com/experiment.html';
+const dashLinks = [...stripped.matchAll(new RegExp(`<a\\b[^>]*href="[^"]*${DASH.replace(/[.]/g, '\\.')}[^"]*"[^>]*>`, 'gi'))];
+if (!dashLinks.length) F('DASHBOARD', 'the live instrumentation dashboard is not linked anywhere');
+for (const a of dashLinks) {
+  if (/class="[^"]*\bbtn\b/.test(a[0])) F('DASHBOARD', `dashboard linked as a button — it must never compete with the Discord CTA: ${a[0].slice(0, 90)}`);
+  if (/class="[^"]*\bfig--gold|\baccent\b/.test(a[0])) F('DASHBOARD', 'dashboard link uses the gold ration reserved for the CTA');
+  if (!/rel="[^"]*noopener/.test(a[0])) F('DASHBOARD', `dashboard link missing rel="noopener": ${a[0].slice(0, 80)}`);
+}
+if (/Cash[- ]Flow Engine/i.test(allCopy))
+  F('DASHBOARD', '"Cash-Flow Engine" names the appendix configuration — call it the live instrumentation / dashboard');
+/* Snapshot framing must accompany the dashboard */
+if (dashLinks.length && !/(fixed )?snapshot|keeps counting|has (since )?moved past|will have moved past/i.test(allCopy))
+  F('DASHBOARD', 'dashboard linked without the mandatory snapshot framing (page = fixed 246-trade snapshot, dashboard = live and ahead of it)');
+
+/* Exactly one gold CTA button on the page, and it points at Discord */
+const goldBtns = [...stripped.matchAll(/<a\b[^>]*class="[^"]*btn--gold[^"]*"[^>]*>/gi)];
+if (goldBtns.length !== 1) W('CTA', `expected exactly 1 gold CTA button, found ${goldBtns.length} — the page converts to ONE action`);
+for (const b of goldBtns) {
+  if (/href="#"/.test(b[0])) W('CTA', 'gold CTA still points at href="#" — substitute the Discord invite before deploy');
+  else if (!/discord\.gg/.test(b[0])) F('CTA', `the gold CTA must point at the Discord invite: ${b[0].slice(0, 90)}`);
 }
 
 /* ---------- 8. Mono discipline ------------------------------------------ */

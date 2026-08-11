@@ -1,0 +1,188 @@
+/* ---------- 05 · RUIN, ENGINEERED TO NEAR-ZERO ---------------------------
+   One dominant engine figure, with the aviation analogy demoted to a literal
+   marginal exhibit: a hairline-separated column in the right margin of the
+   headline block, set entirely in navy so no gold ever lands on a number we
+   did not compute. The analogy is context, not proof, and the layout says so
+   before a word is read.
+
+   Below 62em the exhibit drops beneath the figure and re-attaches with a top
+   hairline — same subordination, rotated 90°. The four aircraft principles
+   then run as the shared .grid--4 of .card--ruled items (2×2 at 768, 1-col at
+   390 via the system's own breakpoints — no bespoke grid here).
+   ------------------------------------------------------------------------- */
+
+#ruin {
+  /* The headline is a 14-character string, so it needs its own ramp: .fig--lg
+     tops out too small to carry the section, .fig--xl overflows 390px. This
+     clamp is tuned so the line never wraps at 390 / 768 / 1440. */
+  --ruin-fig: clamp(2.75rem, 1.4rem + 5.6vw, 5.5rem);
+  --ruin-ex-w: clamp(15rem, 21vw, 18rem);
+  --ruin-ex-gap: clamp(var(--s-7), 4vw, var(--s-9));
+}
+
+/* --- The headline figure -------------------------------------------------- */
+.ruin-head { min-width: 0; }
+.ruin-fig {
+  font-size: var(--ruin-fig);
+  letter-spacing: -.048em;
+  line-height: 1;
+}
+/* "in" is the hinge of a ratio, not a measured quantity — so it leaves the
+   mono, drops to a label size, and lifts toward the optical centre of the
+   numerals rather than sitting on their baseline. */
+.ruin-fig__in {
+  font-family: 'DM Sans', system-ui, sans-serif;
+  /* Floored at 13px so the 390px case never drops the word below the minimum
+     legible size, even though it is optically a connective, not a reading. */
+  font-size: max(.8125rem, .28em);
+  font-weight: 400;
+  letter-spacing: .02em;
+  vertical-align: 1.15em;
+  color: var(--ink-3);
+}
+
+.ruin-sub {
+  margin-top: var(--s-4);
+  font-size: var(--t-sm);
+  line-height: 1.55;
+  color: var(--ink-2);
+  max-width: 30em;
+  text-wrap: pretty;
+}
+
+/* The mandated verdict line gets a serif register change and its own short
+   hairline, so it reads as the conclusion drawn from the figure rather than a
+   second caption. */
+.ruin-verdict {
+  margin-top: var(--s-6);
+  font-family: 'Cormorant Garamond', 'Iowan Old Style', Georgia, 'Times New Roman', serif;
+  font-weight: 400;
+  font-size: clamp(1.3rem, 1.05rem + 1.05vw, 2rem);
+  line-height: 1.24;
+  letter-spacing: -.014em;
+  color: var(--ink);
+  max-width: 18em;
+  text-wrap: balance;
+}
+.ruin-verdict::before {
+  content: '';
+  display: block;
+  width: 56px;
+  height: 1px;
+  margin-bottom: var(--s-5);
+  background: var(--ink-4);
+}
+
+/* --- The aviation exhibit -------------------------------------------------
+   Stacked default: a bounded block hung under the figure on a top hairline. */
+.ruin-exhibit {
+  margin-top: clamp(var(--s-8), 6vw, var(--s-9));
+  padding-top: var(--s-6);
+  border-top: 1px solid var(--line);
+  max-width: 34rem;
+}
+.ruin-plot {
+  margin-top: var(--s-5);
+  display: grid;
+  grid-template-columns: auto minmax(64px, 1fr) auto;
+  column-gap: var(--s-3);
+  align-items: center;
+}
+/* The two readings sit at the heights their own data points occupy, so the
+   drop is legible even with the curve stripped out. */
+.ruin-plot__pt--from { align-self: start; }
+.ruin-plot__pt--to { align-self: end; }
+
+.ruin-plot__v {
+  display: block;
+  font-size: clamp(1.15rem, 1rem + .5vw, 1.5rem);
+  line-height: 1.15;
+  letter-spacing: -.028em;
+  color: var(--ink);
+  white-space: nowrap;
+}
+.ruin-plot__pt--from .ruin-plot__v { color: var(--ink-2); }
+
+.ruin-plot__yr {
+  display: block;
+  margin-top: var(--s-1);
+  font-size: var(--t-xs);
+  line-height: 1.3;
+  letter-spacing: .14em;
+  color: var(--ink-3);
+}
+
+.ruin-plot__curve {
+  width: 100%;
+  height: auto;
+}
+.ruin-plot__axis { fill: none; stroke: var(--line); stroke-width: 1; }
+.ruin-plot__arc {
+  fill: none;
+  stroke: var(--ink-2);
+  stroke-width: 1;
+  stroke-linecap: round;
+}
+.ruin-plot__dot { fill: var(--ink-2); stroke: none; }
+
+.ruin-exhibit__cap {
+  margin-top: var(--s-5);
+  max-width: 40ch;
+}
+
+/* --- The four aircraft principles ----------------------------------------
+   Wider row gutters than the system default: .card--ruled leads with a
+   hairline, and four hairlines need air between them to read as four rules
+   rather than one table. */
+.ruin-grid {
+  margin-top: clamp(var(--s-9), 6vw, var(--s-11));
+  column-gap: clamp(var(--s-5), 3vw, var(--s-8));
+  row-gap: clamp(var(--s-7), 4vw, var(--s-9));
+}
+/* Four-up columns are narrow; the questions are short enough that an orphaned
+   last word is the main risk. */
+.ruin-card .card__q { text-wrap: balance; }
+
+/* Principle 4 is the one the analogy breaks on — a market adapts where physics
+   does not. It gets a heavier top rule and nothing else; the emphasis stays
+   monochrome so gold is not spent on a heading. */
+.ruin-card--living { border-top-color: var(--ink-4); }
+
+/* --- Closing attribution -------------------------------------------------- */
+.ruin-attrib {
+  margin-top: clamp(var(--s-8), 5vw, var(--s-10));
+  max-width: 74ch;
+}
+/* .attrib is already at the 13px floor — inline mono must not shrink under it. */
+.ruin-attrib .mono {
+  font-size: 1em;
+  white-space: nowrap;
+}
+
+/* =========================================================================
+   62em — the exhibit moves into the margin
+   ========================================================================= */
+@media (min-width: 62em) {
+
+  .ruin-lead {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) var(--ruin-ex-w);
+    column-gap: var(--ruin-ex-gap);
+    align-items: stretch;
+  }
+
+  /* Full-height hairline, bottom-aligned content: the rule spans the whole
+     headline block so it reads as a margin, while the exhibit's last line
+     settles onto the verdict's baseline. */
+  .ruin-exhibit {
+    margin-top: 0;
+    padding-top: 0;
+    padding-left: clamp(var(--s-5), 2.6vw, var(--s-7));
+    border-top: 0;
+    border-left: 1px solid var(--line);
+    max-width: none;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+  }
+}

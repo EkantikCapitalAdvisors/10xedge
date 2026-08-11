@@ -1,0 +1,189 @@
+<section class="band band--dark" id="shape" aria-labelledby="shape-title">
+  <div class="wrap">
+
+    <div class="sec-head">
+      <p class="eyebrow" data-reveal>THE PAYOFF SHAPE</p>
+      <h2 id="shape-title" class="sec-title" data-reveal style="--d:70ms">It Bends the Payoff</h2>
+      <p class="lede" data-reveal style="--d:140ms">Most assets sit on one line &mdash; more reward means more risk. A real edge steps off it.</p>
+    </div>
+
+    <figure class="shape-fig">
+
+      <p class="shape-flag" data-reveal><span class="eyebrow">Conceptual diagram &middot; unquantified axes</span></p>
+
+      <div class="shape-plot-wrap" data-reveal style="--d:80ms">
+
+        <!-- ---------- Wide layout (>=880px) ---------- -->
+        <svg class="shape-plot shape-plot--wide" viewBox="0 0 1040 620" preserveAspectRatio="xMidYMid meet"
+             role="img" aria-labelledby="shape-dgw-t shape-dgw-d">
+          <title id="shape-dgw-t">Conceptual diagram: reward potential against risk of permanent loss</title>
+          <desc id="shape-dgw-d">Both axes are unquantified and no values are plotted. A dotted curve, labelled the conventional frontier, runs from lower left to upper right: further right means more risk of permanent loss, further up means more reward potential. Eight asset classes sit on that curve, in rising order of risk &mdash; cash, bonds, managed futures, equities, real estate, hedge funds, private equity and venture. Retail trading sits below and to the right of the curve, in a region marked no edge or broken discipline. One larger gold point, marked THIS EDGE, sits above and to the left of the curve, annotated Sharpe about 1.4 to 1.7 and loss capped at about 1R, with a dashed line dropping from it to the curve directly below.</desc>
+
+          <g class="shape-ax">
+            <line x1="96" y1="44" x2="96" y2="520"/>
+            <line x1="96" y1="520" x2="1012" y2="520"/>
+          </g>
+
+          <text class="shape-t-axis" x="96" y="28">Reward potential &uarr;</text>
+          <text class="shape-t-axis" x="1012" y="560" text-anchor="end">Risk of permanent loss / ruin &rarr;</text>
+
+          <path class="shape-frontier" d="M 150 470 C 340 372, 560 268, 950 180"/>
+          <line class="shape-leader" x1="730" y1="180" x2="730" y2="230"/>
+          <text class="shape-t-region" x="600" y="170">conventional frontier</text>
+
+          <g class="shape-assets">
+            <circle cx="150" cy="470" r="4"/>
+            <text class="shape-t-asset" x="164" y="492">Cash</text>
+
+            <circle cx="238" cy="426" r="4"/>
+            <text class="shape-t-asset" x="252" y="448">Bonds</text>
+
+            <circle cx="333" cy="381" r="4"/>
+            <text class="shape-t-asset" x="347" y="403">Mgd futures</text>
+
+            <circle cx="438" cy="336" r="4"/>
+            <text class="shape-t-asset" x="452" y="358">Equities</text>
+
+            <circle cx="555" cy="292" r="4"/>
+            <text class="shape-t-asset" x="569" y="314">Real estate</text>
+
+            <circle cx="659" cy="257" r="4"/>
+            <text class="shape-t-asset" x="673" y="279">Hedge funds</text>
+
+            <circle cx="786" cy="221" r="4"/>
+            <text class="shape-t-asset" x="800" y="243">Private equity</text>
+
+            <circle cx="950" cy="180" r="4"/>
+            <text class="shape-t-asset" x="938" y="166" text-anchor="end">Venture</text>
+          </g>
+
+          <g>
+            <circle class="shape-retail" cx="712" cy="428" r="4.5"/>
+            <text class="shape-t-retail" x="734" y="424">Retail trading</text>
+            <text class="shape-t-region" x="734" y="450">no edge / broken discipline</text>
+          </g>
+
+          <g>
+            <line class="shape-lift" x1="315" y1="256" x2="315" y2="386"/>
+            <circle class="shape-hero__halo" cx="315" cy="225" r="27"/>
+            <circle class="shape-hero__ring" cx="315" cy="225" r="16"/>
+            <circle class="shape-hero__dot" cx="315" cy="225" r="7"/>
+            <text class="shape-t-hero" x="352" y="216">THIS EDGE</text>
+            <text class="shape-t-herosub" x="352" y="244">Sharpe ~1.4&ndash;1.7 &middot; loss capped ~1R</text>
+          </g>
+        </svg>
+
+        <!-- ---------- Compact layout (<880px): redrawn, portrait ---------- -->
+        <svg class="shape-plot shape-plot--compact" viewBox="0 0 480 580" preserveAspectRatio="xMidYMid meet"
+             role="img" aria-labelledby="shape-dgc-t shape-dgc-d">
+          <title id="shape-dgc-t">Conceptual diagram: reward potential against risk of permanent loss</title>
+          <desc id="shape-dgc-d">Both axes are unquantified and no values are plotted. A dotted curve, labelled the conventional frontier, runs from lower left to upper right: further right means more risk of permanent loss, further up means more reward potential. Eight asset classes sit on that curve, in rising order of risk &mdash; cash, bonds, managed futures, equities, real estate, hedge funds, private equity and venture. Retail trading sits below and to the right of the curve, in a region marked no edge or broken discipline. One larger gold point, marked THIS EDGE, sits above and to the left of the curve, annotated Sharpe about 1.4 to 1.7 and loss capped at about 1R, with a dashed line dropping from it to the curve directly below.</desc>
+
+          <g class="shape-ax">
+            <line x1="52" y1="44" x2="52" y2="520"/>
+            <line x1="52" y1="520" x2="462" y2="520"/>
+          </g>
+
+          <text class="shape-t-axis" x="52" y="26">Reward potential &uarr;</text>
+          <text class="shape-t-axis" x="462" y="558" text-anchor="end">Risk of permanent loss / ruin &rarr;</text>
+
+          <path class="shape-frontier" d="M 78 486 C 118 360, 200 190, 320 110"/>
+
+          <g class="shape-assets">
+            <circle cx="78" cy="486" r="3.5"/>
+            <text class="shape-t-asset" x="91" y="491">Cash</text>
+
+            <circle cx="97" cy="431" r="3.5"/>
+            <text class="shape-t-asset" x="110" y="436">Bonds</text>
+
+            <circle cx="121" cy="373" r="3.5"/>
+            <text class="shape-t-asset" x="134" y="378">Mgd futures</text>
+
+            <circle cx="150" cy="314" r="3.5"/>
+            <text class="shape-t-asset" x="163" y="319">Equities</text>
+
+            <circle cx="184" cy="257" r="3.5"/>
+            <text class="shape-t-asset" x="197" y="262">Real estate</text>
+
+            <circle cx="222" cy="203" r="3.5"/>
+            <text class="shape-t-asset" x="235" y="208">Hedge funds</text>
+
+            <circle cx="269" cy="152" r="3.5"/>
+            <text class="shape-t-asset" x="282" y="157">Private equity</text>
+
+            <circle cx="320" cy="110" r="3.5"/>
+            <text class="shape-t-asset" x="333" y="115">Venture</text>
+          </g>
+
+          <g>
+            <line class="shape-frontier" x1="188" y1="486" x2="216" y2="486"/>
+            <text class="shape-t-region" x="226" y="491">conventional frontier</text>
+          </g>
+
+          <g>
+            <circle class="shape-retail" cx="330" cy="402" r="4"/>
+            <text class="shape-t-retail" x="330" y="382" text-anchor="middle">Retail trading</text>
+            <text class="shape-t-region" x="330" y="428" text-anchor="middle">no edge /</text>
+            <text class="shape-t-region" x="330" y="448" text-anchor="middle">broken discipline</text>
+          </g>
+
+          <g>
+            <line class="shape-lift" x1="140" y1="258" x2="140" y2="330"/>
+            <circle class="shape-hero__halo" cx="140" cy="234" r="21"/>
+            <circle class="shape-hero__ring" cx="140" cy="234" r="12.5"/>
+            <circle class="shape-hero__dot" cx="140" cy="234" r="6.5"/>
+            <text class="shape-t-hero" x="140" y="146" text-anchor="middle">THIS EDGE</text>
+            <text class="shape-t-herosub" x="140" y="172" text-anchor="middle">Sharpe ~1.4&ndash;1.7</text>
+            <text class="shape-t-herosub" x="140" y="192" text-anchor="middle">loss capped ~1R</text>
+          </g>
+        </svg>
+
+      </div>
+
+      <figcaption class="shape-foot">
+
+        <ul class="shape-key" data-reveal style="--d:160ms">
+
+          <li class="shape-key__i">
+            <svg class="shape-key__mark" viewBox="0 0 26 14" aria-hidden="true" focusable="false">
+              <line class="shape-frontier" x1="1" y1="7" x2="25" y2="7"/>
+            </svg>
+            <span>
+              <span class="shape-key__t">conventional frontier</span>
+              <span class="shape-key__d">More reward is paid for with more risk of permanent loss.</span>
+            </span>
+          </li>
+
+          <li class="shape-key__i">
+            <svg class="shape-key__mark" viewBox="0 0 26 14" aria-hidden="true" focusable="false">
+              <circle class="shape-retail" cx="13" cy="7" r="4"/>
+            </svg>
+            <span>
+              <span class="shape-key__t">no edge / broken discipline</span>
+              <span class="shape-key__d">Below the line &mdash; more risk of permanent loss, less reward.</span>
+            </span>
+          </li>
+
+          <li class="shape-key__i">
+            <svg class="shape-key__mark" viewBox="0 0 26 14" aria-hidden="true" focusable="false">
+              <circle class="shape-hero__ring" cx="13" cy="7" r="6.25"/>
+              <circle class="shape-hero__dot" cx="13" cy="7" r="3.5"/>
+            </svg>
+            <span>
+              <span class="shape-key__t shape-key__t--hero">THIS EDGE</span>
+              <span class="shape-key__d">Above the line &mdash; Sharpe <span class="mono">~1.4&ndash;1.7</span> &middot; loss capped <span class="mono">~1R</span>.</span>
+            </span>
+          </li>
+
+        </ul>
+
+        <p class="attrib shape-note" data-reveal style="--d:240ms">
+          Bounded loss + positive expectancy = a payoff shape almost nothing else has. Conceptual placement, conditional on the edge being real and disciplined. The Sharpe estimate (<span class="mono">~1.4&ndash;1.7</span>) is trade-derived from <span class="mono">246</span> trades called live in our Discord channel, Feb&ndash;Aug 2026, net of all costs, and is conditional on the edge persisting &mdash; not a measured long-horizon result.
+        </p>
+
+      </figcaption>
+
+    </figure>
+
+  </div>
+</section>
