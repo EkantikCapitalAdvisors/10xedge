@@ -1,0 +1,269 @@
+/* =============================================================================
+   09 — THE ROAD  (#road)  — LIGHT BAND
+   ---------------------------------------------------------------------------
+   Composition — a chronology, not a grid.
+
+     >=1200px   LIVE NOW      INDICATIVE: 60–90    INDICATIVE: 90–180   GATE-COND.
+                ●━━━━━━━━━━━━━━○━━━━━━━━━━━━━━━━━━━━○━━━━━━━━━━━━━━━━━━━━○━━━ ─  ·
+                1 PROVE        2 STRUCTURE          3 LICENSE            4 TRADE
+                body           body                 body                 body
+
+     <=1199px   the same axis turned vertical: the gate condition, then the
+                station, then the stage — the hairline dropping down the margin.
+
+   The hairline is the AXIS, not decoration: it separates *when* (the gate
+   condition, above the line) from *what* (the stage, below it). Every element
+   in the section is placed by that line. Segment lengths are weighted by the
+   mass of the stage they carry (.9 / 1.08 / 1.16 / .86), so the four bodies land
+   within a line of each other instead of raggedly stopping wherever they stop —
+   and the axis does not die at station 4: it fades on past it, because the road
+   does not end when the last gate opens.
+
+   Legibility: nothing in stages 2–4 is dimmed. Every stage name is full --ink,
+   every status --ink-2, every body --ink-2 — identical to stage 1. The current
+   stage is marked by exactly two things: a filled node on the axis and the live
+   badge. Progression is signalled by rank, not by fade.
+
+   Gold budget: ZERO. Gold is rationed to the H1 accent, the CTA and engine-
+   measured figures; a stage marker is none of those. "Now" is carried by a
+   solid --ink node against three hollow ones, which is a stronger signal than
+   a colour anyway.
+
+   Typeface law: the day ranges (60–90, 90–180) and "Series 3" are ESTIMATES and
+   registration labels, not engine output — DM Sans, never JetBrains Mono. The
+   stage ordinals 1–4 are ordinals, the same role the design system gives mono
+   in `.card__k .n`: index positions in a fixed enumeration, carrying no measured
+   quantity, which is why they are --ink-3 and never gold.
+   ========================================================================= */
+
+#road {
+  /* Station geometry — shared by both orientations. */
+  --road-node: 11px;
+
+  /* The gate-condition row is a fixed box in BOTH orientations. The live badge
+     (13px caps, .5rem padding, 1px border = 33.6px) sets it; the three flat
+     labels centre inside the same box. That is what puts all four gate labels
+     on one line across the track, and what makes the axis position arithmetic
+     rather than hopeful. */
+  --road-status-h: 2.125rem;
+  --road-cap: calc((var(--road-status-h) - var(--road-node)) / 2);
+
+  /* Vertical case */
+  --road-rail: 1.5rem;
+  --road-vgap: clamp(var(--s-7), 6vw, var(--s-9));
+
+  /* Horizontal case */
+  --road-gap: clamp(var(--s-5), 2.6vw, var(--s-8));
+}
+
+/* ---------- Stage: vertical axis (default) ------------------------------- */
+
+#road .road-stage {
+  position: relative;
+  padding-left: calc(var(--road-rail) + var(--s-3));
+}
+#road .road-stage + .road-stage { margin-top: var(--road-vgap); }
+
+/* The mark spans from the top of its stage through the gap to the next stage's
+   top edge, so the connector can be expressed as one offset from its bottom. */
+#road .road-mark {
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: calc(-1 * var(--road-vgap));
+  width: var(--road-node);
+}
+#road .road-stage:last-child .road-mark { bottom: 0; }
+
+#road .road-node {
+  position: absolute;
+  left: 0;
+  top: var(--road-cap);
+  z-index: 1;
+  width: var(--road-node);
+  height: var(--road-node);
+  border: 1px solid var(--ink-4);
+  border-radius: 50%;
+  background: var(--bg);
+}
+
+/* The current station. Filled ink — the only solid node on the axis. */
+#road .road-stage--live .road-node {
+  border-color: var(--ink);
+  background: var(--ink);
+}
+
+/* The connector. Vertical: drops from under this node to just above the next. */
+#road .road-stage:not(:last-child) .road-mark::before {
+  content: '';
+  position: absolute;
+  left: calc((var(--road-node) - 1px) / 2);
+  top: calc(var(--road-cap) + var(--road-node) + var(--s-3));
+  bottom: calc(var(--s-3) - var(--road-cap));
+  width: 1px;
+  background: var(--line);
+}
+
+/* ---------- The gate condition (above the axis) -------------------------- */
+
+#road .road-status {
+  display: flex;
+  align-items: center;
+  min-height: var(--road-status-h);
+  color: var(--ink-2);
+  letter-spacing: .12em;
+}
+
+/* The pill hangs into the margin by exactly its own padding + border, so its
+   TEXT — not its faint 1px outline — lands on the same vertical as the three
+   flat labels, the stage name and the body. The outline hangs; the type does
+   not. This is also why the badge carries no `.dot` here: the filled node on
+   the axis one line below already says "this is where we are", and two marks
+   saying it, stacked, is one mark too many. */
+#road .road-stage--live .road-status { margin-left: calc(-1 * (.75rem + 1px)); }
+
+#road .road-live {
+  padding-inline: .75rem;
+  color: var(--ink);
+  line-height: 1.2;
+  letter-spacing: .12em;
+}
+
+/* ---------- The station (below the axis) --------------------------------- */
+
+/* Cormorant caps at the shared --t-h3 step — no local size, so the stage names
+   sit on the same rung of the scale as every other h3 on the page. Tracking is
+   opened so the caps do not clot; weight 500 because caps at 400 go weedy. */
+#road .road-name {
+  font-weight: 500;
+  line-height: 1.2;
+  letter-spacing: .045em;
+  color: var(--ink);
+}
+
+#road .road-n {
+  font-size: .64em;
+  letter-spacing: 0;
+  color: var(--ink-3);
+  margin-right: .62em;
+}
+
+#road .road-b {
+  margin-top: var(--s-4);
+  font-size: var(--t-sm);
+  line-height: 1.62;
+  color: var(--ink-2);
+  max-width: 34em;
+  text-wrap: pretty;
+}
+
+/* ---------- Stage: horizontal axis (>=1200px) ---------------------------- */
+/* 1200, not 1024: at 1024 a four-across track gives each body a 21ch measure —
+   the paragraph gets NARROWER as the viewport gets wider. The vertical axis
+   reads correctly all the way to 1199px, where the four-across measure finally
+   clears 27ch. */
+
+@media (min-width: 75em) {
+  #road .road-track {
+    display: grid;
+    /* Segment length ∝ the mass of the stage it carries. Measured, not guessed:
+       these weights hold the tallest and shortest stage within one line of each
+       other (≤25px spread) at 1200, 1280, 1440 and 1920, while keeping the
+       narrowest body above a 27ch measure. Equal quarters left 97px of rag
+       between the longest column and the shortest. */
+    grid-template-columns: .9fr 1.08fr 1.16fr .86fr;
+    column-gap: var(--road-gap);
+    align-items: start;
+  }
+
+  #road .road-stage { padding-left: 0; }
+  #road .road-stage + .road-stage { margin-top: 0; }
+
+  #road .road-mark {
+    position: relative;
+    inset: auto;
+    display: block;
+    width: auto;
+    height: var(--road-node);
+    margin-block: var(--s-5);
+  }
+  #road .road-node { top: 0; }
+
+  /* One hairline running from each node, under it, across the gap, to the next.
+     The nodes sit on top (z-index 1, opaque fill) so it reads as continuous. */
+  #road .road-stage:not(:last-child) .road-mark::before {
+    left: 0;
+    right: calc(-1 * var(--road-gap));
+    top: 50%;
+    bottom: auto;
+    width: auto;
+    height: 1px;
+    transform: translateY(-.5px);
+  }
+
+  /* Past the last station the axis fades out rather than stopping dead — the
+     right of the track is the future, not an empty column. */
+  #road .road-stage:last-child .road-mark::after {
+    content: '';
+    position: absolute;
+    left: calc((var(--road-node) - 1px) / 2);
+    right: 0;
+    top: 50%;
+    height: 1px;
+    transform: translateY(-.5px);
+    background: linear-gradient(90deg, var(--line), transparent);
+  }
+}
+
+/* ---------- The terminus ------------------------------------------------- */
+
+#road .road-close {
+  margin-top: clamp(var(--s-9), 7vw, var(--s-11));
+  padding-top: clamp(var(--s-6), 3.5vw, var(--s-8));
+  border-top: 1px solid var(--line);
+  display: grid;
+  gap: var(--s-6);
+}
+
+/* The page's recurring section-closing pull statement: one component, one job,
+   ONE size — `--t-pull`. No local font-size lives here. */
+#road .road-vow {
+  font-family: 'Cormorant Garamond', 'Iowan Old Style', Georgia, 'Times New Roman', serif;
+  font-weight: 400;
+  font-size: var(--t-pull);
+  line-height: 1.28;
+  letter-spacing: -.014em;
+  color: var(--ink);
+  max-width: 20em;
+  text-wrap: pretty;
+}
+
+@media (min-width: 75em) {
+  #road .road-close {
+    grid-template-columns: minmax(0, 1.05fr) minmax(0, .95fr);
+    column-gap: clamp(var(--s-7), 5vw, var(--s-10));
+    align-items: start;
+  }
+  /* The same hairline-aside device the page uses elsewhere — but hung off the
+     CAP LINE of the first line rather than off the line box, and nudged down so
+     the caveat's caps sit on the vow's caps in the adjacent column. `start`
+     aligns line boxes; type has to be aligned by hand. */
+  #road .road-attrib {
+    position: relative;
+    /* Measured: the vow's cap line sits 11.0px under its box top, the caveat's
+       4.0px under its own. .54em of 13px closes the 7px difference so the two
+       columns start on one optical line, not on two line-box tops. */
+    margin-top: .54em;
+    padding-left: clamp(var(--s-5), 2.4vw, var(--s-6));
+  }
+  /* Cap line to last baseline — the rule measures the type, not the line boxes. */
+  #road .road-attrib::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: .31em;
+    bottom: .52em;
+    width: 1px;
+    background: var(--line);
+  }
+}

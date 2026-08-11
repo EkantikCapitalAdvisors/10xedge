@@ -1,0 +1,180 @@
+/* ---------- 01 · HERO ---------------------------------------------------
+   Full-bleed navy. One left type axis; the lead column is held to 10-of-12
+   from 768px and 9-of-12 from 1024px so the headline always breaks to two
+   lines and the asymmetry is stated by the measure, not by leftover space.
+   Exactly two horizontal structures: the status strip at the top of the
+   content block and the soft-launch rail seated at the foot of the band.
+   No decorative grid — a hairline that crosses a letterform is a defect,
+   and one that claims to draw the 12-column grid must land on it.
+   ------------------------------------------------------------------------ */
+
+.hero {
+  --hero-seat: rgba(19, 31, 56, .38);       /* navy-900 alpha — rail seating */
+
+  position: relative;
+  overflow: hidden;
+  isolation: isolate;
+  display: flex;
+  flex-direction: column;
+
+  /* Clears the fixed nav (~78px incl. its stacked mark) with room to breathe. */
+  padding-top: calc(var(--s-10) + var(--s-5));
+  padding-bottom: 0;
+
+  /* Tall at desktop, never taller than its content on short/mobile viewports. */
+  min-height: 34rem;
+  min-height: min(100vh, 60rem);
+  min-height: min(100svh, 60rem);
+}
+
+/* No local contrast override. The shared dark-band --ink-2 (ivory .70 over navy)
+   measures 7.34:1, comfortably past AA — an earlier 3.3:1 reading was wrong, and
+   retuning one band's token would only desynchronise the hero from the other
+   dark bands. Light-band tokens were the ones that needed correcting. */
+
+/* --- Atmosphere ---------------------------------------------------------
+   A single navy vignette plus a barely-there ivory lift at the top-left.
+   The lift used to be gold; gold is rationed to the H1 accent, the CTA and
+   engine-measured figures, and a wash over 40% of the fold is none of those. */
+.hero__atmos {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+.hero__atmos::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(72% 58% at 16% 2%,  rgba(250, 248, 245, .045), rgba(250, 248, 245, 0) 60%),
+    radial-gradient(88% 74% at 92% 100%, rgba(19, 31, 56, .92),    rgba(19, 31, 56, 0)   64%);
+}
+
+/* --- Body --------------------------------------------------------------- */
+.hero__body {
+  position: relative;
+  z-index: 1;
+  flex: 1 1 auto;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding-block: var(--s-6) var(--s-7);
+}
+
+/* --- Status strip -------------------------------------------------------
+   The fold's only horizontal rule: the live-status pill on the type axis,
+   a hairline carrying the full content width, and a terminus at the right
+   content edge so the rule closes instead of trailing off. */
+.hero__top {
+  display: flex;
+  align-items: center;
+  gap: var(--s-5);
+}
+.hero__badge {
+  flex: none;
+  font-size: var(--t-eyebrow);
+  letter-spacing: .14em;
+  padding: .5rem .95rem .5rem .8rem;
+}
+/* Nothing above the fold loops. The status pill announces "live" by being
+   present, not by pulsing at a reader who is trying to read the headline. */
+.hero__top .dot::after { animation: none; }
+
+.hero__rule {
+  display: none;
+  flex: 1 1 0;
+  min-width: 0;
+  height: 1px;
+  background: var(--line);
+}
+.hero__top-k {
+  display: none;
+  flex: none;
+}
+
+/* --- Lead column -------------------------------------------------------- */
+.hero__lead { margin-top: var(--s-4); }
+
+.hero__title {
+  /* Same endpoints as --t-display (49.6px floor, 108px cap) but a steeper
+     middle, so 768px gets a display-scale headline instead of the desktop
+     layout shrunk into one thin line. */
+  font-size: clamp(3.1rem, .55rem + 9.8vw, 6.75rem);
+}
+
+/* 16 → 32 → 48 (40 → 64 from 768px). The label sits tight to the headline it
+   labels; every step below it opens, so the H1 owns the space. The old build
+   used --s-5 for both the eyebrow gap and the lede gap, which gave the display
+   line no dominance at all. */
+.hero__lede {
+  margin-top: var(--s-6);
+  max-width: 26em;
+}
+
+.hero__actions {
+  margin-top: var(--s-8);
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--s-4) var(--s-6);
+}
+.hero__cta { max-width: 100%; }
+
+.hero__quiet {
+  display: inline-flex;
+  align-items: center;
+  gap: .55em;
+  padding-block: var(--s-3);          /* tap target >= 44px */
+  font-size: var(--t-sm);
+  font-weight: 500;
+  color: var(--ink-2);
+  transition: color .2s var(--ease-io);
+}
+.hero__quiet-t {
+  border-bottom: 1px solid var(--line);
+  padding-bottom: .15em;
+  transition: border-color .2s var(--ease-io);
+}
+.hero__quiet-a {
+  transition: transform .2s var(--ease);
+}
+.hero__quiet:hover { color: var(--ink); }
+.hero__quiet:hover .hero__quiet-t { border-bottom-color: var(--ink-3); }
+.hero__quiet:hover .hero__quiet-a { transform: translateX(3px); }
+
+/* --- Soft-launch status rail --------------------------------------------
+   One hairline value in this band: --line for structure. --line-2 made a
+   fourth weight that belonged to no system. */
+.hero__rail {
+  position: relative;
+  z-index: 1;
+  border-top: 1px solid var(--line);
+  background: var(--hero-seat);
+}
+.hero__rail-in {
+  padding-block: clamp(var(--s-5), 2.2vw, var(--s-6));
+}
+.hero__status {
+  max-width: 68ch;
+  text-wrap: pretty;
+}
+.hero__status strong { color: var(--ink); }
+
+/* --- 768px -------------------------------------------------------------- */
+@media (min-width: 48em) {
+  .hero__body { padding-block: var(--s-7) var(--s-8); }
+  .hero__rule { display: block; }
+  .hero__top-k { display: block; }
+  /* 10 of 12 columns: 10t + 9g where t = (100% - 11g)/12 */
+  .hero__lead { max-width: calc(83.3333% - var(--s-6) / 6); }
+  .hero__lede { margin-top: var(--s-7); }
+  .hero__actions { margin-top: var(--s-9); }
+}
+
+/* --- 1024px: the 9-of-12 lead column ------------------------------------ */
+@media (min-width: 64em) {
+  /* 9 of 12 columns: 9t + 8g where t = (100% - 11g)/12 */
+  .hero__lead { max-width: calc(75% - var(--s-6) / 4); }
+}

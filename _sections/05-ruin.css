@@ -1,0 +1,271 @@
+/* ---------- 05 · RUIN, ENGINEERED TO NEAR-ZERO ---------------------------
+   A DARK band. #shape → #ruin → #tripwires read as one continuous navy risk
+   chapter: light for the evidence, dark for how it fails. Nothing here paints
+   a literal colour — every value is a semantic token, so the .band--dark flip
+   in styles.css repaints the whole section without a single override.
+
+   Composition: one dominant engine figure, with the aviation analogy demoted
+   to a literal marginal exhibit — a hairline-separated column in the right
+   margin of the headline block, set entirely in ink so no gold ever lands on
+   a number we did not compute. Below 62em the exhibit drops beneath the
+   figure and re-attaches with a top hairline: same subordination, rotated 90°.
+
+   The four aircraft principles are a DEPENDENCY CHAIN, not four peers, so
+   they run as a numbered vertical sequence with the ordinal hung in the left
+   margin and each principle's rule and body set side by side. Principle 4 —
+   the one the analogy breaks on — gets a real structural break: a gap, a
+   heavier rule, and a larger question.
+   ------------------------------------------------------------------------- */
+
+#ruin {
+  /* The headline is a 14-character string, so it needs its own ramp: .fig--lg
+     tops out too small to carry the section, .fig--xl overflows 390px. This
+     clamp is tuned so the line never wraps at 390 / 768 / 1440. */
+  --ruin-fig: clamp(2.75rem, 1.4rem + 5.6vw, 5.5rem);
+  --ruin-ex-w: clamp(15rem, 21vw, 18rem);
+  --ruin-ex-gap: clamp(var(--s-7), 4vw, var(--s-9));
+  /* #tripwires is the next navy band. The system's own band seam only paints
+     between light bands, so the risk chapter gets its internal seam here — a
+     hairline, not a polarity change. */
+  border-bottom: 1px solid var(--line);
+}
+
+/* --- The headline figure -------------------------------------------------- */
+.ruin-head { min-width: 0; }
+.ruin-fig {
+  font-size: var(--ruin-fig);
+  letter-spacing: -.048em;
+  line-height: 1;
+}
+/* The qualifier is not a digit. At the numerals' own size it read as a fifth
+   glyph in the string and sat a full monospace cell away from the 1 it
+   qualifies; it now drops to roughly half height, loses the mono tracking and
+   is optically centred on the numerals' x-height. */
+.ruin-fig__lt {
+  font-size: .58em;
+  letter-spacing: 0;
+  margin-right: .06em;
+  vertical-align: .055em;
+}
+/* "in" is the hinge of a ratio, not a measured quantity — so it leaves the
+   mono, drops to a label size, and lifts toward the optical centre of the
+   numerals rather than sitting on their baseline. Its gaps are margins, not
+   monospace word-spaces: a mono cell at 88px is a 48px hole. */
+.ruin-fig__in {
+  font-family: 'DM Sans', system-ui, sans-serif;
+  /* Floored at 13px so the 390px case never drops the word below the minimum
+     legible size, even though it is optically a connective, not a reading. */
+  font-size: max(.8125rem, .28em);
+  font-weight: 400;
+  letter-spacing: .02em;
+  vertical-align: 1.15em;
+  margin-inline: .34em;
+  color: var(--ink-3);
+}
+
+.ruin-sub {
+  margin-top: var(--s-4);
+  font-size: var(--t-sm);
+  line-height: 1.55;
+  color: var(--ink-2);
+  max-width: 30em;
+  text-wrap: pretty;
+}
+
+/* The mandated verdict line gets a serif register change and its own short
+   hairline, so it reads as the conclusion drawn from the figure rather than a
+   second caption. Size is the shared --t-pull: this is the page's recurring
+   section-closing pull statement and it is not allowed its own scale. */
+.ruin-verdict {
+  margin-top: var(--s-6);
+  font-family: 'Cormorant Garamond', 'Iowan Old Style', Georgia, 'Times New Roman', serif;
+  font-weight: 400;
+  font-size: var(--t-pull);
+  line-height: 1.24;
+  letter-spacing: -.014em;
+  color: var(--ink);
+  max-width: 18em;
+  text-wrap: balance;
+}
+.ruin-verdict::before {
+  content: '';
+  display: block;
+  width: var(--s-8);   /* 48px — the system's .rule--short width, in ink not gold */
+  height: 1px;
+  margin-bottom: var(--s-5);
+  background: var(--ink-4);
+}
+
+/* --- The aviation exhibit -------------------------------------------------
+   Stacked default: a bounded block hung under the figure on a top hairline. */
+.ruin-exhibit {
+  margin-top: clamp(var(--s-8), 6vw, var(--s-9));
+  padding-top: var(--s-6);
+  border-top: 1px solid var(--line);
+  max-width: 34rem;
+}
+.ruin-plot {
+  margin-top: var(--s-5);
+  display: grid;
+  grid-template-columns: auto minmax(64px, 1fr) auto;
+  column-gap: var(--s-3);
+  align-items: center;
+  min-height: 7.25rem;
+}
+/* The two readings sit at the heights their own data points occupy, so the
+   drop is legible even with the curve stripped out. The min-height above is
+   what buys them the travel: without it the 47.6px label blocks set the row
+   height and align-self had under 3px of slack to work with. */
+.ruin-plot__pt--from { align-self: start; }
+.ruin-plot__pt--to { align-self: end; }
+
+.ruin-plot__v {
+  display: block;
+  font-size: clamp(1.15rem, 1rem + .5vw, 1.5rem);
+  line-height: 1.15;
+  letter-spacing: -.028em;
+  color: var(--ink);
+  white-space: nowrap;
+}
+.ruin-plot__pt--from .ruin-plot__v { color: var(--ink-2); }
+
+.ruin-plot__yr {
+  display: block;
+  margin-top: var(--s-1);
+  font-size: var(--t-xs);
+  line-height: 1.3;
+  letter-spacing: .14em;
+  color: var(--ink-3);
+}
+
+/* The curve is stretched to the row so the two dots actually land at the two
+   readings' heights; every stroke is non-scaling so the distortion never
+   reaches the ink. */
+.ruin-plot__curve {
+  width: 100%;
+  height: 100%;
+  align-self: stretch;
+}
+.ruin-plot__axis { fill: none; stroke: var(--line); stroke-width: 1; }
+.ruin-plot__arc {
+  fill: none;
+  stroke: var(--ink-2);
+  stroke-width: 1;
+  stroke-linecap: round;
+}
+/* Zero-length round-capped strokes, not circles: a <circle> would render as an
+   ellipse once the viewBox is stretched. */
+.ruin-plot__dot {
+  fill: none;
+  stroke: var(--ink-2);
+  stroke-width: 7;
+  stroke-linecap: round;
+}
+
+.ruin-exhibit__cap {
+  margin-top: var(--s-5);
+  max-width: 40ch;
+}
+
+/* --- The four aircraft principles ----------------------------------------
+   A sequence, not a grid. Each principle is a hairline-led row: hung ordinal,
+   then the rule (label + question), then the body. Reading down the ordinals
+   is reading the dependency chain. */
+.ruin-seq {
+  margin-top: clamp(var(--s-9), 6vw, var(--s-11));
+}
+.ruin-seq__item {
+  display: grid;
+  grid-template-columns: 1.75rem minmax(0, 1fr);
+  column-gap: var(--s-3);
+  row-gap: var(--s-4);
+  align-items: start;
+}
+.ruin-seq__item + .ruin-seq__item {
+  margin-top: clamp(var(--s-6), 3vw, var(--s-7));
+}
+.ruin-seq__n {
+  grid-column: 1;
+  grid-row: 1;
+  font-size: var(--t-eyebrow);
+  font-weight: 500;
+  line-height: 1.2;
+  color: var(--ink-2);
+  font-variant-numeric: tabular-nums;
+}
+.ruin-seq__hd { grid-column: 2; }
+/* The rule spans the section; the prose keeps a 68-character measure and lets
+   the slack fall at the right. Structure is the hairline, not the text block. */
+.ruin-seq__b { grid-column: 2; min-width: 0; max-width: 32rem; }
+.ruin-seq__b .card__b { margin-top: 0; }
+.ruin-seq__b .card__b + .card__b { margin-top: var(--s-4); }
+/* The questions are short; an orphaned last word is the main risk. */
+.ruin-seq__item .card__q { text-wrap: balance; }
+
+/* Principle 4 is the one the analogy breaks on — a market adapts where physics
+   does not. The first three keep the account alive; this one keeps it right,
+   so it is set off from them by a real gap, a heavier hairline and a step up
+   in the question. The emphasis stays monochrome: no gold on a heading. */
+.ruin-seq__item + .ruin-seq__item--living {
+  margin-top: clamp(var(--s-8), 5vw, var(--s-10));
+}
+.ruin-seq__item--living { border-top-color: var(--ink-4); }
+.ruin-seq__item--living .card__q { font-size: var(--t-h3); line-height: 1.18; }
+
+/* The evidence line under LOAD LIMIT: the rule, then the record against the rule.
+   Set apart by a hairline so it reads as corroboration, not as more rule text. */
+.ruin-evidence {
+  padding-top: var(--s-4);
+  border-top: 1px solid var(--line-2);
+  color: var(--ink-2);
+}
+
+/* --- Closing attribution --------------------------------------------------
+   The smallest type on the page takes the system's own measure, not a 74ch
+   one-off; and it is a source note, so it no longer restates the headline. */
+.ruin-attrib {
+  margin-top: clamp(var(--s-8), 5vw, var(--s-10));
+  max-width: 52ch;
+}
+/* .attrib is already at the 13px floor — inline mono must not shrink under it. */
+.ruin-attrib .mono {
+  font-size: 1em;
+  white-space: nowrap;
+}
+
+/* =========================================================================
+   62em — the exhibit moves into the margin, the sequence splits rule from body
+   ========================================================================= */
+@media (min-width: 62em) {
+
+  .ruin-lead {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) var(--ruin-ex-w);
+    column-gap: var(--ruin-ex-gap);
+    align-items: stretch;
+  }
+
+  /* Full-height hairline, bottom-aligned content: the rule spans the whole
+     headline block so it reads as a margin, while the exhibit's last line
+     settles onto the verdict's baseline. */
+  .ruin-exhibit {
+    margin-top: 0;
+    padding-top: 0;
+    padding-left: clamp(var(--s-5), 2.6vw, var(--s-7));
+    border-top: 0;
+    border-left: 1px solid var(--line);
+    max-width: none;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+  }
+
+  .ruin-seq__item {
+    grid-template-columns: 2.25rem minmax(0, 19rem) minmax(0, 1fr);
+    column-gap: clamp(var(--s-5), 3vw, var(--s-8));
+  }
+  .ruin-seq__b {
+    grid-column: 3;
+    grid-row: 1;
+  }
+}

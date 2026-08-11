@@ -1,0 +1,179 @@
+<section class="band band--dark" id="shape" aria-labelledby="shape-title">
+  <div class="wrap">
+
+    <div class="sec-head">
+      <p class="eyebrow" data-reveal>THE PAYOFF SHAPE</p>
+      <h2 id="shape-title" class="sec-title" data-reveal style="--d:70ms">It Bends the Payoff</h2>
+      <p class="lede" data-reveal style="--d:140ms">Most assets sit on one line &mdash; more reward means more risk. A real edge steps off it.</p>
+    </div>
+
+    <figure class="shape-fig">
+
+      <p class="shape-flag" data-reveal><span class="eyebrow">Conceptual diagram &middot; unquantified axes</span></p>
+
+      <div class="shape-plot-wrap" data-reveal style="--d:80ms">
+
+        <!-- ---------- Wide artboard (>=1024px). 1040 units wide, never rendered
+             wider than 1040px, never narrower than ~951px — so its 14.5-unit
+             labels render between 13.3px and 14.5px and never break the floor. -->
+        <svg class="shape-plot shape-plot--wide" viewBox="0 0 1040 508" preserveAspectRatio="xMidYMid meet"
+             role="img" aria-labelledby="shape-dgw-t shape-dgw-d">
+          <title id="shape-dgw-t">Conceptual diagram: reward potential against risk of permanent loss</title>
+          <desc id="shape-dgw-d">Both axes are unquantified and no values are plotted. A dotted curve, labelled the conventional frontier, runs from lower left to upper right: further right means more risk of permanent loss, further up means more reward potential. Eight asset classes sit on that curve, in rising order of risk &mdash; cash, bonds, managed futures, equities, real estate, hedge funds, private equity and venture. Retail trading sits below and to the right of the curve, in a region marked no edge or broken discipline. One larger gold point, marked THIS EDGE, sits above and to the left of the curve, annotated Sharpe about 1.4 to 1.7 and loss capped at about 1R, with a dashed line dropping from it to the curve directly below.</desc>
+
+          <g class="shape-ax">
+            <line x1="40" y1="44" x2="40" y2="478"/>
+            <line x1="40" y1="478" x2="1032" y2="478"/>
+          </g>
+
+          <text class="shape-t-axis" x="40" y="28">Reward potential &uarr;</text>
+          <text class="shape-t-axis" x="1032" y="500" text-anchor="end">Risk of permanent loss / ruin &rarr;</text>
+
+          <path class="shape-frontier" d="M 104 436 C 262 310, 520 222, 930 152"/>
+          <text class="shape-t-region" x="808" y="124" text-anchor="end">conventional frontier</text>
+          <line class="shape-leader" x1="820" y1="130" x2="820" y2="172"/>
+
+          <g class="shape-assets">
+            <circle cx="104" cy="436" r="4"/>
+            <text class="shape-t-asset" x="117" y="458">Cash</text>
+
+            <circle cx="171" cy="389" r="4"/>
+            <text class="shape-t-asset" x="184" y="411">Bonds</text>
+
+            <circle cx="267" cy="336" r="4"/>
+            <text class="shape-t-asset" x="280" y="358">Mgd futures</text>
+
+            <circle cx="379" cy="288" r="4"/>
+            <text class="shape-t-asset" x="392" y="310">Equities</text>
+
+            <circle cx="504" cy="247" r="4"/>
+            <text class="shape-t-asset" x="517" y="269">Real estate</text>
+
+            <circle cx="639" cy="211" r="4"/>
+            <text class="shape-t-asset" x="652" y="233">Hedge funds</text>
+
+            <circle cx="781" cy="180" r="4"/>
+            <text class="shape-t-asset" x="794" y="202">Private equity</text>
+
+            <circle cx="930" cy="152" r="4"/>
+            <text class="shape-t-asset" x="943" y="174">Venture</text>
+          </g>
+
+          <g>
+            <circle class="shape-retail" cx="700" cy="383" r="4.5"/>
+            <text class="shape-t-retail" x="718" y="388">Retail trading</text>
+            <text class="shape-t-region" x="718" y="414">no edge / broken discipline</text>
+          </g>
+
+          <g>
+            <line class="shape-lift" x1="320" y1="203" x2="320" y2="313"/>
+            <circle class="shape-hero__halo" cx="320" cy="176" r="27"/>
+            <circle class="shape-hero__ring" cx="320" cy="176" r="16"/>
+            <circle class="shape-hero__dot" cx="320" cy="176" r="7"/>
+            <text class="shape-t-hero" x="363" y="168">THIS EDGE</text>
+            <text class="shape-t-herosub" x="363" y="196">Sharpe ~1.4&ndash;1.7 &middot; loss capped ~1R</text>
+          </g>
+        </svg>
+
+        <!-- ---------- Compact artboard (<1024px): redrawn portrait, not a
+             shrunken copy. 390 units wide, never rendered wider than 390px, so
+             its 15.5-unit labels render between 13.7px and 15.5px. -->
+        <svg class="shape-plot shape-plot--compact" viewBox="0 0 390 518" preserveAspectRatio="xMidYMid meet"
+             role="img" aria-labelledby="shape-dgc-t shape-dgc-d">
+          <title id="shape-dgc-t">Conceptual diagram: reward potential against risk of permanent loss</title>
+          <desc id="shape-dgc-d">Both axes are unquantified and no values are plotted. A dotted curve, labelled the conventional frontier, runs from lower left to upper right: further right means more risk of permanent loss, further up means more reward potential. Eight asset classes sit on that curve, in rising order of risk &mdash; cash, bonds, managed futures, equities, real estate, hedge funds, private equity and venture. Retail trading sits below and to the right of the curve, in a region marked no edge or broken discipline. One larger gold point, marked THIS EDGE, sits above and to the left of the curve, annotated Sharpe about 1.4 to 1.7 and loss capped at about 1R, with a dashed line dropping from it to the curve directly below.</desc>
+
+          <g class="shape-ax">
+            <line x1="30" y1="40" x2="30" y2="484"/>
+            <line x1="30" y1="484" x2="382" y2="484"/>
+          </g>
+
+          <text class="shape-t-axis" x="30" y="24">Reward potential &uarr;</text>
+          <text class="shape-t-axis" x="382" y="506" text-anchor="end">Risk of permanent loss / ruin &rarr;</text>
+
+          <path class="shape-frontier" d="M 48 440 C 92 330, 146 212, 280 138"/>
+
+          <g class="shape-assets">
+            <circle cx="48" cy="440" r="3.5"/>
+            <text class="shape-t-asset" x="59" y="459">Cash</text>
+
+            <circle cx="73" cy="380" r="3.5"/>
+            <text class="shape-t-asset" x="84" y="399">Bonds</text>
+
+            <circle cx="99" cy="328" r="3.5"/>
+            <text class="shape-t-asset" x="110" y="347">Mgd futures</text>
+
+            <circle cx="127" cy="280" r="3.5"/>
+            <text class="shape-t-asset" x="138" y="299">Equities</text>
+
+            <circle cx="159" cy="237" r="3.5"/>
+            <text class="shape-t-asset" x="170" y="256">Real estate</text>
+
+            <circle cx="196" cy="198" r="3.5"/>
+            <text class="shape-t-asset" x="207" y="217">Hedge funds</text>
+
+            <circle cx="236" cy="165" r="3.5"/>
+            <text class="shape-t-asset" x="247" y="184">Private equity</text>
+
+            <circle cx="280" cy="138" r="3.5"/>
+            <text class="shape-t-asset" x="291" y="157">Venture</text>
+          </g>
+
+          <g>
+            <circle class="shape-retail" cx="210" cy="360" r="4"/>
+            <text class="shape-t-retail" x="228" y="366">Retail trading</text>
+            <text class="shape-t-region" x="228" y="390">no edge /<tspan x="228" dy="21">broken discipline</tspan></text>
+          </g>
+
+          <g>
+            <line class="shape-lift" x1="131" y1="201" x2="131" y2="275"/>
+            <circle class="shape-hero__halo" cx="131" cy="180" r="21"/>
+            <circle class="shape-hero__ring" cx="131" cy="180" r="12.5"/>
+            <circle class="shape-hero__dot" cx="131" cy="180" r="5.5"/>
+            <text class="shape-t-hero" x="110" y="94">THIS EDGE</text>
+            <text class="shape-t-herosub" x="110" y="120">Sharpe ~1.4&ndash;1.7</text>
+            <text class="shape-t-herosub" x="110" y="144">loss capped ~1R</text>
+          </g>
+        </svg>
+
+      </div>
+
+      <figcaption class="shape-foot">
+
+        <ul class="shape-key" data-reveal style="--d:160ms">
+
+          <li class="shape-key__i">
+            <svg class="shape-key__mark" viewBox="0 0 26 14" aria-hidden="true" focusable="false">
+              <line class="shape-frontier" x1="1" y1="7" x2="25" y2="7"/>
+            </svg>
+            <p class="shape-key__x"><span class="shape-key__t">conventional frontier</span> &mdash; more reward is paid for with more risk of permanent loss.</p>
+          </li>
+
+          <li class="shape-key__i">
+            <svg class="shape-key__mark" viewBox="0 0 26 14" aria-hidden="true" focusable="false">
+              <circle class="shape-retail" cx="13" cy="7" r="4"/>
+            </svg>
+            <p class="shape-key__x"><span class="shape-key__t">no edge / broken discipline</span> &mdash; below the line: more risk of permanent loss, less reward.</p>
+          </li>
+
+          <li class="shape-key__i">
+            <svg class="shape-key__mark" viewBox="0 0 26 14" aria-hidden="true" focusable="false">
+              <circle class="shape-hero__halo" cx="13" cy="7" r="10.5"/>
+              <circle class="shape-hero__ring" cx="13" cy="7" r="6.25"/>
+              <circle class="shape-hero__dot" cx="13" cy="7" r="2.75"/>
+            </svg>
+            <p class="shape-key__x"><span class="shape-key__t shape-key__t--hero">THIS EDGE</span> &mdash; above the line: Sharpe <span class="mono">~1.4&ndash;1.7</span>, loss capped <span class="mono">~1R</span>.</p>
+          </li>
+
+        </ul>
+
+        <p class="attrib shape-note" data-reveal style="--d:240ms">
+          Bounded loss + positive expectancy = a payoff shape almost nothing else has. Conceptual placement, conditional on the edge being real and disciplined. The Sharpe estimate (<span class="mono">~1.4&ndash;1.7</span>) is trade-derived from <span class="mono">149</span> trades called live in our Discord channel, Feb&ndash;Aug 2026, net of all costs, and is conditional on the edge persisting &mdash; not a measured long-horizon result.
+        </p>
+
+      </figcaption>
+
+    </figure>
+
+  </div>
+</section>

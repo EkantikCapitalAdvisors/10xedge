@@ -1,6 +1,16 @@
 # Deploy checklist — THE EKANTIK STRUCTURAL EDGE landing page
 
-Page: `edge/index.html` → intended path `/edge/` on `10xedge.ekantikcapital.com`.
+Page: `index.html` → served at the **root** of `10xedge.ekantikcapital.com`.
+
+> **2026-08-11 — PUBLISHED TO ROOT AT THE OPERATOR'S EXPLICIT INSTRUCTION.**
+> The page was moved from `edge/` to the repository root and merged to `main`, replacing the
+> holding page. This was done **with both hard blockers below still open**. The operator was told
+> so before the move and instructed it anyway; that is their call to make, and it is recorded here
+> rather than left implicit.
+> - `noindex,nofollow` is retained, so the page is reachable but not indexable.
+> - The previous holding page is preserved at `_archive/holding-page.html`. Rolling back is a
+>   one-file copy: `cp _archive/holding-page.html index.html`.
+> - The design fixer round was mid-flight at publish time (2 of 11 sections verified complete).
 
 ---
 

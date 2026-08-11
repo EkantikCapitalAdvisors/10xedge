@@ -1,23 +1,24 @@
 /* ---------- 10 · THE CTA -------------------------------------------------
-   The close. Two registers, deliberately at odds, stacked:
+   The close. ONE axis, top to bottom — the same left rail every other
+   section uses, and the same one the footer beneath it uses, so the seam
+   between this band and the colophon is silent. The band was previously
+   centre-set above its own ruled rails, which put two alignment systems
+   inside one section; that is gone.
 
-   1. THE ASK — centre-set on a narrow column, the largest type on the page
-      after the hero. Centring is earned here because this is the only band
-      that addresses the reader instead of showing them evidence. Section 07
-      ends by shutting the door on everyone ("no one can allocate"); this
-      band restates that and then hands over the single thing that is
-      actually open.
-   2. THE RECORD — left-aligned, ruled top and bottom, full wrap width. Same
-      badge + rail construction as the hero's soft-launch strip, so the page
-      opens and closes on the identical sentence, in the identical form. A
-      statement of record must not look like centred marketing copy, so it
-      breaks the centre axis on purpose.
+   Promotion comes from the dark ground, the air, and the single gold
+   control. NOT from type size: `.sec-title` is the page's structural
+   refrain and keeps `--t-h2` at weight 400 here exactly as everywhere
+   else. `.sec-head` supplies the eyebrow → title → lede rhythm, so the
+   close is measured with the page's own ruler.
 
-   Gold appears exactly once in this band: the primary button. Nothing else
-   is gold — not the eyebrow, not a rule, not an accent word in the heading —
-   so the one action is the only bright object on a dark field. The ghost
-   secondary is quieted by text colour and size, never by removing its
-   border: a 60px control that is hard to see is worse than a quiet one.
+   Gold appears exactly once in this band: the primary button. Nothing
+   else is gold — not the eyebrow, not a rule, not an accent word — so the
+   one action is the only bright object on a dark field. Both controls
+   share the system `.btn` box, so their top and bottom edges line up; the
+   hierarchy between them is carried by fill and border alone.
+
+   Nothing in this band moves on a loop. The conversion viewport has one
+   focal point and it is not an animation.
 
    No urgency devices of any kind. Nothing counts, nothing expires.
    ------------------------------------------------------------------------- */
@@ -26,13 +27,11 @@
   position: relative;
   overflow: hidden;
   isolation: isolate;
-  /* Extra air above so the band separates cleanly from the roadmap. */
-  padding-block: calc(var(--sec-y) + var(--s-6)) var(--sec-y);
-  text-align: center;
 }
 
-/* --- Atmosphere: a navy vignette and a single soft lift behind the ask.
-       Alpha-composites of navy-900 and ivory only — no new hues. --------- */
+/* --- Atmosphere: a navy vignette and a single soft lift, moved off centre
+       to sit behind the heading now that the band reads left. Alpha
+       composites of navy-900 and ivory only — no new hues. ------------- */
 #watch .cta__atmos {
   position: absolute;
   inset: 0;
@@ -44,7 +43,7 @@
   position: absolute;
   inset: 0;
   background:
-    radial-gradient(76% 58% at 50% 4%,   rgba(250, 248, 245, .045), rgba(250, 248, 245, 0) 62%),
+    radial-gradient(72% 56% at 26% 2%,   rgba(250, 248, 245, .045), rgba(250, 248, 245, 0) 62%),
     radial-gradient(98% 80% at 50% 114%, rgba(19, 31, 56, .9),      rgba(19, 31, 56, 0)     68%);
 }
 
@@ -55,59 +54,30 @@
 
 /* =========================================================================
    1 · THE ASK
+   `.sec-head` already sets the 46rem measure and the eyebrow/title/lede
+   steps. Nothing to add and, more importantly, nothing to override.
    ========================================================================= */
-#watch .cta-lead {
-  max-width: 46rem;
-  margin-inline: auto;
-}
 
-/* 11px is the system eyebrow; at the page's largest close it is raised to the
-   13px legibility floor and given a hair less tracking to compensate. */
-#watch .cta-eyebrow {
-  font-size: var(--t-xs);
-  letter-spacing: .16em;
-}
-
-#watch .cta-title {
-  /* Second-largest type on the page: above --t-h2, below the hero display.
-     Balanced, it sets as two even lines from ~420px upward. */
-  margin-top: var(--s-4);
-  font-size: clamp(2.6rem, 1.62rem + 3.55vw, 5.1rem);
-  font-weight: 300;
-  line-height: 1.015;
-  letter-spacing: -.019em;
-}
-
-#watch .cta-lede {
-  margin-top: var(--s-5);
-  margin-inline: auto;
-  max-width: 30em;
-}
-
-/* The equalizer. Serif, quiet, with a short hairline above it so it reads
-   as a turn in the argument rather than another paragraph. */
+/* The equalizer — the page's recurring section-closing pull statement, at
+   the shared `--t-pull`. Its short hairline is built the same way §05's
+   verdict builds its own: a 48px ink rule, never the gold `.rule--short`.
+   `.sec-head + *` supplies the gap above it. */
 #watch .cta-eq {
-  position: relative;
-  margin-top: clamp(var(--s-8), 4.5vw, var(--s-9));
-  padding-top: clamp(var(--s-6), 3vw, var(--s-7));
-  margin-inline: auto;
-  max-width: 19em;
-  font-family: 'Cormorant Garamond', 'Iowan Old Style', Georgia, serif;
-  font-size: clamp(1.45rem, 1.13rem + 1.2vw, 2.2rem);
+  max-width: 20em;
+  font-family: 'Cormorant Garamond', 'Iowan Old Style', Georgia, 'Times New Roman', serif;
   font-weight: 400;
+  font-size: var(--t-pull);
   line-height: 1.24;
-  letter-spacing: -.013em;
+  letter-spacing: -.014em;
   color: var(--ink-2);
   text-wrap: balance;
 }
 #watch .cta-eq::before {
   content: '';
-  position: absolute;
-  top: 0;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 48px;
+  display: block;
+  width: var(--s-8);   /* 48px — the system's .rule--short width, in ink not gold */
   height: 1px;
+  margin-bottom: var(--s-5);
   background: var(--line);
 }
 #watch .cta-eq strong {
@@ -117,12 +87,14 @@
 
 /* =========================================================================
    2 · ONE ACTION
+   The hinge above leads into the controls, so this gap is deliberately
+   tighter than the refrain gap that separates the ask from the hinge.
    ========================================================================= */
 #watch .cta-act {
-  margin-top: clamp(var(--s-8), 4.5vw, var(--s-9));
+  margin-top: var(--s-8);
 }
 
-/* 390px: full-width stack with a real gap — 24px, wide enough that the gold
+/* 390px: full-width stack with a real 24px gap — wide enough that the gold
    control and the ghost control never read as one segmented object. */
 #watch .cta-act__row {
   display: flex;
@@ -130,23 +102,21 @@
   align-items: stretch;
   gap: var(--s-5);
   max-width: 24rem;
-  margin-inline: auto;
 }
 
-/* Unmissable: larger label, deeper padding than the shared .btn. ~68px tall. */
-#watch .cta-primary {
-  font-size: 1rem;
-  padding: 1.25rem 2.25rem;
-  letter-spacing: .004em;
-}
+/* Both controls run on the shared `.btn` box — identical padding, identical
+   label size, identical height, so their edges line up whether they are
+   stacked or side by side. The primary is separated by fill, not by scale:
+   a private button size here would also put a second 16px label class on a
+   page whose button label is 15px everywhere else. */
 #watch .cta-primary__glyph {
   width: 1.15em;
   height: 1.15em;
 }
 
-/* Genuinely quieter: the label sits at --ink-2 (7.3:1 on navy) rather than
-   full ivory, and the control keeps the shared .btn--ghost hairline so the
-   tap target stays legible. ~60px tall. */
+/* Genuinely quieter: the label sits at --ink-2 rather than full ivory, and
+   the control keeps the shared .btn--ghost hairline so the tap target stays
+   legible. A control that is hard to see is worse than a quiet one. */
 #watch .cta-secondary {
   color: var(--ink-2);
 }
@@ -155,31 +125,34 @@
   color: var(--ink);
 }
 
-/* The observation-only clarifier. It must be readable, not fine print —
-   --ink-3 at 15px is 4.7:1 on navy. */
+/* The observation-only clarifier is the system `.note` — readable, not fine
+   print. Only its position in the rhythm is local. */
 #watch .cta-clarify {
   margin-top: var(--s-5);
-  margin-inline: auto;
-  max-width: 52ch;
-  font-size: var(--t-sm);
-  line-height: 1.6;
-  color: var(--ink-3);
-  text-wrap: pretty;
+}
+
+/* Both of the band's short supporting paragraphs run to two or three lines,
+   where `pretty` only guards the last line's orphan and leaves a stub under
+   two full measures. `balance` evens the rag on a paragraph this short. */
+#watch .cta-lede,
+#watch .cta-clarify {
+  text-wrap: balance;
 }
 
 /* Tertiary verification link — below the button and below the clarifier,
-   subordinate to both. Never a button, never gold. Padded to a 46px tap
-   target without moving the label. */
+   subordinate to both. Never a button, never gold. The extra tap area is
+   taken above the label so the underline keeps the component's shared 2px
+   offset, and the top padding is subtracted back out of the margin so the
+   rendered gap is the specified --s-6. */
 #watch .cta-verify {
-  margin-top: var(--s-6);
+  margin-top: calc(var(--s-6) - 1.35rem);
 }
 #watch .cta-verify__a {
-  padding-top: .95rem;
-  padding-bottom: .45rem;
+  padding-top: 1.35rem;
 }
 
 /* =========================================================================
-   3 · THE RECORD — left-aligned, ruled
+   3 · THE RECORD — ruled, full wrap width, same left axis
    ========================================================================= */
 #watch .cta-seam {
   margin-top: clamp(var(--s-9), 6vw, var(--s-11));
@@ -193,14 +166,16 @@
 #watch .cta-status {
   display: grid;
   gap: var(--s-4);
-  text-align: left;
 }
 #watch .cta-status__badge {
   justify-self: start;
   align-self: start;
-  font-size: var(--t-xs);
-  letter-spacing: .13em;
-  padding: .5rem .95rem .5rem .8rem;
+}
+/* The badge is a statement of record, not a live indicator. The band that
+   holds the page's single conversion point gets no perpetual motion in it. */
+#watch .cta-status__badge .dot::after {
+  animation: none;
+  opacity: 0;
 }
 #watch .cta-status__t {
   max-width: 72ch;
@@ -208,7 +183,7 @@
 }
 #watch .cta-status__t strong { color: var(--ink); }
 
-/* --- Signature: small, level, confident. Not a card, not centred. ------- */
+/* --- Signature: small, level, confident. Not a card. -------------------- */
 #watch .cta-sig {
   display: flex;
   flex-wrap: wrap;
@@ -219,7 +194,6 @@
   font-style: normal;
   font-size: var(--t-sm);
   line-height: 1.6;
-  text-align: left;
 }
 #watch .cta-sig__id,
 #watch .cta-sig__ch {
@@ -270,7 +244,6 @@
     flex-direction: row;
     flex-wrap: wrap;
     align-items: center;
-    justify-content: center;
     gap: var(--s-5) var(--s-6);
     max-width: none;
   }
@@ -285,8 +258,10 @@
     column-gap: var(--s-7);
     align-items: start;
   }
+  /* Same value as every other rule in this band. --line-2 measured 1.26:1
+     on navy and simply was not there. */
   #watch .cta-status__t {
-    border-left: 1px solid var(--line-2);
+    border-left: 1px solid var(--line);
     padding-left: var(--s-7);
   }
 }
