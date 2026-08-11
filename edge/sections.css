@@ -695,6 +695,11 @@
   text-wrap: pretty;
   max-width: 22em;
 }
+/* The multiple is derived arithmetic, not engine output, so it stays in the
+   serif — but Cormorant defaults to oldstyle figures and an x-height "5"
+   makes the sentence's whole claim the quietest thing in it. Lining figures
+   put it back on the cap-line without borrowing the mono attribution signal. */
+.house-pull .num--rule { font-variant-numeric: lining-nums tabular-nums; }
 .house-attrib { max-width: 58ch; }
 
 /* =========================================================================
@@ -1436,7 +1441,11 @@
 #capacity {
   /* Field geometry. Cols must divide 150 exactly. */
   --cap-cols: 25;          /* → 6 rows */
-  --cap-few-cols: 5;       /* → 2 rows */
+  /* 5 × 2 only while the wrap is too narrow for ten marks to stay chunky. At
+     this width the derived gutters come out equal (10px each way), so the pair
+     of rows still reads as ten, not as five. Above 40em the field resolves to
+     a single row of ten — see below. */
+  --cap-few-cols: 5;
   --cap-gap: 2px;
   --cap-h: 4.25rem;
 
@@ -1569,7 +1578,7 @@
   margin-top: clamp(var(--s-7), 4.5vw, var(--s-9));
   display: grid;
   gap: var(--s-5);
-  max-width: 46rem;
+  max-width: 50rem;
 }
 .cap-scale__col {
   padding-top: var(--s-5);
@@ -1642,6 +1651,10 @@
   #capacity {
     --cap-cols: 50;        /* → 3 rows */
     --cap-h: 4.75rem;
+    /* One row of ten. Two rows would need a row gutter far tighter than the
+       column gutter to hold equal ink, and the eye then pairs the marks
+       vertically and counts five. */
+    --cap-few-cols: 10;
   }
 }
 
@@ -1697,7 +1710,6 @@
 @media (min-width: 74em) {
   #capacity {
     --cap-cols: 150;       /* → 1 row */
-    --cap-few-cols: 10;    /* → 1 row, so both fields are the same single band */
     --cap-h: 6rem;
   }
   .cap-field { width: min(100%, calc(150 * 7px - 1px)); }

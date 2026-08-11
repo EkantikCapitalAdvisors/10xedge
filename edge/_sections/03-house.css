@@ -156,6 +156,11 @@
   text-wrap: pretty;
   max-width: 22em;
 }
+/* The multiple is derived arithmetic, not engine output, so it stays in the
+   serif — but Cormorant defaults to oldstyle figures and an x-height "5"
+   makes the sentence's whole claim the quietest thing in it. Lining figures
+   put it back on the cap-line without borrowing the mono attribution signal. */
+.house-pull .num--rule { font-variant-numeric: lining-nums tabular-nums; }
 .house-attrib { max-width: 58ch; }
 
 /* =========================================================================
