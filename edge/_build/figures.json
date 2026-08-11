@@ -2,25 +2,37 @@
   "_comment": "Engine-derived figures for the landing page. `locked` is what the page currently states and what counsel reviewed. `refresh.mjs` recomputes `live` from the public trade journal and reports drift; it only rewrites the page when run with --apply, and any rewrite re-opens the CEG gate.",
   "source": "https://accelerator.ekantikcapital.com/data/tenx_trades.json",
   "costModel": {
-    "roundTurnUsd": 1.5,
-    "_comment": "The public feed carries NO commission/fee field, so a net profit factor cannot be derived from it. This is the operator-supplied round-turn cost. It is not a guess: $1.50/trade is the value that reconciles the record's gross profit factor (1.507) to the deck's stated net figure (1.49), which is consistent with a blended ES/MES commission. If the real cost differs, the net profit factor on the page is wrong and MUST be corrected here, not on the page.",
-    "verified": false,
-    "verifiedBy": null,
-    "verifiedOn": null
+    "plan": "Tradovate Free",
+    "commissionPerSide": {
+      "ES": 1.29,
+      "MES": 0.39
+    },
+    "exchangeClearingPerSide": {
+      "ES": 1.33,
+      "MES": 0.37
+    },
+    "nfaPerSide": 0.01,
+    "blendedRoundTurnUsd": 5.33,
+    "totalCostUsd": 1311,
+    "_comment": "Confirmed by the operator 2026-08-11: the account is on the Tradovate Free plan. All-in cost is commission + CME exchange/clearing + NFA, per side, doubled for a round turn, multiplied by contracts. The record is 169 ES contracts and 274 MES contracts across 246 trades. Exchange/clearing rates are published non-member Globex figures and should be reconciled against an actual Tradovate statement before ship.",
+    "_supersedes": "The earlier inferred $1.50/trade was wrong by roughly 3.5x. It was reverse-engineered to reproduce the deck's stated 1.49 profit factor, which is itself the figure that turned out to be optimistic.",
+    "verified": true,
+    "verifiedBy": "Hiren Desai (operator)",
+    "verifiedOn": "2026-08-11"
   },
   "locked": {
     "trades": 246,
     "winRatePct": 58.9,
     "winRateHeadlinePct": 59,
-    "profitFactorNet": 1.49,
+    "profitFactorNet": 1.44,
     "windowLabel": "Feb&ndash;Aug 2026",
     "tradesPerYear": 491,
-    "edgePerTradeR": 0.24,
-    "returnPct": 49.9,
+    "edgePerTradeR": 0.21,
+    "returnPct": 42.3,
     "windowDays": 182,
     "windowStart": "Feb 4",
     "windowEnd": "Aug 5",
-    "maxDrawdownPct": 8.3
+    "maxDrawdownPct": 11.3
   },
   "tolerance": {
     "_comment": "Drift beyond these thresholds is reported as MATERIAL and requires counsel re-review before the page is republished.",
@@ -44,10 +56,24 @@
     "monthlyLossCapUsd": 2000,
     "_comment": "Tightened rules reported by the operator 2026-08-11: no more than $1,000 of drawdown in any week and $2,000 in any month, on the $20,000 portfolio (5% weekly, 10% monthly). The 246-trade record ALREADY CONFORMS: worst losing week -$938, worst losing month -$132, zero breaches of either cap. So these formalise observed behaviour rather than contradict it.",
     "_supersedes": "The deck's appendix stated $1,000 weekly and $2,500 monthly. The monthly cap is tightened from $2,500 to $2,000.",
-    "brokerEnforced": null,
-    "_brokerEnforcedNote": "UNKNOWN and material. The deck called these 'broker-enforced hard caps'. A broker-enforced cap is a mechanism; a self-imposed cap is a rule that depends on the operator honouring it. The page must describe whichever is true and must not imply enforcement that does not exist.",
-    "countersigned": false,
-    "_countersignNote": "This page publishes a Fidelity Gate stating 'every rule change is countersigned and disclosed before it runs'. Tightening the risk rules IS a rule change. It requires Manish Dharod's countersignature and disclosure before it is described on the page as being in force.",
-    "verified": false
+    "brokerEnforced": true,
+    "_brokerEnforcedNote": "Confirmed by the operator 2026-08-11: the weekly and monthly drawdown caps are broker-enforced, i.e. a mechanism rather than a rule the operator must remember to honour. The page may describe them as enforced.",
+    "countersigned": true,
+    "_countersignNote": "Operator confirmed 2026-08-11 that the rule change is countersigned. NOTE: this covers the RULE CHANGE only. The separate page-level blocker - Manish countersigning the sentence that names him and the authority it describes - remains open in the deploy checklist.",
+    "verified": true,
+    "countersignedBy": "Manish Dharod",
+    "countersignedOn": "2026-08-11"
+  },
+  "_correction": {
+    "on": "2026-08-11",
+    "what": "Every net-of-costs figure was restated downward after the real Tradovate cost was established.",
+    "changes": {
+      "profitFactorNet": "1.49 -> 1.44",
+      "returnPctOn20k": "49.9 -> 42.3",
+      "maxDrawdownPct": "8.3 -> 11.3",
+      "edgePerTradeR": "0.24 -> 0.21",
+      "centsPerDollarRisked": "~24c -> ~21c"
+    },
+    "why": "The journal's dollar_pl is gross. The deck's '$1.49 collected per $1.00 lost, net of every cost' and '+0.24R net of all costs' were computed against a cost far below the account's actual all-in rate. At the confirmed Free-plan rate the figures are as restated. The win rate (58.9%) is unchanged: it counts trade outcomes gross, which is the ordinary convention and what the deck's wording describes."
   }
 }

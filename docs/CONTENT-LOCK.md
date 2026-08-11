@@ -22,7 +22,7 @@ Every performance figure on the page must sit within visual reach of one of thes
 | Figure | Exact wording required | Mandatory conditionality attached |
 |---|---|---|
 | Win rate | `58.9%` (display headline may read `59%` only if `58.9% exactly` appears in its subline) | "of trades win" |
-| Profit factor | `$1.49` | "collected per $1.00 lost" — "a 1.49 profit factor — won vs. lost, net of every cost" |
+| Profit factor | `$1.44` **(RESTATED 2026-08-11)** | "collected per $1.00 lost" — "a 1.44 profit factor — won vs. lost, net of every cost". The deck's `$1.49` was computed against a cost ~3.5x below the account's confirmed all-in rate. See the restatement note below. |
 | Sample | `246` | "live trades" — "called live in our Discord channel — not a backtest" |
 | Sample caveat (MANDATORY, verbatim) | "246 trades is six months of one kind of market — promising, not yet proven." | must appear in the proof strip |
 | Ruin | `< 1 in 200,000` | "simulated 5-year risk of ruin at the 2.5% per-trade ceiling" + "computed, not promised" + 200,000 paths / five years |
@@ -31,7 +31,7 @@ Every performance figure on the page must sit within visual reach of one of thes
 | Minimum allocation | `$20,000` | NO per-account limit |
 | Casino tilt | `~5.3¢` of every `$1` staked, by geometry | — |
 | Casino win rate | `52.6%` of even-money spins | — |
-| Edge tilt | `~24¢` kept per `$1` risked (`+0.24R`) | "net of all costs" |
+| Edge tilt | `~21¢` kept per `$1` risked (`+0.21R`) **(RESTATED)** | "net of all costs" — deck said ~24¢ / +0.24R against the same understated cost |
 | Edge volume | `~491` trades a year | — |
 | Sharpness | "measured ~4.5× sharper" than the casino's nickel | "with far fewer spins" |
 | Aviation | `≈28` → `~0.2` fatal accidents per million flights, 1960 → 2024, `≈100×` | "(Airbus data)" — industry-reported context |
@@ -41,6 +41,29 @@ Every performance figure on the page must sit within visual reach of one of thes
 - "at the $20,000 minimum, 150 fit; at $3,000,000, one does."   ($3M ÷ $20k = 150. Exact.)
 - "One allocation could close the door on everyone."
 - "A low ceiling is exactly what a real edge looks like."
+
+## RESTATEMENT — 2026-08-11
+The account was confirmed to be on the **Tradovate Free plan**. All-in cost is commission
+($1.29/side ES, $0.39/side MES) + CME exchange/clearing (~$1.33/side ES, ~$0.37/side MES) + NFA
+($0.01/side), doubled per round turn, times contracts. Across 169 ES and 274 MES contracts over 246
+trades that is **$5.33 per trade, $1,311 total** — roughly 3.5x the $1.50/trade the deck's figures
+imply. The journal's `dollar_pl` is gross.
+
+Every net-of-costs figure was therefore restated **downward**:
+
+| Figure | Deck | Restated | Note |
+|---|---|---|---|
+| Profit factor | 1.49 | **1.44** | net of confirmed Free-plan cost |
+| Return on the $20,000 portfolio | — | **+42.3%** | was +49.9% at the inferred cost |
+| Deepest drawdown | — | **−11.3%** | was −8.3%; costs deepen the trough |
+| Edge per trade | +0.24R | **+0.21R** | ~21¢ per $1 risked |
+| Win rate | 58.9% | **58.9%** | unchanged — counts trade outcomes gross, which is the ordinary convention and what the deck's wording describes |
+
+The tightened caps still hold net of costs: worst week −$988 against the $1,000 cap, worst month
+−$210 against the $2,000 cap. No breach.
+
+**Rule: a figure may be restated downward when the evidence requires it. It may never be restated
+upward without the same standard of evidence.**
 
 ## FORBIDDEN — automatic FAIL
 ### Forbidden strings (anywhere, any casing, including disclosures)
