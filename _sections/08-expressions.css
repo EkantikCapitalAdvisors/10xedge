@@ -1,0 +1,166 @@
+/* =============================================================================
+   08 — ONE EDGE, MANY EXPRESSIONS  (#expressions)  — LIGHT STRIP, DELIBERATELY
+   QUIET
+   ---------------------------------------------------------------------------
+   Composition:
+
+     ┌ eyebrow            ┌──────────────────────────────────────
+     │ title              │ A monthly cash-flow check │ one line
+     │ lede               ├──────────────────────────────────────
+     │                    │ A portfolio overlay       │ one line
+     │                    ├──────────────────────────────────────
+     │                    │ A managed program         │ one line
+     ────────────────────────────────────────────────────────────
+     the closing line — full width, footnote register
+
+   This band sits between two loud sections and its only job is to prove the
+   roadmap is not being hidden while refusing to sell it. So it is built as an
+   editorial aside: head in a narrow left column, an inline definition list in
+   the right, everything held by hairlines and air. No cards, no icons, no
+   figures.
+
+   Colour: strictly monochrome navy-on-ivory. GOLD APPEARS NOWHERE in this
+   section — not on the eyebrow, not on a rule, not on a marker. Gold is
+   rationed to engine-measured data, and this section is defined by having no
+   measured data in it. Withholding the accent here is the point.
+
+   Numerals: NONE. There is not a single digit in the rendered copy —
+   "three" is spelled out, and no configuration carries a figure, because
+   none of them has been measured live. That absence is the argument.
+
+   Two hairline weights carry the hierarchy: --line-2 separates the list rows
+   (internal, quiet), --line closes the section above the footnote (structural).
+
+   Deviations from the shared scale, justified:
+   · .sec-title is scaled down a full step (its own --t-h2 clamp would put it
+     at 3.9rem beside a section that must not compete). It is still the
+     largest thing here, so the hierarchy reads — it simply reads as an aside.
+   · .lede is stepped down toward body size for the same reason.
+   · One optical nudge of --s-1 on the list, noted at the rule.
+   · Reveal delays are set here rather than inline, so the markup carries no
+     digits at all.
+   ========================================================================= */
+
+/* ---------- Frame -------------------------------------------------------- */
+
+#expressions {
+  /* The gutter between the head column and the list, at wide widths. */
+  --exp-gap: clamp(var(--s-7), 5vw, var(--s-10));
+  /* Term column width in the inline list — sized so every term sets on one
+     line and every description sets on two. */
+  --exp-term: clamp(9.5rem, 18vw, 13.5rem);
+}
+
+#expressions .exp {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+}
+
+/* ---------- Head --------------------------------------------------------- */
+
+#expressions .exp-title {
+  /* A step below every other .sec-title on the page — see note above. */
+  font-size: clamp(1.75rem, 1.34rem + 1.35vw, 2.6rem);
+  line-height: 1.08;
+  letter-spacing: -.014em;
+}
+
+#expressions .sec-head > .exp-title { margin-top: var(--s-3); }
+
+#expressions .exp-lede {
+  font-size: clamp(1.0625rem, 1rem + .2vw, 1.15rem);
+  line-height: 1.6;
+  max-width: 30em;
+}
+
+#expressions .sec-head > .exp-title + .exp-lede { margin-top: var(--s-4); }
+
+/* ---------- The list ----------------------------------------------------- */
+
+#expressions .exp-list {
+  /* .sec-head + * would drop a full section step here; this band is tighter. */
+  margin-top: clamp(var(--s-6), 4vw, var(--s-8));
+}
+
+#expressions .exp-item {
+  border-top: 1px solid var(--line-2);
+  padding-block: clamp(var(--s-4), 1.6vw, var(--s-5));
+}
+
+#expressions .exp-name {
+  font-family: 'Cormorant Garamond', 'Iowan Old Style', Georgia, 'Times New Roman', serif;
+  font-weight: 400;
+  font-size: clamp(1.15rem, 1.06rem + .3vw, 1.35rem);
+  line-height: 1.2;
+  letter-spacing: -.008em;
+  color: var(--ink);
+  text-wrap: balance;
+}
+
+#expressions .exp-line {
+  margin: 0;
+  font-size: var(--t-sm);
+  line-height: 1.6;
+  color: var(--ink-2);
+  max-width: 34em;
+  text-wrap: pretty;
+}
+
+/* Stacked at 390px: the term reads as a small heading over its line. */
+#expressions .exp-name + .exp-line { margin-top: var(--s-2); }
+
+/* ---------- Inline term | line (≥ 34em) ---------------------------------- */
+/* From roughly 544px up there is room to set the list as a true two-column
+   definition table. Baseline alignment, not top alignment: the serif term and
+   the sans line are different sizes, and their first baselines are what the
+   eye actually reads as "level". */
+
+@media (min-width: 34em) {
+  #expressions .exp-item {
+    display: grid;
+    grid-template-columns: minmax(0, var(--exp-term)) minmax(0, 1fr);
+    column-gap: var(--s-5);
+    align-items: baseline;
+  }
+  #expressions .exp-name + .exp-line { margin-top: 0; }
+}
+
+/* ---------- Two columns (≥ 62em) ----------------------------------------- */
+/* The head stops being a header and becomes a margin note. */
+
+@media (min-width: 62em) {
+  #expressions .exp {
+    grid-template-columns: minmax(0, 22rem) minmax(0, 1fr);
+    column-gap: var(--exp-gap);
+    align-items: start;
+  }
+  #expressions .sec-head { max-width: none; }
+  #expressions .sec-head + .exp-list {
+    /* Columns now carry the separation; the vertical step would double it. */
+    margin-top: var(--s-1); /* optical: drops the first hairline off the
+                               eyebrow's cap line rather than crossing it */
+  }
+}
+
+/* ---------- The closing line --------------------------------------------- */
+/* Full wrap width and a heavier hairline than the list uses, so it reads as
+   the section's own footnote rather than a fourth item. */
+
+#expressions .exp-close {
+  margin-top: clamp(var(--s-7), 4.5vw, var(--s-9));
+  padding-top: clamp(var(--s-4), 2vw, var(--s-5));
+  border-top: 1px solid var(--line);
+  max-width: 62ch;
+  text-wrap: pretty;
+}
+
+#expressions .exp-close strong { color: var(--ink); }
+
+/* ---------- Reveal choreography ------------------------------------------ */
+/* Two groups of three, ≤ 160ms each. Set in CSS so the markup stays free of
+   inline styles — and of digits. */
+
+#expressions .sec-head > .exp-title { --d: 80ms; }
+#expressions .sec-head > .exp-lede { --d: 160ms; }
+#expressions .exp-item + .exp-item { --d: 80ms; }
+#expressions .exp-item + .exp-item + .exp-item { --d: 160ms; }

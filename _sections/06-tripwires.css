@@ -1,0 +1,263 @@
+/* =============================================================================
+   06 — TWO WAYS IT DIES. TWO TRIPWIRES.  (#tripwires)  — DEEPEST NAVY BAND
+   ---------------------------------------------------------------------------
+   Composition, deliberately not three identical cards:
+
+     [ EXPRESSION GATE │ FIDELITY GATE ]   two tall ruled columns, peers,
+                                           divided by one vertical hairline
+     ───────────────────────────────────   seam 1
+     the consequence — the one rule both gates resolve to
+     ───────────────────────────────────   seam 2
+     INDEPENDENT WITNESS  ·  [ signature plate ]   external check
+     ⎸ the closing punch (.caveat)
+
+   Both seams span the full .wrap measure and nothing else in the section draws
+   a horizontal rule at a third length: the gate ledger rules and the signature
+   rule are column-width and align to their own column's edges.
+
+   The two gates are internal instruments drawn with nothing but rules and air.
+   Gate A is prose that ends on a live link; gate B is set as the checklist its
+   own question names, so the pair is a matched instrument set without being
+   two identical boxes. The witness is the only element in the section that
+   sits on a raised field inside a border — because it is the only check that
+   is not ours. That contrast, not a third card, is what marks it as external.
+
+   Colour: strictly monochrome ivory-on-navy. Gold appears nowhere in this
+   section — no engine-measured figure is shown here, so none is earned.
+
+   Numerals: 100, $0 and 24 are RULE thresholds and a policy window, not engine
+   output. JetBrains Mono is the page's attribution signal ("we measured this"),
+   so they take .num--rule — tabular DM Sans at full ink, weight 500 — and read
+   as instrument settings rather than as results.
+
+   The band above (#ruin) is also dark, so this section closes a continuous navy
+   run. The value step navy → navy-900 is real but low-frequency; a --line-2
+   hairline marks the seam so the two bands do not fuse into one field.
+
+   Contrast on this band: nothing readable falls below --ink-2 (.70 ivory).
+   The one exception is the decorative, aria-hidden signature glyph.
+   ========================================================================= */
+
+#tripwires {
+  /* Optical inset either side of the vertical divider — half the visual gap. */
+  --tw-inset: clamp(var(--s-5), 3.6vw, var(--s-9));
+  /* The section's structural beat between major blocks. */
+  --tw-drop: clamp(var(--s-8), 5vw, var(--s-10));
+  /* Marks the navy → deep-navy seam at the end of the dark run. */
+  border-top: 1px solid var(--line-2);
+}
+
+/* ---------- Section head -------------------------------------------------
+   The title is a two-beat couplet — "Two Ways It Dies." / "Two Tripwires." —
+   and the measure is capped so it breaks after the first beat at every width
+   rather than running out flat at 768. Size and weight are the shared
+   .sec-title refrain and are never touched. */
+
+#tripwires .sec-title { max-width: 8.5em; }
+
+/* ---------- The two gates ------------------------------------------------ */
+
+#tripwires .tw-gates {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--s-8);
+}
+
+#tripwires .tw-gate {
+  border-top: 1px solid var(--line);
+  padding-top: var(--s-6);
+}
+
+/* ---------- Glyphs -------------------------------------------------------
+   Hand-drawn, geometric, currentColor, 1.25 stroke. Rendered 1:1 against the
+   56×36 viewBox so the stroke lands at exactly 1.25px — no scaling blur.
+   All three fill the same optical box (bbox h ≈ 29, optical centre y ≈ 18) and
+   carry comparable ink mass, so the set reads as one instrument family.
+   A: a threshold line with a curve crossing it, ringed at the crossing. The
+      dash is on the threshold only — it is the semantic point of the mark —
+      and the solid curve carries the weight.
+   B: a three-row checklist, the top row ticked.
+   C: a dashed boundary with an arrow entering from outside it. */
+
+#tripwires .tw-glyph {
+  width: 56px;
+  height: 36px;
+  color: var(--ink-2);
+  margin-bottom: var(--s-5);
+}
+
+/* ---------- Shared block type (both gates and the witness) --------------- */
+
+#tripwires .tw-k { color: var(--ink-2); }
+
+#tripwires .tw-q { margin-top: var(--s-4); }
+
+#tripwires .tw-b {
+  margin-top: var(--s-4);
+  max-width: 34em;
+  text-wrap: pretty;
+}
+
+/* Thresholds sit in ink, at medium weight — instrument settings, not data. */
+#tripwires .tw-b .num--rule,
+#tripwires .tw-consequence .num--rule {
+  color: var(--ink);
+  font-weight: 500;
+}
+
+/* ---------- The fidelity ledger -----------------------------------------
+   The gate that asks "are we still flying by the checklist?" is set as the
+   checklist. Three ruled rows, column-width, closing on a rule so the block
+   terminates on a real edge instead of trailing off into the column. */
+
+#tripwires .tw-check { margin-top: var(--s-5); }
+
+#tripwires .tw-check__i {
+  border-top: 1px solid var(--line-2);
+  padding-block: var(--s-3);
+  color: var(--ink-2);
+  text-wrap: pretty;
+}
+#tripwires .tw-check__i:last-child { border-bottom: 1px solid var(--line-2); }
+
+/* ---------- Two columns ------------------------------------------------- */
+/* 46em, not 52em, so the 768px case gets the paired reading it was written
+   for. The gates stretch to a common height, which lets the single divider
+   hairline run past the shorter column and hold the pair as one apparatus. */
+
+@media (min-width: 46em) {
+  #tripwires .tw-gates {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0;
+  }
+  #tripwires .tw-gate { padding-bottom: var(--s-5); }
+  #tripwires .tw-gate--a { padding-right: var(--tw-inset); }
+  #tripwires .tw-gate--b {
+    padding-left: var(--tw-inset);
+    border-left: 1px solid var(--line-2);
+  }
+}
+
+/* ---------- The seams ----------------------------------------------------
+   Seam 1 carries the same 96px of air above it that seam 2 carries below it:
+   the pair frames the consequence rather than decorating the block beneath.
+   Below 46em the gates have no bottom padding, so the seam takes the whole
+   measure itself. */
+
+#tripwires .tw-seam { margin-top: calc(var(--tw-drop) + var(--s-5)); }
+@media (min-width: 46em) {
+  #tripwires .tw-seam { margin-top: var(--tw-drop); }
+}
+#tripwires .tw-seam--2 { margin-top: var(--s-8); }
+
+/* ---------- The consequence line ----------------------------------------
+   DM Sans at 500 and full ink: this is a rule of operation, so it is set as
+   an instruction, not as a serif aside — which keeps it from competing with
+   the Cormorant punch that closes the band. */
+
+#tripwires .tw-consequence {
+  margin-top: var(--s-8);
+  font-weight: 500;
+  font-size: clamp(1.0625rem, .97rem + .42vw, 1.3rem);
+  line-height: 1.45;
+  letter-spacing: -.008em;
+  color: var(--ink);
+  max-width: 34em;
+  text-wrap: pretty;
+}
+
+/* ---------- Independent witness ------------------------------------------ */
+
+#tripwires .tw-witness {
+  margin-top: calc(var(--tw-drop) + var(--s-5));
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--s-7);
+}
+
+#tripwires .tw-witness__p strong {
+  color: var(--ink);
+  font-weight: 500;
+}
+
+/* The signature plate — the section's only bordered object, by design.
+   The name is a caption to "Who can overrule us?", not a peer of it: the
+   heading asks, the plate answers, and the plate never outranks the ask. */
+#tripwires .tw-sign {
+  background: var(--bg-raise);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-lg);
+  padding: clamp(var(--s-5), 2.6vw, var(--s-7));
+  /* A signature plate is a small object. Capped so the single-column layout at
+     768 does not stretch it into a banner. */
+  max-width: 27rem;
+}
+#tripwires .tw-sign .tw-glyph {
+  color: var(--ink-3);
+  margin-bottom: clamp(var(--s-5), 2.4vw, var(--s-7));
+}
+#tripwires .tw-sign__name {
+  font-family: 'Cormorant Garamond', 'Iowan Old Style', Georgia, 'Times New Roman', serif;
+  font-weight: 400;
+  font-size: clamp(1.06rem, .99rem + .2vw, 1.22rem);
+  line-height: 1.2;
+  letter-spacing: -.008em;
+  color: var(--ink);
+}
+/* The rule a signature is written above, not a border. */
+#tripwires .tw-sign__rule {
+  display: block;
+  height: 1px;
+  background: var(--line);
+  margin: var(--s-3) 0 var(--s-3);
+}
+#tripwires .tw-sign__role {
+  font-size: var(--t-xs);
+  line-height: 1.55;
+  letter-spacing: .008em;
+  color: var(--ink-2);
+  max-width: 28ch;
+  text-wrap: pretty;
+}
+
+@media (min-width: 60em) {
+  #tripwires .tw-witness {
+    grid-template-columns: minmax(0, 1fr) minmax(17rem, 21rem);
+    column-gap: clamp(var(--s-7), 4vw, var(--s-9));
+    align-items: start;
+  }
+}
+
+/* ---------- The closing punch --------------------------------------------
+   Runs to the full measure so the band closes on a full-width line rather
+   than abandoning the column the signature plate opened. */
+
+#tripwires .tw-punch {
+  margin-top: calc(var(--tw-drop) + var(--s-6));
+  max-width: 31em;   /* = the seam measure at 1440, so the band closes on-grid */
+  /* Three near-equal lines rather than two full ones and a two-word stub. */
+  text-wrap: balance;
+}
+
+/* The dashboard plots the rolling-100 gate reference at $0 — the exact
+   threshold this gate describes. Linked here so the claim is checkable.
+   The padding is the tap target: the link is the section's only interactive
+   element and must clear 44px at every width. */
+#tripwires .tw-verify { margin-top: var(--s-5); }
+#tripwires .verify-link {
+  padding-top: .75em;
+  padding-bottom: .6em;
+  border-bottom: 0;
+}
+/* Label and arrow are ONE flex item, so when the label wraps in a narrow column
+   the arrow stays welded to the last word instead of floating to the far right
+   of the first baseline — the nbsp does the welding. The underline moves onto
+   this inline span so it hugs the text on every line instead of running out to
+   the width of the padded hit area. */
+#tripwires .tw-verify__l {
+  display: inline;
+  border-bottom: 1px solid var(--line);
+  padding-bottom: 2px;
+  transition: border-color .2s var(--ease-io);
+}
+#tripwires .verify-link:hover .tw-verify__l { border-bottom-color: var(--ink-3); }

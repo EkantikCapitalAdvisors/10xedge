@@ -1,0 +1,2936 @@
+/* ===== 01-hero.css =================================================== */
+/* ---------- 01 · HERO ---------------------------------------------------
+   Full-bleed navy. One left type axis; the lead column is held to 10-of-12
+   from 768px and 9-of-12 from 1024px so the headline always breaks to two
+   lines and the asymmetry is stated by the measure, not by leftover space.
+   Exactly two horizontal structures: the status strip at the top of the
+   content block and the soft-launch rail seated at the foot of the band.
+   No decorative grid — a hairline that crosses a letterform is a defect,
+   and one that claims to draw the 12-column grid must land on it.
+   ------------------------------------------------------------------------ */
+
+.hero {
+  --hero-seat: rgba(19, 31, 56, .38);       /* navy-900 alpha — rail seating */
+
+  position: relative;
+  overflow: hidden;
+  isolation: isolate;
+  display: flex;
+  flex-direction: column;
+
+  /* Clears the fixed nav (~78px incl. its stacked mark) with room to breathe. */
+  padding-top: calc(var(--s-10) + var(--s-5));
+  padding-bottom: 0;
+
+  /* Tall at desktop, never taller than its content on short/mobile viewports. */
+  min-height: 34rem;
+  min-height: min(100vh, 60rem);
+  min-height: min(100svh, 60rem);
+}
+
+/* No local contrast override. The shared dark-band --ink-2 (ivory .70 over navy)
+   measures 7.34:1, comfortably past AA — an earlier 3.3:1 reading was wrong, and
+   retuning one band's token would only desynchronise the hero from the other
+   dark bands. Light-band tokens were the ones that needed correcting. */
+
+/* --- Atmosphere ---------------------------------------------------------
+   A single navy vignette plus a barely-there ivory lift at the top-left.
+   The lift used to be gold; gold is rationed to the H1 accent, the CTA and
+   engine-measured figures, and a wash over 40% of the fold is none of those. */
+.hero__atmos {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+.hero__atmos::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(72% 58% at 16% 2%,  rgba(250, 248, 245, .045), rgba(250, 248, 245, 0) 60%),
+    radial-gradient(88% 74% at 92% 100%, rgba(19, 31, 56, .92),    rgba(19, 31, 56, 0)   64%);
+}
+
+/* --- Body --------------------------------------------------------------- */
+.hero__body {
+  position: relative;
+  z-index: 1;
+  flex: 1 1 auto;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding-block: var(--s-6) var(--s-7);
+}
+
+/* --- Status strip -------------------------------------------------------
+   The fold's only horizontal rule: the live-status pill on the type axis,
+   a hairline carrying the full content width, and a terminus at the right
+   content edge so the rule closes instead of trailing off. */
+.hero__top {
+  display: flex;
+  align-items: center;
+  gap: var(--s-5);
+}
+.hero__badge {
+  flex: none;
+  font-size: var(--t-eyebrow);
+  letter-spacing: .14em;
+  padding: .5rem .95rem .5rem .8rem;
+}
+/* Nothing above the fold loops. The status pill announces "live" by being
+   present, not by pulsing at a reader who is trying to read the headline. */
+.hero__top .dot::after { animation: none; }
+
+.hero__rule {
+  display: none;
+  flex: 1 1 0;
+  min-width: 0;
+  height: 1px;
+  background: var(--line);
+}
+.hero__top-k {
+  display: none;
+  flex: none;
+}
+
+/* --- Lead column -------------------------------------------------------- */
+.hero__lead { margin-top: var(--s-4); }
+
+.hero__title {
+  /* Same endpoints as --t-display (49.6px floor, 108px cap) but a steeper
+     middle, so 768px gets a display-scale headline instead of the desktop
+     layout shrunk into one thin line. */
+  font-size: clamp(3.1rem, .55rem + 9.8vw, 6.75rem);
+}
+
+/* 16 → 32 → 48 (40 → 64 from 768px). The label sits tight to the headline it
+   labels; every step below it opens, so the H1 owns the space. The old build
+   used --s-5 for both the eyebrow gap and the lede gap, which gave the display
+   line no dominance at all. */
+.hero__lede {
+  margin-top: var(--s-6);
+  max-width: 26em;
+}
+
+.hero__actions {
+  margin-top: var(--s-8);
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--s-4) var(--s-6);
+}
+.hero__cta { max-width: 100%; }
+
+.hero__quiet {
+  display: inline-flex;
+  align-items: center;
+  gap: .55em;
+  padding-block: var(--s-3);          /* tap target >= 44px */
+  font-size: var(--t-sm);
+  font-weight: 500;
+  color: var(--ink-2);
+  transition: color .2s var(--ease-io);
+}
+.hero__quiet-t {
+  border-bottom: 1px solid var(--line);
+  padding-bottom: .15em;
+  transition: border-color .2s var(--ease-io);
+}
+.hero__quiet-a {
+  transition: transform .2s var(--ease);
+}
+.hero__quiet:hover { color: var(--ink); }
+.hero__quiet:hover .hero__quiet-t { border-bottom-color: var(--ink-3); }
+.hero__quiet:hover .hero__quiet-a { transform: translateX(3px); }
+
+/* --- Soft-launch status rail --------------------------------------------
+   One hairline value in this band: --line for structure. --line-2 made a
+   fourth weight that belonged to no system. */
+.hero__rail {
+  position: relative;
+  z-index: 1;
+  border-top: 1px solid var(--line);
+  background: var(--hero-seat);
+}
+.hero__rail-in {
+  padding-block: clamp(var(--s-5), 2.2vw, var(--s-6));
+}
+.hero__status {
+  max-width: 68ch;
+  text-wrap: pretty;
+}
+.hero__status strong { color: var(--ink); }
+
+/* --- 768px -------------------------------------------------------------- */
+@media (min-width: 48em) {
+  .hero__body { padding-block: var(--s-7) var(--s-8); }
+  .hero__rule { display: block; }
+  .hero__top-k { display: block; }
+  /* 10 of 12 columns: 10t + 9g where t = (100% - 11g)/12 */
+  .hero__lead { max-width: calc(83.3333% - var(--s-6) / 6); }
+  .hero__lede { margin-top: var(--s-7); }
+  .hero__actions { margin-top: var(--s-9); }
+}
+
+/* --- 1024px: the 9-of-12 lead column ------------------------------------ */
+@media (min-width: 64em) {
+  /* 9 of 12 columns: 9t + 8g where t = (100% - 11g)/12 */
+  .hero__lead { max-width: calc(75% - var(--s-6) / 4); }
+}
+
+/* ===== 02-numbers.css ================================================ */
+/* =============================================================================
+   02 — THREE NUMBERS PROOF STRIP  (#proof)
+   A ruled ledger, not cards: one hairline across the top, hairlines down the
+   gutters at >=768px, horizontal hairlines when it stacks.
+
+   THE ARGUMENT'S SHAPE — two results measured across one count. 62% and $1.69
+   are what the engine produced; 149 is the sample they were produced from, and
+   the caveat directly below says so out loud. So the strip is not three peers:
+   the two results carry the gold ration and the full figure scale, the count is
+   set smaller and in ink, seated on the results' own baseline. A ledger, with a
+   denominator.
+
+   THE ALIGNMENT RULE — this strip aligns by INK, never by advance box. Every
+   figure's first painted pixel sits exactly on its column's content edge, so
+   the figure, the label and the subline share one left edge. The currency mark
+   is part of the number, not hanging punctuation: hanging it broke the page
+   gutter at 390px and put three different ink edges on a ruled ledger.
+
+   THE AFFIX RULE — "$" and "%" are peers doing one job, so they get one rule:
+   both are superiors, set at the same fraction of the numeral and hung so their
+   ink caps land on the digits' cap line. Neither sits on the baseline; neither
+   floats above the digits. The constants below are measured ink metrics of
+   JetBrains Mono at 1em, so the arithmetic stays honest if the sizes move.
+   ============================================================================= */
+
+#proof {
+  /* Space between the top hairline and the first glyph of each column.
+     Stepped through the spacing tokens — nothing here lands between them. */
+  --pf-rowpad: var(--s-6);
+  /* Figure size. Same curve as --t-fig-xl, lifted at the small end: at 390px
+     the token's floor undersells the one place on the page where size argues. */
+  --pf-fig: clamp(4rem, 2.6rem + 4.6vw, 6.75rem);
+  /* The count is the strip's denominator, not its third claim. */
+  --pf-count: .62;
+
+  /* --- measured ink metrics, JetBrains Mono 400 @ 1em ------------------- */
+  --pf-cap: .73;        /* digit cap height above baseline                  */
+  --pf-ink-cur: .87;    /* "$" ink ascent above baseline                    */
+  --pf-ink-pct: .74;    /* "%" ink ascent above baseline                    */
+  --pf-lsb-cur: .07;    /* "$" left side bearing                            */
+  --pf-lsb-6: .06;      /* "6" left side bearing                            */
+  --pf-lsb-1: .09;      /* "1" left side bearing                            */
+  /* Affix size as a fraction of the numeral it modifies. */
+  --pf-aff: .46;
+}
+
+/* ---------- The strip ---------------------------------------------------- */
+
+#proof .proof-grid {
+  display: grid;
+  gap: var(--s-7);
+  border-top: 1px solid var(--line);
+}
+
+#proof .proof-num {
+  position: relative;
+  min-width: 0;
+  padding-top: var(--pf-rowpad);
+}
+
+/* Stacked (<768px): hairlines between, per the ledger reading. */
+#proof .proof-num + .proof-num { border-top: 1px solid var(--line); }
+
+/* ---------- The figures -------------------------------------------------- */
+
+#proof .proof-fig {
+  font-size: var(--pf-fig);
+  white-space: nowrap;
+  /* Ink flush: pull back the left side bearing of the first painted glyph. */
+  margin-left: calc(var(--pf-lsb-6) * -1em);
+}
+
+/* "$1.69" opens on the affix, so the compensation lives on the affix instead. */
+#proof .proof-num--cur .proof-fig { margin-left: 0; }
+
+/* The count: quieter, smaller, and in ink rather than the gold ration. */
+#proof .proof-num--count .proof-fig {
+  font-size: calc(var(--pf-fig) * var(--pf-count));
+  margin-left: calc(var(--pf-lsb-1) * -1em);
+}
+
+/* Currency and percent are set as separate spans so the numerals carry the
+   weight. Same weight as the numerals — a heavier affix reads as a correction,
+   not a unit. */
+#proof .proof-fig__aff {
+  display: inline-block;
+  font-size: calc(var(--pf-aff) * 1em);
+  font-weight: 400;
+  line-height: 1;
+  letter-spacing: 0;
+}
+
+/* Both affixes hang from the digits' cap line. The raise is (cap ÷ affix scale
+   − the affix's own ink ascent), expressed in the affix's own em. */
+#proof .proof-fig__aff--pct {
+  vertical-align: calc((var(--pf-cap) / var(--pf-aff) - var(--pf-ink-pct)) * 1em);
+  margin-left: .12em;
+}
+
+#proof .proof-fig__aff--cur {
+  vertical-align: calc((var(--pf-cap) / var(--pf-aff) - var(--pf-ink-cur)) * 1em);
+  margin-left: calc(var(--pf-lsb-cur) * -1em);
+  margin-right: .14em;
+}
+
+/* ---------- Label + subline ---------------------------------------------- */
+
+#proof .proof-num__label {
+  margin-top: var(--s-5);
+  font-size: clamp(1.25rem, 1.1rem + .6vw, 1.5rem);
+  font-weight: 500;
+  line-height: 1.3;
+  letter-spacing: -.008em;
+  color: var(--ink);
+  text-wrap: balance;
+}
+
+#proof .proof-num__sub {
+  margin-top: var(--s-3);
+  max-width: 30ch;
+  font-size: var(--t-sm);
+  line-height: 1.6;
+  color: var(--ink-2);
+  text-wrap: pretty;
+}
+
+/* ---------- Caveat + attribution ----------------------------------------- */
+
+#proof .proof-foot {
+  display: grid;
+  gap: var(--s-7);
+  margin-top: clamp(var(--s-8), 6vw, var(--s-10));
+}
+
+/* The honesty inversion. Its size is NOT set here: the section-closing pull
+   statement is one component with one job, and it is sized by --t-pull for
+   every section on the page. */
+#proof .proof-caveat { max-width: 34ch; }
+
+#proof .proof-caveat__lead {
+  display: block;
+  margin-bottom: var(--s-2);
+  font-size: .78em;
+  letter-spacing: -.005em;
+  color: var(--ink-2);
+}
+
+/* Provenance column: where the figures came from, and how to check them. One
+   block, so nothing can open a gap between the claim and its receipt. */
+#proof .proof-prov {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--s-6);
+}
+
+/* Attribution is provenance, not fine print: hairline above it, and lifted off
+   --ink-3 so it stays comfortably readable at 13px. */
+#proof .proof-attrib {
+  max-width: 46ch;
+  padding-top: var(--s-4);
+  border-top: 1px solid var(--line);
+  color: var(--ink-2);
+}
+
+/* Verification link — the dashboard makes the three numbers checkable. */
+#proof .proof-verify {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--s-3);
+}
+
+#proof .proof-verify__note { max-width: 54ch; }
+
+/* The link's own box is 15px/1.65 + 2px — under the 44px tap minimum. A
+   transparent overlay gives it 45px of hit area without moving the underline. */
+#proof .verify-link { position: relative; }
+#proof .verify-link::after {
+  content: "";
+  position: absolute;
+  inset: -.55rem 0;
+}
+
+/* ---------- >=768px: three columns, hairlines down the gutters ----------- */
+
+@media (min-width: 768px) {
+
+  #proof {
+    --pf-rowpad: var(--s-8);
+    /* Gutter between columns, carrying the hairline. */
+    --pf-gut: clamp(var(--s-8), 6vw, var(--s-11));
+  }
+
+  /* Two results, one denominator — the third track is narrower because the
+     count is not a third claim. */
+  #proof .proof-grid {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) minmax(0, .75fr);
+    grid-template-rows: auto auto auto;
+    column-gap: var(--pf-gut);
+    row-gap: 0;
+  }
+
+  /* A ledger's rows must line up. Subgrid makes figure / label / subline three
+     real rows shared by all three columns, so a label that wraps in one column
+     cannot knock its neighbours' sublines off the line. */
+  #proof .proof-num {
+    grid-row: span 3;
+    border-top: 0;
+  }
+  @supports (grid-template-rows: subgrid) {
+    #proof .proof-num {
+      display: grid;
+      grid-template-rows: subgrid;
+    }
+  }
+
+  /* Side by side, the count seats on the results' BASELINE, not their cap line —
+     one ruled line under three figures. With line-height:1 a JetBrains Mono
+     baseline sits .86em below the box top, so the drop is .86 × (1/scale − 1)
+     of the count's own em. */
+  #proof .proof-num--count .proof-fig {
+    align-self: start;
+    margin-top: calc(.86em * (1 / var(--pf-count) - 1));
+  }
+
+  /* Hairline centred in the gutter, running from the top rule down and fading
+     out rather than stopping dead — the strip is open at the bottom. */
+  #proof .proof-num + .proof-num::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: calc(var(--pf-gut) / -2 - .5px);
+    width: 1px;
+    background: linear-gradient(180deg, var(--line) 0 62%, transparent 100%);
+  }
+
+  #proof .proof-num__sub { max-width: 26ch; }
+}
+
+/* ---------- >=900px: caveat left, provenance stacked right --------------- */
+
+@media (min-width: 900px) {
+
+  #proof { --pf-rowpad: var(--s-9); }
+
+  /* The left track is exactly the caveat's measure; the provenance column
+     fills the rest, so no L-shaped void is left in the bottom right. */
+  #proof .proof-foot {
+    grid-template-columns: auto minmax(0, 1fr);
+    column-gap: clamp(var(--s-8), 6vw, var(--s-11));
+    align-items: start;
+  }
+
+  /* Both columns start on the same line, so the caveat's left rule and the
+     attribution's top rule read as one structure. */
+  #proof .proof-attrib { max-width: none; }
+}
+
+/* ===== 02b-record.css ================================================ */
+/* §02b — The record so far. A realised result over a stated window, on a stated
+   balance. Deliberately quieter than the Three Numbers strip above it: that strip
+   is the argument, this is the receipt. */
+
+#record { padding-top: var(--s-9); }
+
+.rec-body {
+  display: grid;
+  grid-template-columns: minmax(0, 5fr) minmax(0, 6fr);
+  gap: clamp(var(--s-7), 6vw, var(--s-11));
+  align-items: start;
+  padding-top: var(--s-7);
+  border-top: 1px solid var(--line);
+}
+
+/* --- the figure ---------------------------------------------------------- */
+/* Return and drawdown are set as peers. A return shown without the drawdown it
+   was earned through is half a claim, so neither is allowed to dominate. */
+.rec-pair {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--s-6);
+}
+.rec-pair__i + .rec-pair__i {
+  padding-left: var(--s-6);
+  border-left: 1px solid var(--line);
+}
+/* Gold marks the earned result; the drawdown is ink. It is not a lesser number,
+   but the page's gold ration belongs to what the engine produced. */
+.rec-pct--dd { color: var(--ink); }
+
+.rec-pct {
+  display: flex;
+  align-items: baseline;
+  letter-spacing: -.045em;
+}
+/* The sign and the percent glyph are subordinate to the digits: both drop back
+   so the number itself holds the baseline and the optical left edge. */
+.rec-pct__sign { font-size: .52em; margin-right: .06em; }
+.rec-pct__aff  { font-size: .46em; margin-left: .04em; }
+
+.rec-figure__label {
+  margin-top: var(--s-4);
+  font-size: var(--t-body);
+  font-weight: 500;
+  color: var(--ink);
+}
+.rec-figure__sub {
+  margin-top: var(--s-3);
+  font-size: var(--t-sm);
+  line-height: 1.6;
+  color: var(--ink-2);
+  max-width: 34ch;
+  text-wrap: pretty;
+}
+
+/* --- the window ---------------------------------------------------------- */
+.rec-time { padding-top: var(--s-2); }
+
+.rec-track {
+  position: relative;
+  display: flex;
+  justify-content: space-between;
+  padding-top: var(--s-5);
+  margin: 0;
+}
+/* The rule IS the window. Endpoints are ticks, not dots — a dot reads as an
+   event, a tick reads as a boundary. */
+.rec-track::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 1px;
+  background: var(--ink-4);
+}
+.rec-track__end { position: relative; }
+.rec-track__end::before {
+  content: '';
+  position: absolute;
+  top: calc(var(--s-5) * -1);
+  left: 0;
+  width: 1px;
+  height: var(--s-4);
+  background: var(--accent-ink);
+}
+.rec-track__end--r { text-align: right; }
+.rec-track__end--r::before { left: auto; right: 0; }
+
+.rec-track__date {
+  display: block;
+  font-size: var(--t-h3);
+  line-height: 1.1;
+  letter-spacing: -.03em;
+  color: var(--ink);
+}
+.rec-track__note {
+  display: block;
+  margin-top: var(--s-1);
+  font-size: var(--t-xs);
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+}
+
+.rec-stats {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: var(--s-5);
+  margin: var(--s-8) 0 0;
+  padding-top: var(--s-5);
+  border-top: 1px solid var(--line-2);
+}
+.rec-stat__k {
+  font-size: var(--t-eyebrow);
+  font-weight: 500;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+}
+.rec-stat__v {
+  margin: var(--s-2) 0 0;
+  font-size: var(--t-fig-md);
+  line-height: 1;
+  letter-spacing: -.03em;
+  color: var(--ink);
+}
+/* "One" is a word, not an engine figure — it must not be set in the mono face
+   that this page reserves for measured numbers. */
+.rec-stat:last-child .rec-stat__v {
+  font-family: 'Cormorant Garamond', Georgia, serif;
+  letter-spacing: -.01em;
+}
+
+.rec-attrib { margin-top: var(--s-8); }
+.rec-verify { margin-top: var(--s-5); }
+
+/* --- responsive ---------------------------------------------------------- */
+@media (max-width: 860px) {
+  .rec-body { grid-template-columns: minmax(0, 1fr); gap: var(--s-8); }
+  .rec-figure__sub { max-width: 46ch; }
+}
+@media (max-width: 460px) {
+  .rec-pair { grid-template-columns: minmax(0, 1fr); gap: var(--s-5); }
+  .rec-pair__i + .rec-pair__i {
+    padding-left: 0; padding-top: var(--s-5);
+    border-left: 0; border-top: 1px solid var(--line);
+  }
+  .rec-stats { gap: var(--s-4); }
+  .rec-stat__k { letter-spacing: .1em; }
+  .rec-track__date { font-size: 1.25rem; }
+}
+
+/* ===== 03-house.css ================================================== */
+/* ---------- 03 · THE HOUSE, NOT THE GAMBLER -----------------------------
+   The page's teaching moment, built as a real comparison matrix: a semantic
+   <table> whose four rule names (THE TILT / THE WIN RATE / THE CAP /
+   THE VOLUME) run down an open gutter as the spine, with the casino's
+   column left bare on the ivory band and OUR column seated on a raised
+   white field. Monochrome navy throughout — no gold, because nothing here
+   is a headline figure, a CTA, or an H1 accent.
+
+   Below 48em the table drops to display:block and each rule becomes a
+   labelled stacked pair (casino block, then the white edge block) — never a
+   squashed four-column grid. Column labels are carried by real DOM spans at
+   that width rather than generated content, so the copy stays reviewable.
+   ------------------------------------------------------------------------ */
+
+#house {
+  /* ONE size for every value line, numeric or verbal. The two columns of a
+     comparison must be set at the same size or the comparison is not being
+     made; the mono/sans split carries the attribution, not the emphasis.
+     The floor is high enough that the value still outranks its 15px clause
+     at 390 (21.3px vs 15px), where the old 19.2px floor let them collide. */
+  --house-val: clamp(1.33rem, .87rem + .69vw, 1.56rem);
+  --house-val-lh: calc(var(--house-val) * 1.32);
+  --house-pad-y: clamp(var(--s-5), 2.4vw, var(--s-7));
+  --house-pad-x: clamp(var(--s-4), 2vw, var(--s-6));
+
+  /* Optical: the 13px spine label and the ~23px value line have line boxes of
+     very different heights, so an equal padding-top leaves the label's baseline
+     ~11px ABOVE the value it names — it floats instead of heading the row.
+     This drops it onto the value's baseline and tracks the fluid value size
+     (half the line-box delta, plus the ascender delta between the two sizes). */
+  --house-spine-drop: calc(
+    var(--house-val-lh) / 2 + var(--house-val) * .455 - var(--t-xs) * 1.105);
+
+  /* Table geometry — reused verbatim by .house-foot so the closing lines
+     hang off the same three tracks. */
+  --house-w-spine: 22%;
+  --house-w-col: 39%;
+}
+
+/* --- Matrix shell -------------------------------------------------------- */
+.house-matrix {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  text-align: left;
+}
+.house-matrix,
+.house-matrix thead,
+.house-matrix tbody,
+.house-matrix tr,
+.house-matrix th,
+.house-matrix td { display: block; }
+
+/* At stacked widths the column headers are carried by .house-tag instead,
+   so exactly one label source is announced at any viewport. */
+.house-matrix thead { display: none; }
+
+/* --- Rows (stacked) ------------------------------------------------------ */
+.house-r {
+  padding-block: var(--s-6);
+  border-top: 1px solid var(--line);
+}
+.house-matrix tbody .house-r:last-child { border-bottom: 1px solid var(--line); }
+
+/* --- Spine: the four rule names ------------------------------------------ */
+.house-spine {
+  margin: 0;
+  padding: 0;
+  /* Stacked, this is the row's heading and must outrank both the 15px clause
+     under it and the 13px column tag inside it — a four-step ladder
+     (21 value / 17 rule / 15 clause / 13 tag), every step clear of the next. */
+  font-size: 1.0625rem;
+  font-weight: 500;
+  line-height: 1.3;
+  letter-spacing: .16em;
+  text-transform: uppercase;
+  text-align: left;
+  color: var(--ink);
+}
+
+/* --- Cells (stacked) -----------------------------------------------------
+   Both blocks carry an identical 1px border + inline padding so their text
+   edges align exactly; only the casino's border is visible, and only as a
+   single left hairline. */
+.house-cell {
+  margin-top: var(--s-4);
+  border: 1px solid transparent;
+  border-radius: var(--radius-lg);
+  padding: var(--s-4) var(--s-5);
+}
+.house-cell--casino {
+  margin-top: var(--s-5);
+  border-left-color: var(--line);
+}
+.house-cell--edge {
+  background: var(--bg-raise);
+  border-color: var(--line);
+}
+
+/* --- Stacked column labels ----------------------------------------------- */
+.house-tag {
+  display: block;
+  margin-bottom: var(--s-3);
+  font-size: var(--t-xs);
+  font-weight: 500;
+  line-height: 1.3;
+  letter-spacing: .145em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+}
+.house-cell--edge .house-tag { color: var(--ink-2); }
+
+/* --- Value line + clause -------------------------------------------------
+   The line box is a fixed length AND both variants render at one font-size,
+   so a mono figure and a verbal value land on the same baseline even when
+   they face each other across a single row (THE VOLUME: "thousands" vs
+   "~291"). Only tracking differs — mono is already tight by design. */
+.house-val {
+  display: block;
+  font-size: var(--house-val);
+  line-height: var(--house-val-lh);
+  letter-spacing: -.022em;
+  color: var(--ink);
+  text-wrap: pretty;
+}
+/* Mono is the attribution signal, so it carries the tighter default; the
+   DM Sans variants (third-party figures, verbal values) need less. */
+.house-val.num--ext,
+.house-val--word { letter-spacing: -.008em; }
+.house-cell--casino .house-val { color: var(--ink-3); }
+
+.house-cl {
+  display: block;
+  margin-top: var(--s-2);
+  font-size: var(--t-sm);
+  line-height: 1.55;
+  color: var(--ink-2);
+  text-wrap: pretty;
+}
+
+/* --- Closing lines ------------------------------------------------------- */
+.house-foot {
+  margin-top: clamp(var(--s-8), 5vw, var(--s-10));
+  display: grid;
+  gap: var(--s-6);
+}
+.house-pull {
+  font-family: 'Cormorant Garamond', 'Iowan Old Style', Georgia, 'Times New Roman', serif;
+  font-weight: 400;
+  /* Shared token — this is the page's recurring section-closing pull
+     statement. One component, one job, one size. Never localise it. */
+  font-size: var(--t-pull);
+  line-height: 1.22;
+  letter-spacing: -.014em;
+  color: var(--ink);
+  text-wrap: pretty;
+  max-width: 22em;
+}
+/* The multiple is derived arithmetic, not engine output, so it stays in the
+   serif — but Cormorant defaults to oldstyle figures and an x-height "5"
+   makes the sentence's whole claim the quietest thing in it. Lining figures
+   put it back on the cap-line without borrowing the mono attribution signal. */
+.house-pull .num--rule { font-variant-numeric: lining-nums tabular-nums; }
+.house-attrib { max-width: 58ch; }
+
+/* =========================================================================
+   48em — the real table takes over
+   ========================================================================= */
+@media (min-width: 48em) {
+
+  .house-matrix { display: table; table-layout: fixed; }
+  .house-matrix thead { display: table-header-group; }
+  .house-matrix tbody { display: table-row-group; }
+  /* Qualified with the ancestor on purpose: the stacked base above sets
+     `.house-matrix tr { display: block }` at (0,1,1), so a bare `.house-r`
+     at (0,1,0) loses and the rows never become table-rows. */
+  .house-matrix tr.house-r { display: table-row; padding-block: 0; border-top: 0; }
+  .house-matrix th,
+  .house-matrix td { display: table-cell; vertical-align: top; }
+  .house-tag { display: none; }
+
+  /* Spine — quieter than at stacked widths, because the column headers now
+     carry the labelling and the rule names only need to hold the gutter. */
+  .house-spine {
+    padding: calc(var(--house-pad-y) + var(--house-spine-drop))
+             var(--s-5) var(--house-pad-y) 0;
+    font-size: var(--t-xs);
+    letter-spacing: .145em;
+    color: var(--ink-2);
+    border-bottom: 1px solid var(--line);
+  }
+
+  /* Header row: labels align on a common bottom edge, which lets the white
+     column open with a quiet cap of space above its own label. */
+  .house-r--head th { vertical-align: bottom; }
+
+  .house-spine--head {
+    width: var(--house-w-spine);
+    padding: 0 var(--s-5) var(--s-4) 0;
+  }
+  .house-col {
+    text-align: left;
+    font-weight: 500;
+    padding-bottom: var(--s-4);
+    border-bottom: 1px solid var(--line);
+  }
+  .house-col--casino { width: var(--house-w-col); padding-right: var(--s-6); }
+  .house-col--edge {
+    width: var(--house-w-col);
+    color: var(--ink);
+    background: var(--bg-raise);
+    padding-inline: var(--house-pad-x);
+    padding-top: var(--s-5);
+    border-top: 1px solid var(--line);
+    border-inline: 1px solid var(--line);
+    border-top-left-radius: var(--radius-lg);
+    border-top-right-radius: var(--radius-lg);
+  }
+
+  /* Body cells */
+  .house-cell {
+    margin: 0;
+    border: 0;
+    border-radius: 0;
+    border-bottom: 1px solid var(--line);
+    padding: var(--house-pad-y) 0;
+    background: none;
+  }
+  .house-cell--casino { padding-right: var(--s-6); }
+  .house-cell--edge {
+    background: var(--bg-raise);
+    border-inline: 1px solid var(--line);
+    padding-inline: var(--house-pad-x);
+  }
+  /* The last row's hairline stays: it closes the matrix along the same edge
+     the white column already closes on. (A `border-bottom` on the <tr> would
+     be inert here anyway — separated borders never paint row borders.) */
+  .house-matrix tbody .house-r:last-child .house-cell--edge {
+    border-bottom-left-radius: var(--radius-lg);
+    border-bottom-right-radius: var(--radius-lg);
+  }
+
+  /* The closing lines inherit the matrix's three tracks: the pull-line runs
+     across spine + casino, the attribution sits directly under the measured
+     column it attributes, indented to the same text edge. */
+  .house-foot {
+    grid-template-columns: var(--house-w-spine) var(--house-w-col) var(--house-w-col);
+    gap: 0;
+    align-items: start;
+  }
+  .house-pull { grid-column: 1 / 3; padding-right: var(--s-8); }
+  .house-attrib { grid-column: 3 / 4; padding-left: var(--house-pad-x); }
+}
+
+/* =========================================================================
+   64em — more air in the rows, a wider gutter between the two columns
+   ========================================================================= */
+@media (min-width: 64em) {
+  #house { --house-w-spine: 18%; --house-w-col: 41%; }
+  .house-cell--casino,
+  .house-col--casino { padding-right: var(--s-8); }
+}
+
+/* ===== 04-shape.css ================================================== */
+/* =============================================================================
+   04 — THE SHAPE OF A REAL EDGE  (#shape)  — DARK BAND
+   A conceptual diagram, not a chart. Two hand-drawn SVGs, not one: a landscape
+   artboard from 1024px and a redrawn portrait artboard below it.
+
+   The one rule that governs both: SVG type scales with the board, so each board
+   is capped at its own artboard width. Rendered size = unit x (rendered width /
+   viewBox width), so a max-width equal to the viewBox width pins the ceiling at
+   1.0 and the breakpoint pins the floor. Wide board: 1040 units, capped at
+   1040px, shown from 1024px where it renders at 0.915 — 14.5u lands between
+   13.3px and 14.5px. Compact board: 390 units, capped at 390px, narrowest at
+   390px viewport where it renders at 0.887 — 15.5u lands between 13.7px and
+   15.5px. Nothing in either board can fall below the 13px floor.
+
+   All plot marks are pure geometry — no axis values, because there are none.
+   ============================================================================= */
+
+#shape {
+  /* Two neutral stroke tiers, both measured against the navy ground:
+     the frontier is data and matches --ink-3 exactly (4.7:1) so the curve and
+     its labels read as one tier; rules are construction lines — axes, the
+     leader, the drop — and sit a tier back at 3.2:1, above the 3:1 floor for
+     meaningful graphics but visibly behind the curve they frame. */
+  --sh-frontier: rgba(250, 248, 245, .52);
+  --sh-rule: rgba(250, 248, 245, .38);
+  /* Gold is rationed to ONE object in this section: the measured point. Fill,
+     ring and halo are the same mark. Not the label, not the drop line. */
+  --sh-gold-ring: rgba(200, 169, 81, .62);
+  --sh-gold-halo: rgba(200, 169, 81, .24);
+}
+
+/* ---------- The "this is not data" flag --------------------------------- */
+/* A label plus a hairline that runs to the edge of the measure: it frames the
+   plot the way a plate caption frames a plate, and it reads before the chart. */
+
+#shape .shape-flag {
+  display: flex;
+  align-items: center;
+  gap: var(--s-4);
+}
+#shape .shape-flag::after {
+  content: "";
+  flex: 1 1 auto;
+  height: 1px;
+  background: linear-gradient(90deg, var(--line), transparent);
+}
+
+/* ---------- Plot frame --------------------------------------------------- */
+
+#shape .shape-plot-wrap { margin-top: clamp(var(--s-6), 4vw, var(--s-8)); }
+
+#shape .shape-plot {
+  display: block;
+  width: 100%;
+  height: auto;
+  overflow: visible;
+}
+
+/* Both boards hang off the same left rail as the flag, the key and the note —
+   the section has one alignment and the diagram is not exempt from it. */
+#shape .shape-plot--compact {
+  max-width: 390px;
+  margin-inline: 0;
+}
+#shape .shape-plot--wide {
+  display: none;
+  max-width: 1040px;
+  margin-inline: 0;
+}
+
+/* ---------- Plot marks --------------------------------------------------- */
+/* Two stroke weights in the whole section: 1.25 for every line, and 1.5 for the
+   two objects that are marks rather than rules — the frontier's dot (the width
+   IS the dot's diameter) and the hero ring. */
+
+#shape .shape-ax line {
+  stroke: var(--sh-rule);
+  stroke-width: 1.25;
+}
+
+/* A true dotted line: a near-zero dash with a round cap renders as a disc of
+   the stroke width, so the frontier reads as a run of dots, not a dashed rule. */
+#shape .shape-frontier {
+  fill: none;
+  stroke: var(--sh-frontier);
+  stroke-width: 1.5;
+  stroke-linecap: round;
+  stroke-dasharray: .01 6.5;
+}
+
+/* Leader to the frontier label. Closes onto the curve stroke at one end and
+   stops clear of the label's edge at the other — never into either. */
+#shape .shape-leader {
+  stroke: var(--sh-rule);
+  stroke-width: 1.25;
+}
+
+/* Filled marks carry no stroke paint; the width is declared only so that every
+   computed stroke-width in this section reads 1.25 or 1.5 and nothing else. */
+#shape .shape-assets circle {
+  fill: var(--ink-3);
+  stroke: none;
+  stroke-width: 1.25;
+}
+
+/* Hollow, so "no edge" is legible as a different class of point, not just a
+   dot in a different place. The key beneath reuses the same two classes. */
+#shape .shape-retail {
+  fill: none;
+  stroke: var(--ink-3);
+  stroke-width: 1.25;
+}
+
+#shape .shape-hero__dot {
+  fill: var(--gold);
+  stroke: none;
+  stroke-width: 1.25;
+}
+#shape .shape-hero__ring {
+  fill: none;
+  stroke: var(--sh-gold-ring);
+  stroke-width: 1.5;
+}
+/* The outer ring is emphasis, not information — it carries nothing the solid
+   dot (gold on navy, 6.3:1) does not already say, so it is allowed to sit
+   below the graphics floor the ring and the frontier clear. */
+#shape .shape-hero__halo {
+  fill: none;
+  stroke: var(--sh-gold-halo);
+  stroke-width: 1.25;
+}
+
+/* The dashed drop holds risk constant and measures the step up off the line —
+   it is the whole argument of the section in one hairline. It is a construction
+   line, not the measured point, so it is neutral: gold would spend the ration
+   on geometry. */
+#shape .shape-lift {
+  stroke: var(--sh-rule);
+  stroke-width: 1.25;
+  stroke-linecap: round;
+  stroke-dasharray: 2 6;
+}
+
+/* ---------- Plot type ---------------------------------------------------- */
+/* Sizes are SVG user units; see the scale note at the top of this file. TWO
+   sizes per board, not five: everything the plot names sits on one tier, and
+   the single label the section is drawn to make gets the one clear jump.
+   Tiers within the body size are carried by ink and weight, never by half a
+   pixel. No fill on the base rule — a type selector would outrank the class
+   selectors below it and quietly flatten every fill to one value. */
+
+#shape .shape-plot text {
+  font-family: 'DM Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+  font-weight: 400;
+}
+
+/* Frame and region labels: one tier, told apart by where they sit. */
+#shape .shape-t-axis,
+#shape .shape-t-region  { font-size: 14.5px; letter-spacing: .05em; fill: var(--ink-3); }
+#shape .shape-t-asset   { font-size: 14.5px; letter-spacing: .01em; fill: var(--ink-3); }
+#shape .shape-t-retail  { font-size: 14.5px; letter-spacing: .01em; fill: var(--ink-2); font-weight: 500; }
+#shape .shape-t-herosub { font-size: 14.5px; letter-spacing: .01em; fill: var(--ink-2); }
+/* Ivory, not gold. The gold ration is spent on the mark; spending it again on
+   the mark's own label would put it on this surface twice. */
+#shape .shape-t-hero    { font-size: 20px;   letter-spacing: .16em; fill: var(--ink); font-weight: 500; }
+
+#shape .shape-plot--compact .shape-t-axis,
+#shape .shape-plot--compact .shape-t-region,
+#shape .shape-plot--compact .shape-t-asset,
+#shape .shape-plot--compact .shape-t-retail,
+#shape .shape-plot--compact .shape-t-herosub { font-size: 15.5px; }
+#shape .shape-plot--compact .shape-t-hero    { font-size: 19px; letter-spacing: .15em; }
+
+/* Below 400px the wrap can no longer hand the compact artboard its own width,
+   so the scale floor drops and the units step up to hold the 13px floor:
+   16.5u x 0.810 at a 360px viewport = 13.4px. */
+@media (max-width: 399.98px) {
+  #shape .shape-plot--compact .shape-t-axis,
+  #shape .shape-plot--compact .shape-t-region,
+  #shape .shape-plot--compact .shape-t-asset,
+  #shape .shape-plot--compact .shape-t-retail,
+  #shape .shape-plot--compact .shape-t-herosub { font-size: 16.5px; }
+  #shape .shape-plot--compact .shape-t-hero    { font-size: 20px; }
+}
+
+/* ---------- Key + footnote ----------------------------------------------- */
+/* Run-in sideheads, not repeated headings: the plot gives each series its
+   position, the key gives it its meaning, and the name is the hinge between the
+   two rather than a second printing of it. */
+
+#shape .shape-foot {
+  margin-top: clamp(var(--s-7), 5vw, var(--s-9));
+  padding-top: var(--s-6);
+  border-top: 1px solid var(--line);
+  display: grid;
+  gap: var(--s-7);
+}
+
+#shape .shape-key { display: grid; gap: var(--s-5); }
+
+#shape .shape-key__i {
+  display: grid;
+  grid-template-columns: 26px minmax(0, 1fr);
+  column-gap: var(--s-4);
+  align-items: start;
+  font-size: var(--t-sm);
+}
+
+/* .32em puts the 14px-tall mark on the optical centre of the first line
+   (15px x 1.58 line box) rather than its box top. overflow visible keeps the
+   hero halo whole outside a 14-unit box. */
+#shape .shape-key__mark {
+  width: 26px;
+  height: 14px;
+  margin-top: .32em;
+  overflow: visible;
+}
+
+#shape .shape-key__x {
+  font-size: var(--t-sm);
+  line-height: 1.58;
+  color: var(--ink-3);
+  text-wrap: pretty;
+}
+
+#shape .shape-key__t {
+  font-weight: 500;
+  letter-spacing: .01em;
+  color: var(--ink);
+}
+/* Tracked up to match the plate label it echoes — the mark, not the colour,
+   is what tells the reader which point this is. */
+#shape .shape-key__t--hero { letter-spacing: .13em; }
+
+#shape .shape-note { max-width: 56ch; }
+
+/* ---------- 760–1023px: plate left, caption right ------------------------ */
+/* The compact board is capped at its artboard width so its labels hold size.
+   Rather than leave that cap as dead air, the key moves alongside it and the
+   two columns start on the same line under the flag. */
+
+@media (min-width: 760px) and (max-width: 1023.98px) {
+  #shape .shape-fig {
+    display: grid;
+    grid-template-columns: 390px minmax(0, 1fr);
+    column-gap: clamp(var(--s-7), 5vw, var(--s-9));
+    align-items: start;
+  }
+  #shape .shape-flag { grid-column: 1 / -1; }
+  #shape .shape-plot-wrap { grid-column: 1; }
+  #shape .shape-foot {
+    grid-column: 2;
+    margin-top: clamp(var(--s-6), 4vw, var(--s-8));
+  }
+}
+
+/* ---------- >=1024px: the wide board, key and footnote share the base line - */
+
+@media (min-width: 1024px) {
+  #shape .shape-plot--wide { display: block; }
+  #shape .shape-plot--compact { display: none; }
+
+  #shape .shape-foot {
+    grid-template-columns: minmax(0, .95fr) minmax(0, 1.05fr);
+    column-gap: clamp(var(--s-8), 6vw, var(--s-11));
+    align-items: start;
+  }
+}
+
+/* ===== 05-ruin.css =================================================== */
+/* ---------- 05 · RUIN, ENGINEERED TO NEAR-ZERO ---------------------------
+   A DARK band. #shape → #ruin → #tripwires read as one continuous navy risk
+   chapter: light for the evidence, dark for how it fails. Nothing here paints
+   a literal colour — every value is a semantic token, so the .band--dark flip
+   in styles.css repaints the whole section without a single override.
+
+   Composition: one dominant engine figure, with the aviation analogy demoted
+   to a literal marginal exhibit — a hairline-separated column in the right
+   margin of the headline block, set entirely in ink so no gold ever lands on
+   a number we did not compute. Below 62em the exhibit drops beneath the
+   figure and re-attaches with a top hairline: same subordination, rotated 90°.
+
+   The four aircraft principles are a DEPENDENCY CHAIN, not four peers, so
+   they run as a numbered vertical sequence with the ordinal hung in the left
+   margin and each principle's rule and body set side by side. Principle 4 —
+   the one the analogy breaks on — gets a real structural break: a gap, a
+   heavier rule, and a larger question.
+   ------------------------------------------------------------------------- */
+
+#ruin {
+  /* The headline is a 14-character string, so it needs its own ramp: .fig--lg
+     tops out too small to carry the section, .fig--xl overflows 390px. This
+     clamp is tuned so the line never wraps at 390 / 768 / 1440. */
+  --ruin-fig: clamp(2.75rem, 1.4rem + 5.6vw, 5.5rem);
+  --ruin-ex-w: clamp(15rem, 21vw, 18rem);
+  --ruin-ex-gap: clamp(var(--s-7), 4vw, var(--s-9));
+  /* #tripwires is the next navy band. The system's own band seam only paints
+     between light bands, so the risk chapter gets its internal seam here — a
+     hairline, not a polarity change. */
+  border-bottom: 1px solid var(--line);
+}
+
+/* --- The headline figure -------------------------------------------------- */
+.ruin-head { min-width: 0; }
+.ruin-fig {
+  font-size: var(--ruin-fig);
+  letter-spacing: -.048em;
+  line-height: 1;
+}
+/* The qualifier is not a digit. At the numerals' own size it read as a fifth
+   glyph in the string and sat a full monospace cell away from the 1 it
+   qualifies; it now drops to roughly half height, loses the mono tracking and
+   is optically centred on the numerals' x-height. */
+.ruin-fig__lt {
+  font-size: .58em;
+  letter-spacing: 0;
+  margin-right: .06em;
+  vertical-align: .055em;
+}
+/* "in" is the hinge of a ratio, not a measured quantity — so it leaves the
+   mono, drops to a label size, and lifts toward the optical centre of the
+   numerals rather than sitting on their baseline. Its gaps are margins, not
+   monospace word-spaces: a mono cell at 88px is a 48px hole. */
+.ruin-fig__in {
+  font-family: 'DM Sans', system-ui, sans-serif;
+  /* Floored at 13px so the 390px case never drops the word below the minimum
+     legible size, even though it is optically a connective, not a reading. */
+  font-size: max(.8125rem, .28em);
+  font-weight: 400;
+  letter-spacing: .02em;
+  vertical-align: 1.15em;
+  margin-inline: .34em;
+  color: var(--ink-3);
+}
+
+.ruin-sub {
+  margin-top: var(--s-4);
+  font-size: var(--t-sm);
+  line-height: 1.55;
+  color: var(--ink-2);
+  max-width: 30em;
+  text-wrap: pretty;
+}
+
+/* The mandated verdict line gets a serif register change and its own short
+   hairline, so it reads as the conclusion drawn from the figure rather than a
+   second caption. Size is the shared --t-pull: this is the page's recurring
+   section-closing pull statement and it is not allowed its own scale. */
+.ruin-verdict {
+  margin-top: var(--s-6);
+  font-family: 'Cormorant Garamond', 'Iowan Old Style', Georgia, 'Times New Roman', serif;
+  font-weight: 400;
+  font-size: var(--t-pull);
+  line-height: 1.24;
+  letter-spacing: -.014em;
+  color: var(--ink);
+  max-width: 18em;
+  text-wrap: balance;
+}
+.ruin-verdict::before {
+  content: '';
+  display: block;
+  width: var(--s-8);   /* 48px — the system's .rule--short width, in ink not gold */
+  height: 1px;
+  margin-bottom: var(--s-5);
+  background: var(--ink-4);
+}
+
+/* --- The aviation exhibit -------------------------------------------------
+   Stacked default: a bounded block hung under the figure on a top hairline. */
+.ruin-exhibit {
+  margin-top: clamp(var(--s-8), 6vw, var(--s-9));
+  padding-top: var(--s-6);
+  border-top: 1px solid var(--line);
+  max-width: 34rem;
+}
+.ruin-plot {
+  margin-top: var(--s-5);
+  display: grid;
+  grid-template-columns: auto minmax(64px, 1fr) auto;
+  column-gap: var(--s-3);
+  align-items: center;
+  min-height: 7.25rem;
+}
+/* The two readings sit at the heights their own data points occupy, so the
+   drop is legible even with the curve stripped out. The min-height above is
+   what buys them the travel: without it the 47.6px label blocks set the row
+   height and align-self had under 3px of slack to work with. */
+.ruin-plot__pt--from { align-self: start; }
+.ruin-plot__pt--to { align-self: end; }
+
+.ruin-plot__v {
+  display: block;
+  font-size: clamp(1.15rem, 1rem + .5vw, 1.5rem);
+  line-height: 1.15;
+  letter-spacing: -.028em;
+  color: var(--ink);
+  white-space: nowrap;
+}
+.ruin-plot__pt--from .ruin-plot__v { color: var(--ink-2); }
+
+.ruin-plot__yr {
+  display: block;
+  margin-top: var(--s-1);
+  font-size: var(--t-xs);
+  line-height: 1.3;
+  letter-spacing: .14em;
+  color: var(--ink-3);
+}
+
+/* The curve is stretched to the row so the two dots actually land at the two
+   readings' heights; every stroke is non-scaling so the distortion never
+   reaches the ink. */
+.ruin-plot__curve {
+  width: 100%;
+  height: 100%;
+  align-self: stretch;
+}
+.ruin-plot__axis { fill: none; stroke: var(--line); stroke-width: 1; }
+.ruin-plot__arc {
+  fill: none;
+  stroke: var(--ink-2);
+  stroke-width: 1;
+  stroke-linecap: round;
+}
+/* Zero-length round-capped strokes, not circles: a <circle> would render as an
+   ellipse once the viewBox is stretched. */
+.ruin-plot__dot {
+  fill: none;
+  stroke: var(--ink-2);
+  stroke-width: 7;
+  stroke-linecap: round;
+}
+
+.ruin-exhibit__cap {
+  margin-top: var(--s-5);
+  max-width: 40ch;
+}
+
+/* --- The four aircraft principles ----------------------------------------
+   A sequence, not a grid. Each principle is a hairline-led row: hung ordinal,
+   then the rule (label + question), then the body. Reading down the ordinals
+   is reading the dependency chain. */
+.ruin-seq {
+  margin-top: clamp(var(--s-9), 6vw, var(--s-11));
+}
+.ruin-seq__item {
+  display: grid;
+  grid-template-columns: 1.75rem minmax(0, 1fr);
+  column-gap: var(--s-3);
+  row-gap: var(--s-4);
+  align-items: start;
+}
+.ruin-seq__item + .ruin-seq__item {
+  margin-top: clamp(var(--s-6), 3vw, var(--s-7));
+}
+.ruin-seq__n {
+  grid-column: 1;
+  grid-row: 1;
+  font-size: var(--t-eyebrow);
+  font-weight: 500;
+  line-height: 1.2;
+  color: var(--ink-2);
+  font-variant-numeric: tabular-nums;
+}
+.ruin-seq__hd { grid-column: 2; }
+/* The rule spans the section; the prose keeps a 68-character measure and lets
+   the slack fall at the right. Structure is the hairline, not the text block. */
+.ruin-seq__b { grid-column: 2; min-width: 0; max-width: 32rem; }
+.ruin-seq__b .card__b { margin-top: 0; }
+.ruin-seq__b .card__b + .card__b { margin-top: var(--s-4); }
+/* The questions are short; an orphaned last word is the main risk. */
+.ruin-seq__item .card__q { text-wrap: balance; }
+
+/* Principle 4 is the one the analogy breaks on — a market adapts where physics
+   does not. The first three keep the account alive; this one keeps it right,
+   so it is set off from them by a real gap, a heavier hairline and a step up
+   in the question. The emphasis stays monochrome: no gold on a heading. */
+.ruin-seq__item + .ruin-seq__item--living {
+  margin-top: clamp(var(--s-8), 5vw, var(--s-10));
+}
+.ruin-seq__item--living { border-top-color: var(--ink-4); }
+.ruin-seq__item--living .card__q { font-size: var(--t-h3); line-height: 1.18; }
+
+/* The evidence line under LOAD LIMIT: the rule, then the record against the rule.
+   Set apart by a hairline so it reads as corroboration, not as more rule text. */
+.ruin-evidence {
+  padding-top: var(--s-4);
+  border-top: 1px solid var(--line-2);
+  color: var(--ink-2);
+}
+
+/* --- Closing attribution --------------------------------------------------
+   The smallest type on the page takes the system's own measure, not a 74ch
+   one-off; and it is a source note, so it no longer restates the headline. */
+.ruin-attrib {
+  margin-top: clamp(var(--s-8), 5vw, var(--s-10));
+  max-width: 52ch;
+}
+/* .attrib is already at the 13px floor — inline mono must not shrink under it. */
+.ruin-attrib .mono {
+  font-size: 1em;
+  white-space: nowrap;
+}
+
+/* =========================================================================
+   62em — the exhibit moves into the margin, the sequence splits rule from body
+   ========================================================================= */
+@media (min-width: 62em) {
+
+  .ruin-lead {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) var(--ruin-ex-w);
+    column-gap: var(--ruin-ex-gap);
+    align-items: stretch;
+  }
+
+  /* Full-height hairline, bottom-aligned content: the rule spans the whole
+     headline block so it reads as a margin, while the exhibit's last line
+     settles onto the verdict's baseline. */
+  .ruin-exhibit {
+    margin-top: 0;
+    padding-top: 0;
+    padding-left: clamp(var(--s-5), 2.6vw, var(--s-7));
+    border-top: 0;
+    border-left: 1px solid var(--line);
+    max-width: none;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+  }
+
+  .ruin-seq__item {
+    grid-template-columns: 2.25rem minmax(0, 19rem) minmax(0, 1fr);
+    column-gap: clamp(var(--s-5), 3vw, var(--s-8));
+  }
+  .ruin-seq__b {
+    grid-column: 3;
+    grid-row: 1;
+  }
+}
+
+/* ===== 06-tripwires.css ============================================== */
+/* =============================================================================
+   06 — TWO WAYS IT DIES. TWO TRIPWIRES.  (#tripwires)  — DEEPEST NAVY BAND
+   ---------------------------------------------------------------------------
+   Composition, deliberately not three identical cards:
+
+     [ EXPRESSION GATE │ FIDELITY GATE ]   two tall ruled columns, peers,
+                                           divided by one vertical hairline
+     ───────────────────────────────────   seam 1
+     the consequence — the one rule both gates resolve to
+     ───────────────────────────────────   seam 2
+     INDEPENDENT WITNESS  ·  [ signature plate ]   external check
+     ⎸ the closing punch (.caveat)
+
+   Both seams span the full .wrap measure and nothing else in the section draws
+   a horizontal rule at a third length: the gate ledger rules and the signature
+   rule are column-width and align to their own column's edges.
+
+   The two gates are internal instruments drawn with nothing but rules and air.
+   Gate A is prose that ends on a live link; gate B is set as the checklist its
+   own question names, so the pair is a matched instrument set without being
+   two identical boxes. The witness is the only element in the section that
+   sits on a raised field inside a border — because it is the only check that
+   is not ours. That contrast, not a third card, is what marks it as external.
+
+   Colour: strictly monochrome ivory-on-navy. Gold appears nowhere in this
+   section — no engine-measured figure is shown here, so none is earned.
+
+   Numerals: 100, $0 and 24 are RULE thresholds and a policy window, not engine
+   output. JetBrains Mono is the page's attribution signal ("we measured this"),
+   so they take .num--rule — tabular DM Sans at full ink, weight 500 — and read
+   as instrument settings rather than as results.
+
+   The band above (#ruin) is also dark, so this section closes a continuous navy
+   run. The value step navy → navy-900 is real but low-frequency; a --line-2
+   hairline marks the seam so the two bands do not fuse into one field.
+
+   Contrast on this band: nothing readable falls below --ink-2 (.70 ivory).
+   The one exception is the decorative, aria-hidden signature glyph.
+   ========================================================================= */
+
+#tripwires {
+  /* Optical inset either side of the vertical divider — half the visual gap. */
+  --tw-inset: clamp(var(--s-5), 3.6vw, var(--s-9));
+  /* The section's structural beat between major blocks. */
+  --tw-drop: clamp(var(--s-8), 5vw, var(--s-10));
+  /* Marks the navy → deep-navy seam at the end of the dark run. */
+  border-top: 1px solid var(--line-2);
+}
+
+/* ---------- Section head -------------------------------------------------
+   The title is a two-beat couplet — "Two Ways It Dies." / "Two Tripwires." —
+   and the measure is capped so it breaks after the first beat at every width
+   rather than running out flat at 768. Size and weight are the shared
+   .sec-title refrain and are never touched. */
+
+#tripwires .sec-title { max-width: 8.5em; }
+
+/* ---------- The two gates ------------------------------------------------ */
+
+#tripwires .tw-gates {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--s-8);
+}
+
+#tripwires .tw-gate {
+  border-top: 1px solid var(--line);
+  padding-top: var(--s-6);
+}
+
+/* ---------- Glyphs -------------------------------------------------------
+   Hand-drawn, geometric, currentColor, 1.25 stroke. Rendered 1:1 against the
+   56×36 viewBox so the stroke lands at exactly 1.25px — no scaling blur.
+   All three fill the same optical box (bbox h ≈ 29, optical centre y ≈ 18) and
+   carry comparable ink mass, so the set reads as one instrument family.
+   A: a threshold line with a curve crossing it, ringed at the crossing. The
+      dash is on the threshold only — it is the semantic point of the mark —
+      and the solid curve carries the weight.
+   B: a three-row checklist, the top row ticked.
+   C: a dashed boundary with an arrow entering from outside it. */
+
+#tripwires .tw-glyph {
+  width: 56px;
+  height: 36px;
+  color: var(--ink-2);
+  margin-bottom: var(--s-5);
+}
+
+/* ---------- Shared block type (both gates and the witness) --------------- */
+
+#tripwires .tw-k { color: var(--ink-2); }
+
+#tripwires .tw-q { margin-top: var(--s-4); }
+
+#tripwires .tw-b {
+  margin-top: var(--s-4);
+  max-width: 34em;
+  text-wrap: pretty;
+}
+
+/* Thresholds sit in ink, at medium weight — instrument settings, not data. */
+#tripwires .tw-b .num--rule,
+#tripwires .tw-consequence .num--rule {
+  color: var(--ink);
+  font-weight: 500;
+}
+
+/* ---------- The fidelity ledger -----------------------------------------
+   The gate that asks "are we still flying by the checklist?" is set as the
+   checklist. Three ruled rows, column-width, closing on a rule so the block
+   terminates on a real edge instead of trailing off into the column. */
+
+#tripwires .tw-check { margin-top: var(--s-5); }
+
+#tripwires .tw-check__i {
+  border-top: 1px solid var(--line-2);
+  padding-block: var(--s-3);
+  color: var(--ink-2);
+  text-wrap: pretty;
+}
+#tripwires .tw-check__i:last-child { border-bottom: 1px solid var(--line-2); }
+
+/* ---------- Two columns ------------------------------------------------- */
+/* 46em, not 52em, so the 768px case gets the paired reading it was written
+   for. The gates stretch to a common height, which lets the single divider
+   hairline run past the shorter column and hold the pair as one apparatus. */
+
+@media (min-width: 46em) {
+  #tripwires .tw-gates {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0;
+  }
+  #tripwires .tw-gate { padding-bottom: var(--s-5); }
+  #tripwires .tw-gate--a { padding-right: var(--tw-inset); }
+  #tripwires .tw-gate--b {
+    padding-left: var(--tw-inset);
+    border-left: 1px solid var(--line-2);
+  }
+}
+
+/* ---------- The seams ----------------------------------------------------
+   Seam 1 carries the same 96px of air above it that seam 2 carries below it:
+   the pair frames the consequence rather than decorating the block beneath.
+   Below 46em the gates have no bottom padding, so the seam takes the whole
+   measure itself. */
+
+#tripwires .tw-seam { margin-top: calc(var(--tw-drop) + var(--s-5)); }
+@media (min-width: 46em) {
+  #tripwires .tw-seam { margin-top: var(--tw-drop); }
+}
+#tripwires .tw-seam--2 { margin-top: var(--s-8); }
+
+/* ---------- The consequence line ----------------------------------------
+   DM Sans at 500 and full ink: this is a rule of operation, so it is set as
+   an instruction, not as a serif aside — which keeps it from competing with
+   the Cormorant punch that closes the band. */
+
+#tripwires .tw-consequence {
+  margin-top: var(--s-8);
+  font-weight: 500;
+  font-size: clamp(1.0625rem, .97rem + .42vw, 1.3rem);
+  line-height: 1.45;
+  letter-spacing: -.008em;
+  color: var(--ink);
+  max-width: 34em;
+  text-wrap: pretty;
+}
+
+/* ---------- Independent witness ------------------------------------------ */
+
+#tripwires .tw-witness {
+  margin-top: calc(var(--tw-drop) + var(--s-5));
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--s-7);
+}
+
+#tripwires .tw-witness__p strong {
+  color: var(--ink);
+  font-weight: 500;
+}
+
+/* The signature plate — the section's only bordered object, by design.
+   The name is a caption to "Who can overrule us?", not a peer of it: the
+   heading asks, the plate answers, and the plate never outranks the ask. */
+#tripwires .tw-sign {
+  background: var(--bg-raise);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-lg);
+  padding: clamp(var(--s-5), 2.6vw, var(--s-7));
+  /* A signature plate is a small object. Capped so the single-column layout at
+     768 does not stretch it into a banner. */
+  max-width: 27rem;
+}
+#tripwires .tw-sign .tw-glyph {
+  color: var(--ink-3);
+  margin-bottom: clamp(var(--s-5), 2.4vw, var(--s-7));
+}
+#tripwires .tw-sign__name {
+  font-family: 'Cormorant Garamond', 'Iowan Old Style', Georgia, 'Times New Roman', serif;
+  font-weight: 400;
+  font-size: clamp(1.06rem, .99rem + .2vw, 1.22rem);
+  line-height: 1.2;
+  letter-spacing: -.008em;
+  color: var(--ink);
+}
+/* The rule a signature is written above, not a border. */
+#tripwires .tw-sign__rule {
+  display: block;
+  height: 1px;
+  background: var(--line);
+  margin: var(--s-3) 0 var(--s-3);
+}
+#tripwires .tw-sign__role {
+  font-size: var(--t-xs);
+  line-height: 1.55;
+  letter-spacing: .008em;
+  color: var(--ink-2);
+  max-width: 28ch;
+  text-wrap: pretty;
+}
+
+@media (min-width: 60em) {
+  #tripwires .tw-witness {
+    grid-template-columns: minmax(0, 1fr) minmax(17rem, 21rem);
+    column-gap: clamp(var(--s-7), 4vw, var(--s-9));
+    align-items: start;
+  }
+}
+
+/* ---------- The closing punch --------------------------------------------
+   Runs to the full measure so the band closes on a full-width line rather
+   than abandoning the column the signature plate opened. */
+
+#tripwires .tw-punch {
+  margin-top: calc(var(--tw-drop) + var(--s-6));
+  max-width: 31em;   /* = the seam measure at 1440, so the band closes on-grid */
+  /* Three near-equal lines rather than two full ones and a two-word stub. */
+  text-wrap: balance;
+}
+
+/* The dashboard plots the rolling-100 gate reference at $0 — the exact
+   threshold this gate describes. Linked here so the claim is checkable.
+   The padding is the tap target: the link is the section's only interactive
+   element and must clear 44px at every width. */
+#tripwires .tw-verify { margin-top: var(--s-5); }
+#tripwires .verify-link {
+  padding-top: .75em;
+  padding-bottom: .6em;
+  border-bottom: 0;
+}
+/* Label and arrow are ONE flex item, so when the label wraps in a narrow column
+   the arrow stays welded to the last word instead of floating to the far right
+   of the first baseline — the nbsp does the welding. The underline moves onto
+   this inline span so it hugs the text on every line instead of running out to
+   the width of the padded hit area. */
+#tripwires .tw-verify__l {
+  display: inline;
+  border-bottom: 1px solid var(--line);
+  padding-bottom: 2px;
+  transition: border-color .2s var(--ease-io);
+}
+#tripwires .verify-link:hover .tw-verify__l { border-bottom-color: var(--ink-3); }
+
+/* ===== 07-capacity.css =============================================== */
+/* ---------- 07 · CAPPED IN DOLLARS, NOT PEOPLE ---------------------------
+   The scarcity beat. It has to carry voltage without a single urgency
+   device, so the drama is spatial rather than temporal: the same rectangle
+   of capacity is drawn twice at identical size — once divided into 150
+   slots at the $20,000 minimum, once into 10 at the $300,000 maximum.
+   Nothing counts down; a rectangle is simply subdivided two ways.
+
+   The equality is the whole argument, so three things are enforced rather
+   than eyeballed:
+   1. ONE height (--cap-h) and one width for both fields.
+   2. ONE fill (--cap-mark) for every mark. A darker "few" row would say the
+      ten allocations occupy more capacity than the 150 — the opposite of
+      the truth — so tone is never the variable. Granularity is.
+   3. MATCHED INK COVERAGE. The gutters of the 10-mark field are derived
+      from the 150-mark field's (× cols/5 across, × rows−1 down), so both
+      rectangles carry the same amount of ink at every breakpoint. Without
+      this the coarse field reads ~95% solid against the fine field's ~73%
+      at 390px and the picture inverts itself between widths.
+
+   Column counts are always exact divisors of 150 — 25 / 50 / 75 / 150 — so
+   the field never ends in a ragged part-row, and at ≥74em the marks are
+   pinned to a whole 6px so the 150-comb cannot beat against the pixel grid.
+   No JS, no gradients faking the ticks: 150 elements, counted.
+
+   No gold in this section. Nothing here is engine-measured: 150 and ten are
+   derived arithmetic ($3M ÷ $20,000, $3M ÷ $300,000), the $3M → ≈$5M ceiling
+   is the strategy's own forward estimate, and Medallion's ≈$10B is reported
+   third-party context. JetBrains Mono is this page's "we measured this"
+   signal, so it appears exactly once here — on the 149-trade count in the
+   attribution. Every other numeral is .num--ext.
+   ------------------------------------------------------------------------- */
+
+#capacity {
+  /* Field geometry. Cols must divide 150 exactly. */
+  --cap-cols: 25;          /* → 6 rows */
+  /* 5 × 2 only while the wrap is too narrow for ten marks to stay chunky. At
+     this width the derived gutters come out equal (10px each way), so the pair
+     of rows still reads as ten, not as five. Above 40em the field resolves to
+     a single row of ten — see below. */
+  --cap-few-cols: 5;
+  --cap-gap: 2px;
+  --cap-h: 4.25rem;
+
+  /* One ramp for both counts. Held well under .sec-title (--t-h2) so the
+     section's heaviest serif stays its heading, not a data label. */
+  --cap-count: clamp(1.7rem, 1.15rem + 1.6vw, 2.6rem);
+
+  --cap-mark: rgba(27, 42, 74, .22);
+}
+
+/* --- The plot ------------------------------------------------------------- */
+.cap-row + .cap-row { margin-top: clamp(var(--s-6), 3.6vw, var(--s-8)); }
+
+/* Label and count set as ONE continuous line above the bar, reading
+   "At the $20,000 minimum, 150 fit." Ranged left, never split across the
+   width: a gap of empty ground between subject and quantity is read
+   backwards — numeral first, subject second. */
+.cap-row__head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: flex-start;
+  gap: .1em .55em;
+  margin-bottom: var(--s-4);
+}
+
+.cap-row__k {
+  font-size: var(--t-sm);
+  line-height: 1.4;
+  color: var(--ink-2);
+  min-width: 0;
+}
+.cap-row__k .num--ext { color: var(--ink); }
+
+.cap-row__v {
+  display: flex;
+  align-items: baseline;
+  gap: .42em;
+  white-space: nowrap;
+}
+
+/* "150" and "ten" are the same slot in the same sentence, so they are the
+   same type: one size, one family, one weight. Both are derived arithmetic
+   rather than engine output, which is why neither borrows JetBrains Mono. */
+.cap-row__n {
+  font-size: var(--cap-count);
+  font-weight: 500;
+  line-height: 1;
+  letter-spacing: -.022em;
+  color: var(--ink);
+}
+
+.cap-row__u {
+  font-size: var(--t-sm);
+  line-height: 1.4;
+  color: var(--ink-2);
+}
+
+/* --- The two fields ------------------------------------------------------- */
+.cap-field {
+  height: var(--cap-h);
+  display: grid;
+  grid-template-columns: repeat(var(--cap-cols), minmax(0, 1fr));
+  grid-auto-rows: minmax(0, 1fr);
+  gap: var(--cap-gap);
+}
+.cap-m { display: block; background: var(--cap-mark); }
+
+/* Same width, same height, same fill — 10 marks instead of 150. The gutters
+   are derived from the fine field's so the two rectangles carry equal ink;
+   the eye then reads the ratio and nothing else. */
+.cap-field--few {
+  grid-template-columns: repeat(var(--cap-few-cols), minmax(0, 1fr));
+  grid-auto-rows: minmax(0, 1fr);
+  column-gap: calc(var(--cap-gap) * var(--cap-cols) / var(--cap-few-cols));
+  row-gap: calc(var(--cap-gap) * (150 / var(--cap-cols) - 1));
+}
+
+/* --- The mechanism, then the punch ---------------------------------------- */
+/* Hung off the plot on a vertical hairline. The full-width horizontal rule is
+   reserved for .cap-seam, which means "change of subject" — this means
+   "footnote to the picture above", and the two must not look alike. */
+.cap-nolimit {
+  margin-top: clamp(var(--s-7), 4vw, var(--s-9));
+  padding-left: var(--s-5);
+  border-left: 1px solid var(--line);
+  font-size: var(--t-lede);
+  line-height: 1.5;
+  letter-spacing: -.004em;
+  color: var(--ink-2);
+  max-width: 34em;
+  text-wrap: pretty;
+}
+.cap-nolimit .num--ext { color: var(--ink); }
+.cap-nolimit strong { color: var(--ink); }
+
+.cap-punch {
+  margin-top: clamp(var(--s-6), 3.5vw, var(--s-7));
+  max-width: 22em;
+}
+
+/* --- Seams ---------------------------------------------------------------- */
+.cap-seam {
+  margin-top: clamp(var(--s-9), 6vw, var(--s-11));
+  margin-bottom: clamp(var(--s-8), 5vw, var(--s-10));
+}
+/* The way out gets more air above it than the other seams: everything before
+   this line is argument, everything after is the exit. */
+.cap-seam--eq { margin-top: clamp(var(--s-10), 7vw, var(--s-11)); }
+
+/* --- Why a low ceiling is the point --------------------------------------- */
+.cap-why__t { max-width: 16em; }
+.cap-why__p {
+  margin-top: var(--s-5);
+  font-size: var(--t-lede);
+  line-height: 1.56;
+  letter-spacing: -.004em;
+  color: var(--ink-2);
+  max-width: 40em;
+  text-wrap: pretty;
+}
+.cap-why__p strong { color: var(--ink); }
+
+/* --- The one comparison that earns its place ------------------------------
+   A gulf of three orders of magnitude cannot be drawn as two equal numbers
+   facing each other: the size difference IS the reading. Medallion is set
+   large, this edge small, and the sentence that states the ratio carries the
+   weight — it is the claim, the figures are only its evidence. */
+.cap-scale {
+  margin-top: clamp(var(--s-7), 4.5vw, var(--s-9));
+  display: grid;
+  gap: var(--s-5);
+  max-width: 50rem;
+}
+.cap-scale__col {
+  padding-top: var(--s-5);
+  border-top: 1px solid var(--line);
+  min-width: 0;
+}
+.cap-scale__k { color: var(--ink-3); }
+
+.cap-scale__v {
+  margin-top: var(--s-4);
+  display: flex;
+  align-items: baseline;
+  gap: .45em;
+  flex-wrap: wrap;
+}
+/* Not .fig: neither figure is engine output, so neither takes the mono. */
+.cap-scale__f {
+  font-size: var(--t-fig-lg);
+  font-weight: 400;
+  line-height: 1;
+  letter-spacing: -.026em;
+  color: var(--ink);
+}
+.cap-scale__f--ours {
+  font-size: var(--t-fig-md);
+  letter-spacing: -.018em;
+}
+.cap-scale__tag {
+  font-size: var(--t-sm);
+  line-height: 1.4;
+  color: var(--ink-3);
+}
+.cap-scale__n {
+  margin-top: var(--s-4);
+  font-size: var(--t-lede);
+  line-height: 1.5;
+  letter-spacing: -.004em;
+  color: var(--ink);
+  max-width: 20em;
+  text-wrap: pretty;
+}
+
+.cap-attrib {
+  margin-top: clamp(var(--s-7), 4vw, var(--s-8));
+  max-width: 70ch;
+}
+
+/* --- The hand-off --------------------------------------------------------
+   Relief, not pressure: the door is shut for everyone, so the exit is a ghost
+   button and never the gold one — the gold CTA belongs to §10 and must not be
+   spent twice. The ghost hairline is raised well above the shared --line
+   value: a control's edge needs 3:1 to exist, and rgba(27,42,74,.12) is
+   1.13:1 on ivory. */
+.cap-eq {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--s-5) clamp(var(--s-6), 4vw, var(--s-8));
+}
+.cap-eq__btn {
+  flex: none;
+  border-color: rgba(27, 42, 74, .52);
+}
+.cap-eq__note { max-width: 42ch; }
+
+/* =========================================================================
+   40em — the field halves its rows
+   ========================================================================= */
+@media (min-width: 40em) {
+  #capacity {
+    --cap-cols: 50;        /* → 3 rows */
+    --cap-h: 4.75rem;
+    /* One row of ten. Two rows would need a row gutter far tighter than the
+       column gutter to hold equal ink, and the eye then pairs the marks
+       vertically and counts five. */
+    --cap-few-cols: 10;
+  }
+}
+
+/* =========================================================================
+   52em — the two capacity readings face each other across a hairline
+   ========================================================================= */
+@media (min-width: 52em) {
+  .cap-scale {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    column-gap: clamp(var(--s-6), 4vw, var(--s-8));
+    align-items: start;
+  }
+  .cap-scale__col {
+    padding-top: 0;
+    border-top: 0;
+  }
+  /* One rule between them, not a box around each. */
+  .cap-scale__col--ours {
+    padding-left: clamp(var(--s-5), 3vw, var(--s-7));
+    border-left: 1px solid var(--line);
+  }
+}
+
+/* =========================================================================
+   62em — the field becomes two rows of strokes
+   ========================================================================= */
+@media (min-width: 62em) {
+  #capacity {
+    --cap-cols: 75;        /* → 2 rows */
+    --cap-gap: 1px;
+    --cap-h: 5.5rem;
+  }
+
+  /* The heading drops into the margin as a sidehead — 19rem holds the longest
+     line of "Why a low ceiling is the point" at h3 size without a two-word
+     orphan, and leaves the paragraph its full 40em measure inside the wrap. */
+  .cap-why {
+    display: grid;
+    grid-template-columns: minmax(0, 19rem) minmax(0, 1fr);
+    column-gap: clamp(var(--s-7), 4.5vw, var(--s-9));
+    align-items: start;
+  }
+  .cap-why__p { margin-top: 0; }
+}
+
+/* =========================================================================
+   74em — 150 marks on one line: the comb the whole section is built around.
+   The marks are pinned to exactly 6px rather than left as 1fr: a fractional
+   6.109px pitch snaps to alternating 6/7px columns at 1x and the strip
+   visibly beats. Both fields take the same derived width so the rectangles
+   stay identical; only the transparent gutters carry the remainder.
+   ========================================================================= */
+@media (min-width: 74em) {
+  #capacity {
+    --cap-cols: 150;       /* → 1 row */
+    --cap-h: 6rem;
+  }
+  .cap-field { width: min(100%, calc(150 * 7px - 1px)); }
+  .cap-field--many { grid-template-columns: repeat(150, minmax(0, 6px)); }
+}
+
+/* ===== 08-expressions.css ============================================ */
+/* =============================================================================
+   08 — ONE EDGE, MANY EXPRESSIONS  (#expressions)  — LIGHT STRIP, DELIBERATELY
+   QUIET
+   ---------------------------------------------------------------------------
+   Composition:
+
+     ┌ eyebrow            ┌──────────────────────────────────────
+     │ title              │ A monthly cash-flow check │ one line
+     │ lede               ├──────────────────────────────────────
+     │                    │ A portfolio overlay       │ one line
+     │                    ├──────────────────────────────────────
+     │                    │ A managed program         │ one line
+     ────────────────────────────────────────────────────────────
+     the closing line — full width, footnote register
+
+   This band sits between two loud sections and its only job is to prove the
+   roadmap is not being hidden while refusing to sell it. So it is built as an
+   editorial aside: head in a narrow left column, an inline definition list in
+   the right, everything held by hairlines and air. No cards, no icons, no
+   figures.
+
+   Colour: strictly monochrome navy-on-ivory. GOLD APPEARS NOWHERE in this
+   section — not on the eyebrow, not on a rule, not on a marker. Gold is
+   rationed to engine-measured data, and this section is defined by having no
+   measured data in it. Withholding the accent here is the point.
+
+   Numerals: NONE. There is not a single digit in the rendered copy —
+   "three" is spelled out, and no configuration carries a figure, because
+   none of them has been measured live. That absence is the argument.
+
+   Two hairline weights carry the hierarchy: --line-2 separates the list rows
+   (internal, quiet), --line closes the section above the footnote (structural).
+
+   Deviations from the shared scale, justified:
+   · .sec-title is scaled down a full step (its own --t-h2 clamp would put it
+     at 3.9rem beside a section that must not compete). It is still the
+     largest thing here, so the hierarchy reads — it simply reads as an aside.
+   · .lede is stepped down toward body size for the same reason.
+   · One optical nudge of --s-1 on the list, noted at the rule.
+   · Reveal delays are set here rather than inline, so the markup carries no
+     digits at all.
+   ========================================================================= */
+
+/* ---------- Frame -------------------------------------------------------- */
+
+#expressions {
+  /* The gutter between the head column and the list, at wide widths. */
+  --exp-gap: clamp(var(--s-7), 5vw, var(--s-10));
+  /* Term column width in the inline list — sized so every term sets on one
+     line and every description sets on two. */
+  --exp-term: clamp(9.5rem, 18vw, 13.5rem);
+}
+
+#expressions .exp {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+}
+
+/* ---------- Head --------------------------------------------------------- */
+
+#expressions .exp-title {
+  /* A step below every other .sec-title on the page — see note above. */
+  font-size: clamp(1.75rem, 1.34rem + 1.35vw, 2.6rem);
+  line-height: 1.08;
+  letter-spacing: -.014em;
+}
+
+#expressions .sec-head > .exp-title { margin-top: var(--s-3); }
+
+#expressions .exp-lede {
+  font-size: clamp(1.0625rem, 1rem + .2vw, 1.15rem);
+  line-height: 1.6;
+  max-width: 30em;
+}
+
+#expressions .sec-head > .exp-title + .exp-lede { margin-top: var(--s-4); }
+
+/* ---------- The list ----------------------------------------------------- */
+
+#expressions .exp-list {
+  /* .sec-head + * would drop a full section step here; this band is tighter. */
+  margin-top: clamp(var(--s-6), 4vw, var(--s-8));
+}
+
+#expressions .exp-item {
+  border-top: 1px solid var(--line-2);
+  padding-block: clamp(var(--s-4), 1.6vw, var(--s-5));
+}
+
+#expressions .exp-name {
+  font-family: 'Cormorant Garamond', 'Iowan Old Style', Georgia, 'Times New Roman', serif;
+  font-weight: 400;
+  font-size: clamp(1.15rem, 1.06rem + .3vw, 1.35rem);
+  line-height: 1.2;
+  letter-spacing: -.008em;
+  color: var(--ink);
+  text-wrap: balance;
+}
+
+#expressions .exp-line {
+  margin: 0;
+  font-size: var(--t-sm);
+  line-height: 1.6;
+  color: var(--ink-2);
+  max-width: 34em;
+  text-wrap: pretty;
+}
+
+/* Stacked at 390px: the term reads as a small heading over its line. */
+#expressions .exp-name + .exp-line { margin-top: var(--s-2); }
+
+/* ---------- Inline term | line (≥ 34em) ---------------------------------- */
+/* From roughly 544px up there is room to set the list as a true two-column
+   definition table. Baseline alignment, not top alignment: the serif term and
+   the sans line are different sizes, and their first baselines are what the
+   eye actually reads as "level". */
+
+@media (min-width: 34em) {
+  #expressions .exp-item {
+    display: grid;
+    grid-template-columns: minmax(0, var(--exp-term)) minmax(0, 1fr);
+    column-gap: var(--s-5);
+    align-items: baseline;
+  }
+  #expressions .exp-name + .exp-line { margin-top: 0; }
+}
+
+/* ---------- Two columns (≥ 62em) ----------------------------------------- */
+/* The head stops being a header and becomes a margin note. */
+
+@media (min-width: 62em) {
+  #expressions .exp {
+    grid-template-columns: minmax(0, 22rem) minmax(0, 1fr);
+    column-gap: var(--exp-gap);
+    align-items: start;
+  }
+  #expressions .sec-head { max-width: none; }
+  #expressions .sec-head + .exp-list {
+    /* Columns now carry the separation; the vertical step would double it. */
+    margin-top: var(--s-1); /* optical: drops the first hairline off the
+                               eyebrow's cap line rather than crossing it */
+  }
+}
+
+/* ---------- The closing line --------------------------------------------- */
+/* Full wrap width and a heavier hairline than the list uses, so it reads as
+   the section's own footnote rather than a fourth item. */
+
+#expressions .exp-close {
+  margin-top: clamp(var(--s-7), 4.5vw, var(--s-9));
+  padding-top: clamp(var(--s-4), 2vw, var(--s-5));
+  border-top: 1px solid var(--line);
+  max-width: 62ch;
+  text-wrap: pretty;
+}
+
+#expressions .exp-close strong { color: var(--ink); }
+
+/* ---------- Reveal choreography ------------------------------------------ */
+/* Two groups of three, ≤ 160ms each. Set in CSS so the markup stays free of
+   inline styles — and of digits. */
+
+#expressions .sec-head > .exp-title { --d: 80ms; }
+#expressions .sec-head > .exp-lede { --d: 160ms; }
+#expressions .exp-item + .exp-item { --d: 80ms; }
+#expressions .exp-item + .exp-item + .exp-item { --d: 160ms; }
+
+/* ===== 09-road.css =================================================== */
+/* =============================================================================
+   09 — THE ROAD  (#road)  — LIGHT BAND
+   ---------------------------------------------------------------------------
+   Composition — a chronology, not a grid.
+
+     >=1200px   LIVE NOW      INDICATIVE: 60–90    INDICATIVE: 90–180   GATE-COND.
+                ●━━━━━━━━━━━━━━○━━━━━━━━━━━━━━━━━━━━○━━━━━━━━━━━━━━━━━━━━○━━━ ─  ·
+                1 PROVE        2 STRUCTURE          3 LICENSE            4 TRADE
+                body           body                 body                 body
+
+     <=1199px   the same axis turned vertical: the gate condition, then the
+                station, then the stage — the hairline dropping down the margin.
+
+   The hairline is the AXIS, not decoration: it separates *when* (the gate
+   condition, above the line) from *what* (the stage, below it). Every element
+   in the section is placed by that line. Segment lengths are weighted by the
+   mass of the stage they carry (.9 / 1.08 / 1.16 / .86), so the four bodies land
+   within a line of each other instead of raggedly stopping wherever they stop —
+   and the axis does not die at station 4: it fades on past it, because the road
+   does not end when the last gate opens.
+
+   Legibility: nothing in stages 2–4 is dimmed. Every stage name is full --ink,
+   every status --ink-2, every body --ink-2 — identical to stage 1. The current
+   stage is marked by exactly two things: a filled node on the axis and the live
+   badge. Progression is signalled by rank, not by fade.
+
+   Gold budget: ZERO. Gold is rationed to the H1 accent, the CTA and engine-
+   measured figures; a stage marker is none of those. "Now" is carried by a
+   solid --ink node against three hollow ones, which is a stronger signal than
+   a colour anyway.
+
+   Typeface law: the day ranges (60–90, 90–180) and "Series 3" are ESTIMATES and
+   registration labels, not engine output — DM Sans, never JetBrains Mono. The
+   stage ordinals 1–4 are ordinals, the same role the design system gives mono
+   in `.card__k .n`: index positions in a fixed enumeration, carrying no measured
+   quantity, which is why they are --ink-3 and never gold.
+   ========================================================================= */
+
+#road {
+  /* Station geometry — shared by both orientations. */
+  --road-node: 11px;
+
+  /* The gate-condition row is a fixed box in BOTH orientations. The live badge
+     (13px caps, .5rem padding, 1px border = 33.6px) sets it; the three flat
+     labels centre inside the same box. That is what puts all four gate labels
+     on one line across the track, and what makes the axis position arithmetic
+     rather than hopeful. */
+  --road-status-h: 2.125rem;
+  --road-cap: calc((var(--road-status-h) - var(--road-node)) / 2);
+
+  /* Vertical case */
+  --road-rail: 1.5rem;
+  --road-vgap: clamp(var(--s-7), 6vw, var(--s-9));
+
+  /* Horizontal case */
+  --road-gap: clamp(var(--s-5), 2.6vw, var(--s-8));
+}
+
+/* ---------- Stage: vertical axis (default) ------------------------------- */
+
+#road .road-stage {
+  position: relative;
+  padding-left: calc(var(--road-rail) + var(--s-3));
+}
+#road .road-stage + .road-stage { margin-top: var(--road-vgap); }
+
+/* The mark spans from the top of its stage through the gap to the next stage's
+   top edge, so the connector can be expressed as one offset from its bottom. */
+#road .road-mark {
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: calc(-1 * var(--road-vgap));
+  width: var(--road-node);
+}
+#road .road-stage:last-child .road-mark { bottom: 0; }
+
+#road .road-node {
+  position: absolute;
+  left: 0;
+  top: var(--road-cap);
+  z-index: 1;
+  width: var(--road-node);
+  height: var(--road-node);
+  border: 1px solid var(--ink-4);
+  border-radius: 50%;
+  background: var(--bg);
+}
+
+/* The current station. Filled ink — the only solid node on the axis. */
+#road .road-stage--live .road-node {
+  border-color: var(--ink);
+  background: var(--ink);
+}
+
+/* The connector. Vertical: drops from under this node to just above the next. */
+#road .road-stage:not(:last-child) .road-mark::before {
+  content: '';
+  position: absolute;
+  left: calc((var(--road-node) - 1px) / 2);
+  top: calc(var(--road-cap) + var(--road-node) + var(--s-3));
+  bottom: calc(var(--s-3) - var(--road-cap));
+  width: 1px;
+  background: var(--line);
+}
+
+/* ---------- The gate condition (above the axis) -------------------------- */
+
+#road .road-status {
+  display: flex;
+  align-items: center;
+  min-height: var(--road-status-h);
+  color: var(--ink-2);
+  letter-spacing: .12em;
+}
+
+/* The pill hangs into the margin by exactly its own padding + border, so its
+   TEXT — not its faint 1px outline — lands on the same vertical as the three
+   flat labels, the stage name and the body. The outline hangs; the type does
+   not. This is also why the badge carries no `.dot` here: the filled node on
+   the axis one line below already says "this is where we are", and two marks
+   saying it, stacked, is one mark too many. */
+#road .road-stage--live .road-status { margin-left: calc(-1 * (.75rem + 1px)); }
+
+#road .road-live {
+  padding-inline: .75rem;
+  color: var(--ink);
+  line-height: 1.2;
+  letter-spacing: .12em;
+}
+
+/* ---------- The station (below the axis) --------------------------------- */
+
+/* Cormorant caps at the shared --t-h3 step — no local size, so the stage names
+   sit on the same rung of the scale as every other h3 on the page. Tracking is
+   opened so the caps do not clot; weight 500 because caps at 400 go weedy. */
+#road .road-name {
+  font-weight: 500;
+  line-height: 1.2;
+  letter-spacing: .045em;
+  color: var(--ink);
+}
+
+#road .road-n {
+  font-size: .64em;
+  letter-spacing: 0;
+  color: var(--ink-3);
+  margin-right: .62em;
+}
+
+#road .road-b {
+  margin-top: var(--s-4);
+  font-size: var(--t-sm);
+  line-height: 1.62;
+  color: var(--ink-2);
+  max-width: 34em;
+  text-wrap: pretty;
+}
+
+/* ---------- Stage: horizontal axis (>=1200px) ---------------------------- */
+/* 1200, not 1024: at 1024 a four-across track gives each body a 21ch measure —
+   the paragraph gets NARROWER as the viewport gets wider. The vertical axis
+   reads correctly all the way to 1199px, where the four-across measure finally
+   clears 27ch. */
+
+@media (min-width: 75em) {
+  #road .road-track {
+    display: grid;
+    /* Segment length ∝ the mass of the stage it carries. Measured, not guessed:
+       these weights hold the tallest and shortest stage within one line of each
+       other (≤25px spread) at 1200, 1280, 1440 and 1920, while keeping the
+       narrowest body above a 27ch measure. Equal quarters left 97px of rag
+       between the longest column and the shortest. */
+    grid-template-columns: .9fr 1.08fr 1.16fr .86fr;
+    column-gap: var(--road-gap);
+    align-items: start;
+  }
+
+  #road .road-stage { padding-left: 0; }
+  #road .road-stage + .road-stage { margin-top: 0; }
+
+  #road .road-mark {
+    position: relative;
+    inset: auto;
+    display: block;
+    width: auto;
+    height: var(--road-node);
+    margin-block: var(--s-5);
+  }
+  #road .road-node { top: 0; }
+
+  /* One hairline running from each node, under it, across the gap, to the next.
+     The nodes sit on top (z-index 1, opaque fill) so it reads as continuous. */
+  #road .road-stage:not(:last-child) .road-mark::before {
+    left: 0;
+    right: calc(-1 * var(--road-gap));
+    top: 50%;
+    bottom: auto;
+    width: auto;
+    height: 1px;
+    transform: translateY(-.5px);
+  }
+
+  /* Past the last station the axis fades out rather than stopping dead — the
+     right of the track is the future, not an empty column. */
+  #road .road-stage:last-child .road-mark::after {
+    content: '';
+    position: absolute;
+    left: calc((var(--road-node) - 1px) / 2);
+    right: 0;
+    top: 50%;
+    height: 1px;
+    transform: translateY(-.5px);
+    background: linear-gradient(90deg, var(--line), transparent);
+  }
+}
+
+/* ---------- The terminus ------------------------------------------------- */
+
+#road .road-close {
+  margin-top: clamp(var(--s-9), 7vw, var(--s-11));
+  padding-top: clamp(var(--s-6), 3.5vw, var(--s-8));
+  border-top: 1px solid var(--line);
+  display: grid;
+  gap: var(--s-6);
+}
+
+/* The page's recurring section-closing pull statement: one component, one job,
+   ONE size — `--t-pull`. No local font-size lives here. */
+#road .road-vow {
+  font-family: 'Cormorant Garamond', 'Iowan Old Style', Georgia, 'Times New Roman', serif;
+  font-weight: 400;
+  font-size: var(--t-pull);
+  line-height: 1.28;
+  letter-spacing: -.014em;
+  color: var(--ink);
+  max-width: 20em;
+  text-wrap: pretty;
+}
+
+@media (min-width: 75em) {
+  #road .road-close {
+    grid-template-columns: minmax(0, 1.05fr) minmax(0, .95fr);
+    column-gap: clamp(var(--s-7), 5vw, var(--s-10));
+    align-items: start;
+  }
+  /* The same hairline-aside device the page uses elsewhere — but hung off the
+     CAP LINE of the first line rather than off the line box, and nudged down so
+     the caveat's caps sit on the vow's caps in the adjacent column. `start`
+     aligns line boxes; type has to be aligned by hand. */
+  #road .road-attrib {
+    position: relative;
+    /* Measured: the vow's cap line sits 11.0px under its box top, the caveat's
+       4.0px under its own. .54em of 13px closes the 7px difference so the two
+       columns start on one optical line, not on two line-box tops. */
+    margin-top: .54em;
+    padding-left: clamp(var(--s-5), 2.4vw, var(--s-6));
+  }
+  /* Cap line to last baseline — the rule measures the type, not the line boxes. */
+  #road .road-attrib::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: .31em;
+    bottom: .52em;
+    width: 1px;
+    background: var(--line);
+  }
+}
+
+/* ===== 10-cta.css ==================================================== */
+/* ---------- 10 · THE CTA -------------------------------------------------
+   The close. ONE axis, top to bottom — the same left rail every other
+   section uses, and the same one the footer beneath it uses, so the seam
+   between this band and the colophon is silent. The band was previously
+   centre-set above its own ruled rails, which put two alignment systems
+   inside one section; that is gone.
+
+   Promotion comes from the dark ground, the air, and the single gold
+   control. NOT from type size: `.sec-title` is the page's structural
+   refrain and keeps `--t-h2` at weight 400 here exactly as everywhere
+   else. `.sec-head` supplies the eyebrow → title → lede rhythm, so the
+   close is measured with the page's own ruler.
+
+   Gold appears exactly once in this band: the primary button. Nothing
+   else is gold — not the eyebrow, not a rule, not an accent word — so the
+   one action is the only bright object on a dark field. Both controls
+   share the system `.btn` box, so their top and bottom edges line up; the
+   hierarchy between them is carried by fill and border alone.
+
+   Nothing in this band moves on a loop. The conversion viewport has one
+   focal point and it is not an animation.
+
+   No urgency devices of any kind. Nothing counts, nothing expires.
+   ------------------------------------------------------------------------- */
+
+#watch {
+  position: relative;
+  overflow: hidden;
+  isolation: isolate;
+}
+
+/* --- Atmosphere: a navy vignette and a single soft lift, moved off centre
+       to sit behind the heading now that the band reads left. Alpha
+       composites of navy-900 and ivory only — no new hues. ------------- */
+#watch .cta__atmos {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+}
+#watch .cta__atmos::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(72% 56% at 26% 2%,   rgba(250, 248, 245, .045), rgba(250, 248, 245, 0) 62%),
+    radial-gradient(98% 80% at 50% 114%, rgba(19, 31, 56, .9),      rgba(19, 31, 56, 0)     68%);
+}
+
+#watch .cta__in {
+  position: relative;
+  z-index: 1;
+}
+
+/* =========================================================================
+   1 · THE ASK
+   `.sec-head` already sets the 46rem measure and the eyebrow/title/lede
+   steps. Nothing to add and, more importantly, nothing to override.
+   ========================================================================= */
+
+/* The equalizer — the page's recurring section-closing pull statement, at
+   the shared `--t-pull`. Its short hairline is built the same way §05's
+   verdict builds its own: a 48px ink rule, never the gold `.rule--short`.
+   `.sec-head + *` supplies the gap above it. */
+#watch .cta-eq {
+  max-width: 20em;
+  font-family: 'Cormorant Garamond', 'Iowan Old Style', Georgia, 'Times New Roman', serif;
+  font-weight: 400;
+  font-size: var(--t-pull);
+  line-height: 1.24;
+  letter-spacing: -.014em;
+  color: var(--ink-2);
+  text-wrap: balance;
+}
+#watch .cta-eq::before {
+  content: '';
+  display: block;
+  width: var(--s-8);   /* 48px — the system's .rule--short width, in ink not gold */
+  height: 1px;
+  margin-bottom: var(--s-5);
+  background: var(--line);
+}
+#watch .cta-eq strong {
+  font-weight: 400;
+  color: var(--ink);
+}
+
+/* =========================================================================
+   2 · ONE ACTION
+   The hinge above leads into the controls, so this gap is deliberately
+   tighter than the refrain gap that separates the ask from the hinge.
+   ========================================================================= */
+#watch .cta-act {
+  margin-top: var(--s-8);
+}
+
+/* 390px: full-width stack with a real 24px gap — wide enough that the gold
+   control and the ghost control never read as one segmented object. */
+#watch .cta-act__row {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: var(--s-5);
+  max-width: 24rem;
+}
+
+/* Both controls run on the shared `.btn` box — identical padding, identical
+   label size, identical height, so their edges line up whether they are
+   stacked or side by side. The primary is separated by fill, not by scale:
+   a private button size here would also put a second 16px label class on a
+   page whose button label is 15px everywhere else. */
+#watch .cta-primary__glyph {
+  width: 1.15em;
+  height: 1.15em;
+}
+
+/* Genuinely quieter: the label sits at --ink-2 rather than full ivory, and
+   the control keeps the shared .btn--ghost hairline so the tap target stays
+   legible. A control that is hard to see is worse than a quiet one. */
+#watch .cta-secondary {
+  color: var(--ink-2);
+}
+#watch .cta-secondary:hover,
+#watch .cta-secondary:focus-visible {
+  color: var(--ink);
+}
+
+/* The observation-only clarifier is the system `.note` — readable, not fine
+   print. Only its position in the rhythm is local. */
+#watch .cta-clarify {
+  margin-top: var(--s-5);
+}
+
+/* Both of the band's short supporting paragraphs run to two or three lines,
+   where `pretty` only guards the last line's orphan and leaves a stub under
+   two full measures. `balance` evens the rag on a paragraph this short. */
+#watch .cta-lede,
+#watch .cta-clarify {
+  text-wrap: balance;
+}
+
+/* Tertiary verification link — below the button and below the clarifier,
+   subordinate to both. Never a button, never gold. The extra tap area is
+   taken above the label so the underline keeps the component's shared 2px
+   offset, and the top padding is subtracted back out of the margin so the
+   rendered gap is the specified --s-6. */
+#watch .cta-verify {
+  margin-top: calc(var(--s-6) - 1.35rem);
+}
+#watch .cta-verify__a {
+  padding-top: 1.35rem;
+}
+
+/* =========================================================================
+   3 · THE RECORD — ruled, full wrap width, same left axis
+   ========================================================================= */
+#watch .cta-seam {
+  margin-top: clamp(var(--s-9), 6vw, var(--s-11));
+  margin-bottom: clamp(var(--s-6), 3vw, var(--s-7));
+}
+#watch .cta-seam--sig {
+  margin-top: clamp(var(--s-7), 4vw, var(--s-8));
+  margin-bottom: clamp(var(--s-5), 2.5vw, var(--s-6));
+}
+
+#watch .cta-status {
+  display: grid;
+  gap: var(--s-4);
+}
+#watch .cta-status__badge {
+  justify-self: start;
+  align-self: start;
+}
+/* The badge is a statement of record, not a live indicator. The band that
+   holds the page's single conversion point gets no perpetual motion in it. */
+#watch .cta-status__badge .dot::after {
+  animation: none;
+  opacity: 0;
+}
+#watch .cta-status__t {
+  max-width: 72ch;
+  text-wrap: pretty;
+}
+#watch .cta-status__t strong { color: var(--ink); }
+
+/* --- Signature: small, level, confident. Not a card. -------------------- */
+#watch .cta-sig {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--s-1) var(--s-6);
+  margin: 0;
+  font-style: normal;
+  font-size: var(--t-sm);
+  line-height: 1.6;
+}
+#watch .cta-sig__id,
+#watch .cta-sig__ch {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0 .6em;
+  min-width: 0;
+}
+#watch .cta-sig__ch { align-items: center; }
+#watch .cta-sig__name {
+  font-weight: 500;
+  color: var(--ink);
+}
+#watch .cta-sig__role { color: var(--ink-3); }
+#watch .cta-sig__sep { color: var(--ink-4); }
+
+#watch .cta-sig__a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 2.75rem;            /* 44px tap target */
+  font-weight: 500;
+  color: var(--ink-2);
+  border-bottom: 1px solid transparent;
+  transition: color .2s var(--ease-io), border-color .2s var(--ease-io);
+}
+#watch .cta-sig__a:hover {
+  color: var(--ink);
+  border-bottom-color: var(--ink-3);
+}
+
+/* =========================================================================
+   Narrow — 390px pass
+   ========================================================================= */
+@media (max-width: 34em) {
+  /* Name over role, no dangling middot at a wrap point. */
+  #watch .cta-sig__id { display: block; }
+  #watch .cta-sig__id .cta-sig__name,
+  #watch .cta-sig__id .cta-sig__role { display: block; }
+  #watch .cta-sig__id .cta-sig__sep { display: none; }
+}
+
+/* =========================================================================
+   544px — the two controls sit side by side, primary first
+   ========================================================================= */
+@media (min-width: 34em) {
+  #watch .cta-act__row {
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--s-5) var(--s-6);
+    max-width: none;
+  }
+}
+
+/* =========================================================================
+   1024px — the record splits into badge | statement, mirroring the hero rail
+   ========================================================================= */
+@media (min-width: 64em) {
+  #watch .cta-status {
+    grid-template-columns: auto minmax(0, 1fr);
+    column-gap: var(--s-7);
+    align-items: start;
+  }
+  /* Same value as every other rule in this band. --line-2 measured 1.26:1
+     on navy and simply was not there. */
+  #watch .cta-status__t {
+    border-left: 1px solid var(--line);
+    padding-left: var(--s-7);
+  }
+}
+
+/* ===== 11-footer.css ================================================= */
+/* =============================================================================
+   11 — DISCLOSURE FOOTER  (#disclosures)  — DEEP NAVY
+   ---------------------------------------------------------------------------
+   Composition — one rail, four rows:
+
+     >=1024px   | Ekantik Capital Advisors |  anchors · anchors · anchors
+                |  ──                      |  Hiren Desai · Founder · email · tel
+                |                          | ------------------------------------
+                | Open the trade journal → |  snapshot caveat
+                | ======================================================
+                | IMPORTANT DISCLOSURES    |  disclosure  |  disclosure
+                |                          |  disclosure  |  disclosure
+                | ------------------------------------------------------
+                | private & confidential · © 2026
+
+     <=1023px   the same four rows, each collapsed to a single column, in the
+                same order. Nothing reflows out of sequence.
+
+   The 14rem left rail is the footer's spine: wordmark, then affordance, then
+   section label, all landing on one vertical. The right field carries every
+   piece of running text. That is the whole idea — a ledger, not a sitemap.
+
+   Legibility: the disclosure prose is 13px/1.62 in --ink-3 on --navy-900.
+   Measured: rgba(250,248,245,.52) composited over #131F38 is ~#8B909A, which
+   is 5.06:1 against #131F38 — clear of the 4.5:1 floor, so --ink-3 stands and
+   the --ink-2 fallback is not needed. Run-in labels step up to --ink-2 so a
+   reader scanning for one paragraph can find it without a size change.
+
+   Gold budget: ONE mark in the entire footer — the 28px hairline under the
+   wordmark. Nothing else here is gold: not the rules, not the links, not the
+   verification affordance. A disclosure block is the last place on the page
+   that should ask for attention.
+
+   Typeface law: no JetBrains Mono anywhere in this section. Mono is reserved
+   for *displayed* engine figures; the numerals here (246, 200,000, ~1.4–1.7,
+   $3M) sit inside legal prose as words, not as data points, and setting them
+   in mono would read as a second claim rather than a qualification. The phone
+   number and the copyright year are likewise DM Sans — neither is measured.
+   ========================================================================= */
+
+#disclosures {
+  /* The spine. One value, used by all four rows. */
+  --disc-rail: 14rem;
+  --disc-gap: clamp(var(--s-6), 4vw, var(--s-9));
+  /* A footer should settle, not float: trim the symmetric band padding at the
+     bottom so the page ends on the copyright rather than on empty navy. */
+  padding-bottom: clamp(var(--s-7), 4vw, var(--s-9));
+}
+
+/* ---------- The shared row geometry -------------------------------------- */
+
+#disclosures .disc-row {
+  display: grid;
+  gap: var(--s-5);
+}
+
+@media (min-width: 64em) {
+  #disclosures .disc-row {
+    grid-template-columns: minmax(0, var(--disc-rail)) minmax(0, 1fr);
+    column-gap: var(--disc-gap);
+    align-items: start;
+  }
+}
+
+/* Row separators. Two weights, deliberately: --line marks the change of
+   register (colophon → disclosures), --line-2 marks a change of subject
+   within a register. */
+#disclosures .disc-verify {
+  margin-top: clamp(var(--s-6), 3.5vw, var(--s-8));
+  padding-top: clamp(var(--s-5), 3vw, var(--s-6));
+  border-top: 1px solid var(--line-2);
+}
+#disclosures .disc-body {
+  margin-top: clamp(var(--s-7), 4.5vw, var(--s-9));
+  padding-top: clamp(var(--s-6), 3.5vw, var(--s-7));
+  border-top: 1px solid var(--line);
+}
+
+/* ---------- Row 1 · wordmark --------------------------------------------- */
+
+#disclosures .disc-mark { display: block; }
+
+#disclosures .disc-mark__n {
+  display: block;
+  font-family: 'Cormorant Garamond', 'Iowan Old Style', Georgia, 'Times New Roman', serif;
+  font-weight: 400;
+  font-size: 1.125rem;
+  line-height: 1.2;
+  letter-spacing: .012em;
+  color: var(--ink);
+  text-wrap: balance;
+}
+
+/* The single permitted gold mark in this section. */
+#disclosures .disc-mark__rule {
+  display: block;
+  width: 28px;
+  height: 1px;
+  margin-top: var(--s-3);
+  background: var(--gold);
+  transition: width .28s var(--ease);
+}
+#disclosures .disc-mark:hover .disc-mark__rule { width: 44px; }
+@media (prefers-reduced-motion: reduce) {
+  #disclosures .disc-mark:hover .disc-mark__rule { width: 28px; }
+}
+
+/* `.eyebrow` leaves display alone; the sub-mark must be a block for its top
+   margin to take and for it to clear the gold hairline above it. */
+#disclosures .disc-mark__s { display: block; margin-top: var(--s-3); }
+
+/* ---------- Row 1 · field: anchors, then contact ------------------------- */
+
+#disclosures .disc-field {
+  display: grid;
+  gap: clamp(var(--s-5), 2.4vw, var(--s-6));
+}
+
+#disclosures .disc-nav__list {
+  display: flex;
+  flex-wrap: wrap;
+  column-gap: clamp(var(--s-5), 2.2vw, var(--s-7));
+  row-gap: var(--s-1);
+  margin: 0;
+}
+/* Hover underline is a border, not text-decoration: these anchors become flex
+   boxes at narrow widths for the 44px target, and text-decoration does not
+   paint inside a flex container. */
+#disclosures .disc-nav a {
+  display: inline-block;
+  font-size: var(--t-xs);
+  font-weight: 500;
+  letter-spacing: .01em;
+  color: var(--ink-2);
+  border-bottom: 1px solid transparent;
+  transition: color .2s var(--ease-io), border-color .2s var(--ease-io);
+}
+#disclosures .disc-nav a:hover {
+  color: var(--ink);
+  border-bottom-color: var(--ink-4);
+}
+
+#disclosures .disc-contact {
+  font-style: normal;
+  font-size: var(--t-xs);
+  line-height: 1.6;
+  color: var(--ink-3);
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+#disclosures .disc-contact__n { color: var(--ink-2); font-weight: 500; }
+#disclosures .disc-contact a {
+  display: inline-block;
+  color: var(--ink-3);
+  border-bottom: 1px solid transparent;
+  transition: color .2s var(--ease-io), border-color .2s var(--ease-io);
+}
+#disclosures .disc-contact a:hover {
+  color: var(--ink);
+  border-bottom-color: var(--ink-4);
+}
+#disclosures .disc-sep { display: none; }
+
+/* Stacked below 768px: every anchor and every contact link is a 44px row. */
+@media (max-width: 47.99em) {
+  #disclosures .disc-nav__list { column-gap: var(--s-6); }
+  #disclosures .disc-nav a,
+  #disclosures .disc-contact a {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+  }
+}
+
+/* From 768px the contact collapses to one middot-separated line. */
+@media (min-width: 48em) {
+  #disclosures .disc-contact {
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-items: baseline;
+    column-gap: .55em;
+    row-gap: var(--s-1);
+  }
+  #disclosures .disc-sep { display: inline; color: var(--ink-4); }
+}
+
+/* ---------- Row 2 · verification ----------------------------------------- */
+
+#disclosures .disc-snapshot { max-width: 56ch; }
+
+/* Below the rail split the link is a standalone control, so give it a real
+   tap target; the system's 2px underline offset grows with it. */
+@media (max-width: 63.99em) {
+  #disclosures .verify-link { padding-block: .5rem; }
+}
+
+/* ---------- Row 3 · the disclosures --------------------------------------- */
+
+#disclosures .disc-label {
+  color: var(--ink-2);
+  /* Optical: the eyebrow's cap-height sits high in its line box, so nudge it
+     down onto the first line of prose in the field beside it. */
+  padding-top: .2em;
+}
+
+#disclosures .disc-p {
+  font-size: var(--t-xs);
+  line-height: 1.62;
+  letter-spacing: .004em;
+  color: var(--ink-3);
+  text-wrap: pretty;
+  break-inside: avoid;
+  margin-bottom: clamp(var(--s-4), 1.6vw, var(--s-5));
+}
+#disclosures .disc-p:last-child { margin-bottom: 0; }
+
+#disclosures .disc-k {
+  color: var(--ink-2);
+  font-weight: 500;
+  letter-spacing: .012em;
+}
+
+/* Two real columns of legal text, read down then across, with a hairline
+   between them. A 13px measure of ~48 characters per column — narrower than
+   the page's prose, which is correct: disclosures are scanned, not read
+   linearly, and a short measure makes a paragraph findable. */
+@media (min-width: 64em) {
+  #disclosures .disc-cols {
+    columns: 2;
+    column-gap: clamp(var(--s-7), 3.4vw, var(--s-9));
+    column-rule: 1px solid var(--line-2);
+    orphans: 3;
+    widows: 3;
+  }
+}
+
+/* ---------- Row 4 · colophon terminus ------------------------------------ */
+
+#disclosures .disc-copy {
+  margin-top: clamp(var(--s-6), 3.5vw, var(--s-8));
+  padding-top: clamp(var(--s-4), 2vw, var(--s-5));
+  border-top: 1px solid var(--line-2);
+  font-size: var(--t-xs);
+  line-height: 1.6;
+  color: var(--ink-3);
+  letter-spacing: .01em;
+}

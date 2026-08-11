@@ -1,0 +1,259 @@
+/* =============================================================================
+   02 — THREE NUMBERS PROOF STRIP  (#proof)
+   A ruled ledger, not cards: one hairline across the top, hairlines down the
+   gutters at >=768px, horizontal hairlines when it stacks.
+
+   THE ARGUMENT'S SHAPE — two results measured across one count. 62% and $1.69
+   are what the engine produced; 149 is the sample they were produced from, and
+   the caveat directly below says so out loud. So the strip is not three peers:
+   the two results carry the gold ration and the full figure scale, the count is
+   set smaller and in ink, seated on the results' own baseline. A ledger, with a
+   denominator.
+
+   THE ALIGNMENT RULE — this strip aligns by INK, never by advance box. Every
+   figure's first painted pixel sits exactly on its column's content edge, so
+   the figure, the label and the subline share one left edge. The currency mark
+   is part of the number, not hanging punctuation: hanging it broke the page
+   gutter at 390px and put three different ink edges on a ruled ledger.
+
+   THE AFFIX RULE — "$" and "%" are peers doing one job, so they get one rule:
+   both are superiors, set at the same fraction of the numeral and hung so their
+   ink caps land on the digits' cap line. Neither sits on the baseline; neither
+   floats above the digits. The constants below are measured ink metrics of
+   JetBrains Mono at 1em, so the arithmetic stays honest if the sizes move.
+   ============================================================================= */
+
+#proof {
+  /* Space between the top hairline and the first glyph of each column.
+     Stepped through the spacing tokens — nothing here lands between them. */
+  --pf-rowpad: var(--s-6);
+  /* Figure size. Same curve as --t-fig-xl, lifted at the small end: at 390px
+     the token's floor undersells the one place on the page where size argues. */
+  --pf-fig: clamp(4rem, 2.6rem + 4.6vw, 6.75rem);
+  /* The count is the strip's denominator, not its third claim. */
+  --pf-count: .62;
+
+  /* --- measured ink metrics, JetBrains Mono 400 @ 1em ------------------- */
+  --pf-cap: .73;        /* digit cap height above baseline                  */
+  --pf-ink-cur: .87;    /* "$" ink ascent above baseline                    */
+  --pf-ink-pct: .74;    /* "%" ink ascent above baseline                    */
+  --pf-lsb-cur: .07;    /* "$" left side bearing                            */
+  --pf-lsb-6: .06;      /* "6" left side bearing                            */
+  --pf-lsb-1: .09;      /* "1" left side bearing                            */
+  /* Affix size as a fraction of the numeral it modifies. */
+  --pf-aff: .46;
+}
+
+/* ---------- The strip ---------------------------------------------------- */
+
+#proof .proof-grid {
+  display: grid;
+  gap: var(--s-7);
+  border-top: 1px solid var(--line);
+}
+
+#proof .proof-num {
+  position: relative;
+  min-width: 0;
+  padding-top: var(--pf-rowpad);
+}
+
+/* Stacked (<768px): hairlines between, per the ledger reading. */
+#proof .proof-num + .proof-num { border-top: 1px solid var(--line); }
+
+/* ---------- The figures -------------------------------------------------- */
+
+#proof .proof-fig {
+  font-size: var(--pf-fig);
+  white-space: nowrap;
+  /* Ink flush: pull back the left side bearing of the first painted glyph. */
+  margin-left: calc(var(--pf-lsb-6) * -1em);
+}
+
+/* "$1.69" opens on the affix, so the compensation lives on the affix instead. */
+#proof .proof-num--cur .proof-fig { margin-left: 0; }
+
+/* The count: quieter, smaller, and in ink rather than the gold ration. */
+#proof .proof-num--count .proof-fig {
+  font-size: calc(var(--pf-fig) * var(--pf-count));
+  margin-left: calc(var(--pf-lsb-1) * -1em);
+}
+
+/* Currency and percent are set as separate spans so the numerals carry the
+   weight. Same weight as the numerals — a heavier affix reads as a correction,
+   not a unit. */
+#proof .proof-fig__aff {
+  display: inline-block;
+  font-size: calc(var(--pf-aff) * 1em);
+  font-weight: 400;
+  line-height: 1;
+  letter-spacing: 0;
+}
+
+/* Both affixes hang from the digits' cap line. The raise is (cap ÷ affix scale
+   − the affix's own ink ascent), expressed in the affix's own em. */
+#proof .proof-fig__aff--pct {
+  vertical-align: calc((var(--pf-cap) / var(--pf-aff) - var(--pf-ink-pct)) * 1em);
+  margin-left: .12em;
+}
+
+#proof .proof-fig__aff--cur {
+  vertical-align: calc((var(--pf-cap) / var(--pf-aff) - var(--pf-ink-cur)) * 1em);
+  margin-left: calc(var(--pf-lsb-cur) * -1em);
+  margin-right: .14em;
+}
+
+/* ---------- Label + subline ---------------------------------------------- */
+
+#proof .proof-num__label {
+  margin-top: var(--s-5);
+  font-size: clamp(1.25rem, 1.1rem + .6vw, 1.5rem);
+  font-weight: 500;
+  line-height: 1.3;
+  letter-spacing: -.008em;
+  color: var(--ink);
+  text-wrap: balance;
+}
+
+#proof .proof-num__sub {
+  margin-top: var(--s-3);
+  max-width: 30ch;
+  font-size: var(--t-sm);
+  line-height: 1.6;
+  color: var(--ink-2);
+  text-wrap: pretty;
+}
+
+/* ---------- Caveat + attribution ----------------------------------------- */
+
+#proof .proof-foot {
+  display: grid;
+  gap: var(--s-7);
+  margin-top: clamp(var(--s-8), 6vw, var(--s-10));
+}
+
+/* The honesty inversion. Its size is NOT set here: the section-closing pull
+   statement is one component with one job, and it is sized by --t-pull for
+   every section on the page. */
+#proof .proof-caveat { max-width: 34ch; }
+
+#proof .proof-caveat__lead {
+  display: block;
+  margin-bottom: var(--s-2);
+  font-size: .78em;
+  letter-spacing: -.005em;
+  color: var(--ink-2);
+}
+
+/* Provenance column: where the figures came from, and how to check them. One
+   block, so nothing can open a gap between the claim and its receipt. */
+#proof .proof-prov {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--s-6);
+}
+
+/* Attribution is provenance, not fine print: hairline above it, and lifted off
+   --ink-3 so it stays comfortably readable at 13px. */
+#proof .proof-attrib {
+  max-width: 46ch;
+  padding-top: var(--s-4);
+  border-top: 1px solid var(--line);
+  color: var(--ink-2);
+}
+
+/* Verification link — the dashboard makes the three numbers checkable. */
+#proof .proof-verify {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--s-3);
+}
+
+#proof .proof-verify__note { max-width: 54ch; }
+
+/* The link's own box is 15px/1.65 + 2px — under the 44px tap minimum. A
+   transparent overlay gives it 45px of hit area without moving the underline. */
+#proof .verify-link { position: relative; }
+#proof .verify-link::after {
+  content: "";
+  position: absolute;
+  inset: -.55rem 0;
+}
+
+/* ---------- >=768px: three columns, hairlines down the gutters ----------- */
+
+@media (min-width: 768px) {
+
+  #proof {
+    --pf-rowpad: var(--s-8);
+    /* Gutter between columns, carrying the hairline. */
+    --pf-gut: clamp(var(--s-8), 6vw, var(--s-11));
+  }
+
+  /* Two results, one denominator — the third track is narrower because the
+     count is not a third claim. */
+  #proof .proof-grid {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) minmax(0, .75fr);
+    grid-template-rows: auto auto auto;
+    column-gap: var(--pf-gut);
+    row-gap: 0;
+  }
+
+  /* A ledger's rows must line up. Subgrid makes figure / label / subline three
+     real rows shared by all three columns, so a label that wraps in one column
+     cannot knock its neighbours' sublines off the line. */
+  #proof .proof-num {
+    grid-row: span 3;
+    border-top: 0;
+  }
+  @supports (grid-template-rows: subgrid) {
+    #proof .proof-num {
+      display: grid;
+      grid-template-rows: subgrid;
+    }
+  }
+
+  /* Side by side, the count seats on the results' BASELINE, not their cap line —
+     one ruled line under three figures. With line-height:1 a JetBrains Mono
+     baseline sits .86em below the box top, so the drop is .86 × (1/scale − 1)
+     of the count's own em. */
+  #proof .proof-num--count .proof-fig {
+    align-self: start;
+    margin-top: calc(.86em * (1 / var(--pf-count) - 1));
+  }
+
+  /* Hairline centred in the gutter, running from the top rule down and fading
+     out rather than stopping dead — the strip is open at the bottom. */
+  #proof .proof-num + .proof-num::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: calc(var(--pf-gut) / -2 - .5px);
+    width: 1px;
+    background: linear-gradient(180deg, var(--line) 0 62%, transparent 100%);
+  }
+
+  #proof .proof-num__sub { max-width: 26ch; }
+}
+
+/* ---------- >=900px: caveat left, provenance stacked right --------------- */
+
+@media (min-width: 900px) {
+
+  #proof { --pf-rowpad: var(--s-9); }
+
+  /* The left track is exactly the caveat's measure; the provenance column
+     fills the rest, so no L-shaped void is left in the bottom right. */
+  #proof .proof-foot {
+    grid-template-columns: auto minmax(0, 1fr);
+    column-gap: clamp(var(--s-8), 6vw, var(--s-11));
+    align-items: start;
+  }
+
+  /* Both columns start on the same line, so the caveat's left rule and the
+     attribution's top rule read as one structure. */
+  #proof .proof-attrib { max-width: none; }
+}

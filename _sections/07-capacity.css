@@ -1,0 +1,309 @@
+/* ---------- 07 · CAPPED IN DOLLARS, NOT PEOPLE ---------------------------
+   The scarcity beat. It has to carry voltage without a single urgency
+   device, so the drama is spatial rather than temporal: the same rectangle
+   of capacity is drawn twice at identical size — once divided into 150
+   slots at the $20,000 minimum, once into 10 at the $300,000 maximum.
+   Nothing counts down; a rectangle is simply subdivided two ways.
+
+   The equality is the whole argument, so three things are enforced rather
+   than eyeballed:
+   1. ONE height (--cap-h) and one width for both fields.
+   2. ONE fill (--cap-mark) for every mark. A darker "few" row would say the
+      ten allocations occupy more capacity than the 150 — the opposite of
+      the truth — so tone is never the variable. Granularity is.
+   3. MATCHED INK COVERAGE. The gutters of the 10-mark field are derived
+      from the 150-mark field's (× cols/5 across, × rows−1 down), so both
+      rectangles carry the same amount of ink at every breakpoint. Without
+      this the coarse field reads ~95% solid against the fine field's ~73%
+      at 390px and the picture inverts itself between widths.
+
+   Column counts are always exact divisors of 150 — 25 / 50 / 75 / 150 — so
+   the field never ends in a ragged part-row, and at ≥74em the marks are
+   pinned to a whole 6px so the 150-comb cannot beat against the pixel grid.
+   No JS, no gradients faking the ticks: 150 elements, counted.
+
+   No gold in this section. Nothing here is engine-measured: 150 and ten are
+   derived arithmetic ($3M ÷ $20,000, $3M ÷ $300,000), the $3M → ≈$5M ceiling
+   is the strategy's own forward estimate, and Medallion's ≈$10B is reported
+   third-party context. JetBrains Mono is this page's "we measured this"
+   signal, so it appears exactly once here — on the 149-trade count in the
+   attribution. Every other numeral is .num--ext.
+   ------------------------------------------------------------------------- */
+
+#capacity {
+  /* Field geometry. Cols must divide 150 exactly. */
+  --cap-cols: 25;          /* → 6 rows */
+  /* 5 × 2 only while the wrap is too narrow for ten marks to stay chunky. At
+     this width the derived gutters come out equal (10px each way), so the pair
+     of rows still reads as ten, not as five. Above 40em the field resolves to
+     a single row of ten — see below. */
+  --cap-few-cols: 5;
+  --cap-gap: 2px;
+  --cap-h: 4.25rem;
+
+  /* One ramp for both counts. Held well under .sec-title (--t-h2) so the
+     section's heaviest serif stays its heading, not a data label. */
+  --cap-count: clamp(1.7rem, 1.15rem + 1.6vw, 2.6rem);
+
+  --cap-mark: rgba(27, 42, 74, .22);
+}
+
+/* --- The plot ------------------------------------------------------------- */
+.cap-row + .cap-row { margin-top: clamp(var(--s-6), 3.6vw, var(--s-8)); }
+
+/* Label and count set as ONE continuous line above the bar, reading
+   "At the $20,000 minimum, 150 fit." Ranged left, never split across the
+   width: a gap of empty ground between subject and quantity is read
+   backwards — numeral first, subject second. */
+.cap-row__head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: flex-start;
+  gap: .1em .55em;
+  margin-bottom: var(--s-4);
+}
+
+.cap-row__k {
+  font-size: var(--t-sm);
+  line-height: 1.4;
+  color: var(--ink-2);
+  min-width: 0;
+}
+.cap-row__k .num--ext { color: var(--ink); }
+
+.cap-row__v {
+  display: flex;
+  align-items: baseline;
+  gap: .42em;
+  white-space: nowrap;
+}
+
+/* "150" and "ten" are the same slot in the same sentence, so they are the
+   same type: one size, one family, one weight. Both are derived arithmetic
+   rather than engine output, which is why neither borrows JetBrains Mono. */
+.cap-row__n {
+  font-size: var(--cap-count);
+  font-weight: 500;
+  line-height: 1;
+  letter-spacing: -.022em;
+  color: var(--ink);
+}
+
+.cap-row__u {
+  font-size: var(--t-sm);
+  line-height: 1.4;
+  color: var(--ink-2);
+}
+
+/* --- The two fields ------------------------------------------------------- */
+.cap-field {
+  height: var(--cap-h);
+  display: grid;
+  grid-template-columns: repeat(var(--cap-cols), minmax(0, 1fr));
+  grid-auto-rows: minmax(0, 1fr);
+  gap: var(--cap-gap);
+}
+.cap-m { display: block; background: var(--cap-mark); }
+
+/* Same width, same height, same fill — 10 marks instead of 150. The gutters
+   are derived from the fine field's so the two rectangles carry equal ink;
+   the eye then reads the ratio and nothing else. */
+.cap-field--few {
+  grid-template-columns: repeat(var(--cap-few-cols), minmax(0, 1fr));
+  grid-auto-rows: minmax(0, 1fr);
+  column-gap: calc(var(--cap-gap) * var(--cap-cols) / var(--cap-few-cols));
+  row-gap: calc(var(--cap-gap) * (150 / var(--cap-cols) - 1));
+}
+
+/* --- The mechanism, then the punch ---------------------------------------- */
+/* Hung off the plot on a vertical hairline. The full-width horizontal rule is
+   reserved for .cap-seam, which means "change of subject" — this means
+   "footnote to the picture above", and the two must not look alike. */
+.cap-nolimit {
+  margin-top: clamp(var(--s-7), 4vw, var(--s-9));
+  padding-left: var(--s-5);
+  border-left: 1px solid var(--line);
+  font-size: var(--t-lede);
+  line-height: 1.5;
+  letter-spacing: -.004em;
+  color: var(--ink-2);
+  max-width: 34em;
+  text-wrap: pretty;
+}
+.cap-nolimit .num--ext { color: var(--ink); }
+.cap-nolimit strong { color: var(--ink); }
+
+.cap-punch {
+  margin-top: clamp(var(--s-6), 3.5vw, var(--s-7));
+  max-width: 22em;
+}
+
+/* --- Seams ---------------------------------------------------------------- */
+.cap-seam {
+  margin-top: clamp(var(--s-9), 6vw, var(--s-11));
+  margin-bottom: clamp(var(--s-8), 5vw, var(--s-10));
+}
+/* The way out gets more air above it than the other seams: everything before
+   this line is argument, everything after is the exit. */
+.cap-seam--eq { margin-top: clamp(var(--s-10), 7vw, var(--s-11)); }
+
+/* --- Why a low ceiling is the point --------------------------------------- */
+.cap-why__t { max-width: 16em; }
+.cap-why__p {
+  margin-top: var(--s-5);
+  font-size: var(--t-lede);
+  line-height: 1.56;
+  letter-spacing: -.004em;
+  color: var(--ink-2);
+  max-width: 40em;
+  text-wrap: pretty;
+}
+.cap-why__p strong { color: var(--ink); }
+
+/* --- The one comparison that earns its place ------------------------------
+   A gulf of three orders of magnitude cannot be drawn as two equal numbers
+   facing each other: the size difference IS the reading. Medallion is set
+   large, this edge small, and the sentence that states the ratio carries the
+   weight — it is the claim, the figures are only its evidence. */
+.cap-scale {
+  margin-top: clamp(var(--s-7), 4.5vw, var(--s-9));
+  display: grid;
+  gap: var(--s-5);
+  max-width: 50rem;
+}
+.cap-scale__col {
+  padding-top: var(--s-5);
+  border-top: 1px solid var(--line);
+  min-width: 0;
+}
+.cap-scale__k { color: var(--ink-3); }
+
+.cap-scale__v {
+  margin-top: var(--s-4);
+  display: flex;
+  align-items: baseline;
+  gap: .45em;
+  flex-wrap: wrap;
+}
+/* Not .fig: neither figure is engine output, so neither takes the mono. */
+.cap-scale__f {
+  font-size: var(--t-fig-lg);
+  font-weight: 400;
+  line-height: 1;
+  letter-spacing: -.026em;
+  color: var(--ink);
+}
+.cap-scale__f--ours {
+  font-size: var(--t-fig-md);
+  letter-spacing: -.018em;
+}
+.cap-scale__tag {
+  font-size: var(--t-sm);
+  line-height: 1.4;
+  color: var(--ink-3);
+}
+.cap-scale__n {
+  margin-top: var(--s-4);
+  font-size: var(--t-lede);
+  line-height: 1.5;
+  letter-spacing: -.004em;
+  color: var(--ink);
+  max-width: 20em;
+  text-wrap: pretty;
+}
+
+.cap-attrib {
+  margin-top: clamp(var(--s-7), 4vw, var(--s-8));
+  max-width: 70ch;
+}
+
+/* --- The hand-off --------------------------------------------------------
+   Relief, not pressure: the door is shut for everyone, so the exit is a ghost
+   button and never the gold one — the gold CTA belongs to §10 and must not be
+   spent twice. The ghost hairline is raised well above the shared --line
+   value: a control's edge needs 3:1 to exist, and rgba(27,42,74,.12) is
+   1.13:1 on ivory. */
+.cap-eq {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--s-5) clamp(var(--s-6), 4vw, var(--s-8));
+}
+.cap-eq__btn {
+  flex: none;
+  border-color: rgba(27, 42, 74, .52);
+}
+.cap-eq__note { max-width: 42ch; }
+
+/* =========================================================================
+   40em — the field halves its rows
+   ========================================================================= */
+@media (min-width: 40em) {
+  #capacity {
+    --cap-cols: 50;        /* → 3 rows */
+    --cap-h: 4.75rem;
+    /* One row of ten. Two rows would need a row gutter far tighter than the
+       column gutter to hold equal ink, and the eye then pairs the marks
+       vertically and counts five. */
+    --cap-few-cols: 10;
+  }
+}
+
+/* =========================================================================
+   52em — the two capacity readings face each other across a hairline
+   ========================================================================= */
+@media (min-width: 52em) {
+  .cap-scale {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    column-gap: clamp(var(--s-6), 4vw, var(--s-8));
+    align-items: start;
+  }
+  .cap-scale__col {
+    padding-top: 0;
+    border-top: 0;
+  }
+  /* One rule between them, not a box around each. */
+  .cap-scale__col--ours {
+    padding-left: clamp(var(--s-5), 3vw, var(--s-7));
+    border-left: 1px solid var(--line);
+  }
+}
+
+/* =========================================================================
+   62em — the field becomes two rows of strokes
+   ========================================================================= */
+@media (min-width: 62em) {
+  #capacity {
+    --cap-cols: 75;        /* → 2 rows */
+    --cap-gap: 1px;
+    --cap-h: 5.5rem;
+  }
+
+  /* The heading drops into the margin as a sidehead — 19rem holds the longest
+     line of "Why a low ceiling is the point" at h3 size without a two-word
+     orphan, and leaves the paragraph its full 40em measure inside the wrap. */
+  .cap-why {
+    display: grid;
+    grid-template-columns: minmax(0, 19rem) minmax(0, 1fr);
+    column-gap: clamp(var(--s-7), 4.5vw, var(--s-9));
+    align-items: start;
+  }
+  .cap-why__p { margin-top: 0; }
+}
+
+/* =========================================================================
+   74em — 150 marks on one line: the comb the whole section is built around.
+   The marks are pinned to exactly 6px rather than left as 1fr: a fractional
+   6.109px pitch snaps to alternating 6/7px columns at 1x and the strip
+   visibly beats. Both fields take the same derived width so the rectangles
+   stay identical; only the transparent gutters carry the remainder.
+   ========================================================================= */
+@media (min-width: 74em) {
+  #capacity {
+    --cap-cols: 150;       /* → 1 row */
+    --cap-h: 6rem;
+  }
+  .cap-field { width: min(100%, calc(150 * 7px - 1px)); }
+  .cap-field--many { grid-template-columns: repeat(150, minmax(0, 6px)); }
+}

@@ -1,0 +1,262 @@
+/* ---------- 03 · THE HOUSE, NOT THE GAMBLER -----------------------------
+   The page's teaching moment, built as a real comparison matrix: a semantic
+   <table> whose four rule names (THE TILT / THE WIN RATE / THE CAP /
+   THE VOLUME) run down an open gutter as the spine, with the casino's
+   column left bare on the ivory band and OUR column seated on a raised
+   white field. Monochrome navy throughout — no gold, because nothing here
+   is a headline figure, a CTA, or an H1 accent.
+
+   Below 48em the table drops to display:block and each rule becomes a
+   labelled stacked pair (casino block, then the white edge block) — never a
+   squashed four-column grid. Column labels are carried by real DOM spans at
+   that width rather than generated content, so the copy stays reviewable.
+   ------------------------------------------------------------------------ */
+
+#house {
+  /* ONE size for every value line, numeric or verbal. The two columns of a
+     comparison must be set at the same size or the comparison is not being
+     made; the mono/sans split carries the attribution, not the emphasis.
+     The floor is high enough that the value still outranks its 15px clause
+     at 390 (21.3px vs 15px), where the old 19.2px floor let them collide. */
+  --house-val: clamp(1.33rem, .87rem + .69vw, 1.56rem);
+  --house-val-lh: calc(var(--house-val) * 1.32);
+  --house-pad-y: clamp(var(--s-5), 2.4vw, var(--s-7));
+  --house-pad-x: clamp(var(--s-4), 2vw, var(--s-6));
+
+  /* Optical: the 13px spine label and the ~23px value line have line boxes of
+     very different heights, so an equal padding-top leaves the label's baseline
+     ~11px ABOVE the value it names — it floats instead of heading the row.
+     This drops it onto the value's baseline and tracks the fluid value size
+     (half the line-box delta, plus the ascender delta between the two sizes). */
+  --house-spine-drop: calc(
+    var(--house-val-lh) / 2 + var(--house-val) * .455 - var(--t-xs) * 1.105);
+
+  /* Table geometry — reused verbatim by .house-foot so the closing lines
+     hang off the same three tracks. */
+  --house-w-spine: 22%;
+  --house-w-col: 39%;
+}
+
+/* --- Matrix shell -------------------------------------------------------- */
+.house-matrix {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  text-align: left;
+}
+.house-matrix,
+.house-matrix thead,
+.house-matrix tbody,
+.house-matrix tr,
+.house-matrix th,
+.house-matrix td { display: block; }
+
+/* At stacked widths the column headers are carried by .house-tag instead,
+   so exactly one label source is announced at any viewport. */
+.house-matrix thead { display: none; }
+
+/* --- Rows (stacked) ------------------------------------------------------ */
+.house-r {
+  padding-block: var(--s-6);
+  border-top: 1px solid var(--line);
+}
+.house-matrix tbody .house-r:last-child { border-bottom: 1px solid var(--line); }
+
+/* --- Spine: the four rule names ------------------------------------------ */
+.house-spine {
+  margin: 0;
+  padding: 0;
+  /* Stacked, this is the row's heading and must outrank both the 15px clause
+     under it and the 13px column tag inside it — a four-step ladder
+     (21 value / 17 rule / 15 clause / 13 tag), every step clear of the next. */
+  font-size: 1.0625rem;
+  font-weight: 500;
+  line-height: 1.3;
+  letter-spacing: .16em;
+  text-transform: uppercase;
+  text-align: left;
+  color: var(--ink);
+}
+
+/* --- Cells (stacked) -----------------------------------------------------
+   Both blocks carry an identical 1px border + inline padding so their text
+   edges align exactly; only the casino's border is visible, and only as a
+   single left hairline. */
+.house-cell {
+  margin-top: var(--s-4);
+  border: 1px solid transparent;
+  border-radius: var(--radius-lg);
+  padding: var(--s-4) var(--s-5);
+}
+.house-cell--casino {
+  margin-top: var(--s-5);
+  border-left-color: var(--line);
+}
+.house-cell--edge {
+  background: var(--bg-raise);
+  border-color: var(--line);
+}
+
+/* --- Stacked column labels ----------------------------------------------- */
+.house-tag {
+  display: block;
+  margin-bottom: var(--s-3);
+  font-size: var(--t-xs);
+  font-weight: 500;
+  line-height: 1.3;
+  letter-spacing: .145em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+}
+.house-cell--edge .house-tag { color: var(--ink-2); }
+
+/* --- Value line + clause -------------------------------------------------
+   The line box is a fixed length AND both variants render at one font-size,
+   so a mono figure and a verbal value land on the same baseline even when
+   they face each other across a single row (THE VOLUME: "thousands" vs
+   "~291"). Only tracking differs — mono is already tight by design. */
+.house-val {
+  display: block;
+  font-size: var(--house-val);
+  line-height: var(--house-val-lh);
+  letter-spacing: -.022em;
+  color: var(--ink);
+  text-wrap: pretty;
+}
+/* Mono is the attribution signal, so it carries the tighter default; the
+   DM Sans variants (third-party figures, verbal values) need less. */
+.house-val.num--ext,
+.house-val--word { letter-spacing: -.008em; }
+.house-cell--casino .house-val { color: var(--ink-3); }
+
+.house-cl {
+  display: block;
+  margin-top: var(--s-2);
+  font-size: var(--t-sm);
+  line-height: 1.55;
+  color: var(--ink-2);
+  text-wrap: pretty;
+}
+
+/* --- Closing lines ------------------------------------------------------- */
+.house-foot {
+  margin-top: clamp(var(--s-8), 5vw, var(--s-10));
+  display: grid;
+  gap: var(--s-6);
+}
+.house-pull {
+  font-family: 'Cormorant Garamond', 'Iowan Old Style', Georgia, 'Times New Roman', serif;
+  font-weight: 400;
+  /* Shared token — this is the page's recurring section-closing pull
+     statement. One component, one job, one size. Never localise it. */
+  font-size: var(--t-pull);
+  line-height: 1.22;
+  letter-spacing: -.014em;
+  color: var(--ink);
+  text-wrap: pretty;
+  max-width: 22em;
+}
+/* The multiple is derived arithmetic, not engine output, so it stays in the
+   serif — but Cormorant defaults to oldstyle figures and an x-height "5"
+   makes the sentence's whole claim the quietest thing in it. Lining figures
+   put it back on the cap-line without borrowing the mono attribution signal. */
+.house-pull .num--rule { font-variant-numeric: lining-nums tabular-nums; }
+.house-attrib { max-width: 58ch; }
+
+/* =========================================================================
+   48em — the real table takes over
+   ========================================================================= */
+@media (min-width: 48em) {
+
+  .house-matrix { display: table; table-layout: fixed; }
+  .house-matrix thead { display: table-header-group; }
+  .house-matrix tbody { display: table-row-group; }
+  /* Qualified with the ancestor on purpose: the stacked base above sets
+     `.house-matrix tr { display: block }` at (0,1,1), so a bare `.house-r`
+     at (0,1,0) loses and the rows never become table-rows. */
+  .house-matrix tr.house-r { display: table-row; padding-block: 0; border-top: 0; }
+  .house-matrix th,
+  .house-matrix td { display: table-cell; vertical-align: top; }
+  .house-tag { display: none; }
+
+  /* Spine — quieter than at stacked widths, because the column headers now
+     carry the labelling and the rule names only need to hold the gutter. */
+  .house-spine {
+    padding: calc(var(--house-pad-y) + var(--house-spine-drop))
+             var(--s-5) var(--house-pad-y) 0;
+    font-size: var(--t-xs);
+    letter-spacing: .145em;
+    color: var(--ink-2);
+    border-bottom: 1px solid var(--line);
+  }
+
+  /* Header row: labels align on a common bottom edge, which lets the white
+     column open with a quiet cap of space above its own label. */
+  .house-r--head th { vertical-align: bottom; }
+
+  .house-spine--head {
+    width: var(--house-w-spine);
+    padding: 0 var(--s-5) var(--s-4) 0;
+  }
+  .house-col {
+    text-align: left;
+    font-weight: 500;
+    padding-bottom: var(--s-4);
+    border-bottom: 1px solid var(--line);
+  }
+  .house-col--casino { width: var(--house-w-col); padding-right: var(--s-6); }
+  .house-col--edge {
+    width: var(--house-w-col);
+    color: var(--ink);
+    background: var(--bg-raise);
+    padding-inline: var(--house-pad-x);
+    padding-top: var(--s-5);
+    border-top: 1px solid var(--line);
+    border-inline: 1px solid var(--line);
+    border-top-left-radius: var(--radius-lg);
+    border-top-right-radius: var(--radius-lg);
+  }
+
+  /* Body cells */
+  .house-cell {
+    margin: 0;
+    border: 0;
+    border-radius: 0;
+    border-bottom: 1px solid var(--line);
+    padding: var(--house-pad-y) 0;
+    background: none;
+  }
+  .house-cell--casino { padding-right: var(--s-6); }
+  .house-cell--edge {
+    background: var(--bg-raise);
+    border-inline: 1px solid var(--line);
+    padding-inline: var(--house-pad-x);
+  }
+  /* The last row's hairline stays: it closes the matrix along the same edge
+     the white column already closes on. (A `border-bottom` on the <tr> would
+     be inert here anyway — separated borders never paint row borders.) */
+  .house-matrix tbody .house-r:last-child .house-cell--edge {
+    border-bottom-left-radius: var(--radius-lg);
+    border-bottom-right-radius: var(--radius-lg);
+  }
+
+  /* The closing lines inherit the matrix's three tracks: the pull-line runs
+     across spine + casino, the attribution sits directly under the measured
+     column it attributes, indented to the same text edge. */
+  .house-foot {
+    grid-template-columns: var(--house-w-spine) var(--house-w-col) var(--house-w-col);
+    gap: 0;
+    align-items: start;
+  }
+  .house-pull { grid-column: 1 / 3; padding-right: var(--s-8); }
+  .house-attrib { grid-column: 3 / 4; padding-left: var(--house-pad-x); }
+}
+
+/* =========================================================================
+   64em — more air in the rows, a wider gutter between the two columns
+   ========================================================================= */
+@media (min-width: 64em) {
+  #house { --house-w-spine: 18%; --house-w-col: 41%; }
+  .house-cell--casino,
+  .house-col--casino { padding-right: var(--s-8); }
+}

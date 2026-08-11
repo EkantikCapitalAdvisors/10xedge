@@ -1,0 +1,97 @@
+<section class="band band--dark" id="ruin" aria-labelledby="ruin-title">
+  <div class="wrap">
+
+    <header class="sec-head">
+      <p class="eyebrow" data-reveal>HOW RUIN IS ENGINEERED OUT</p>
+      <h2 class="sec-title" id="ruin-title" data-reveal style="--d:80ms">Built the Way Aircraft Are Built</h2>
+      <p class="lede" data-reveal style="--d:160ms">Aviation engineered the crash &asymp;100&times; rarer since 1960. Ruin here is engineered out of the math before any trade &mdash; not &lsquo;we try to avoid ruin,&rsquo; but a simulated number: 200,000 paths, five years, at the 2.5% per-trade ceiling.</p>
+    </header>
+
+    <div class="ruin-lead">
+
+      <div class="ruin-head">
+        <p class="fig fig--lg fig--gold ruin-fig" data-reveal><span class="ruin-fig__lt">&lt;</span>1<span class="ruin-fig__in">in</span>200,000</p>
+        <p class="ruin-sub" data-reveal style="--d:80ms">simulated 5-year risk of ruin at the 2.5% per-trade ceiling</p>
+        <p class="ruin-verdict" data-reveal style="--d:160ms">Effectively zero &mdash; computed, not promised.</p>
+      </div>
+
+      <figure class="ruin-exhibit" data-reveal style="--d:240ms">
+
+        <p class="eyebrow ruin-exhibit__k">AVIATION ALREADY DID THIS</p>
+
+        <div class="ruin-plot">
+          <p class="ruin-plot__pt ruin-plot__pt--from">
+            <span class="num--ext ruin-plot__v">&asymp;28</span>
+            <span class="ruin-plot__yr">1960</span>
+          </p>
+          <svg class="ruin-plot__curve" viewBox="0 0 200 76" preserveAspectRatio="none" aria-hidden="true" focusable="false">
+            <path class="ruin-plot__axis" d="M0 70 H200" vector-effect="non-scaling-stroke"/>
+            <path class="ruin-plot__arc" d="M5 8 C 44 44, 74 58, 195 62" vector-effect="non-scaling-stroke"/>
+            <path class="ruin-plot__dot" d="M5 8h.01" vector-effect="non-scaling-stroke"/>
+            <path class="ruin-plot__dot" d="M195 62h.01" vector-effect="non-scaling-stroke"/>
+          </svg>
+          <p class="ruin-plot__pt ruin-plot__pt--to">
+            <span class="num--ext ruin-plot__v">~0.2</span>
+            <span class="ruin-plot__yr">2024</span>
+          </p>
+        </div>
+
+        <figcaption class="xs ruin-exhibit__cap">Fatal accidents per million flights (Airbus data). Industry-reported context, not a claim about this strategy.</figcaption>
+
+      </figure>
+
+    </div>
+
+    <ul class="ruin-seq">
+
+      <li class="card card--ruled ruin-seq__item" data-reveal>
+        <span class="ruin-seq__n num--rule" aria-hidden="true">1</span>
+        <div class="ruin-seq__hd">
+          <p class="card__k">LOAD LIMIT</p>
+          <p class="card__q">How much stress before it breaks?</p>
+        </div>
+        <div class="ruin-seq__b">
+          <p class="card__b">A wing is rated far beyond any storm &mdash; you never fly near the limit. Here: one capped chip (R) per trade, deliberate over-capitalization, a hard 20% ceiling on total risk at any moment, and drawdown caps of <span class="num--rule">$1,000</span> in any week and <span class="num--rule">$2,000</span> in any month on the <span class="num--rule">$20,000</span> portfolio.</p>
+          <p class="card__b ruin-evidence" data-risk-controls>Those caps are enforced at the broker, and were set after this record was logged &mdash; the record already sits inside them. Across the <span class="mono"><span data-fig="trades">149</span></span> trades the worst week lost <span class="mono">$<span data-fig="worstWeekUsd">571</span></span> and the worst month <span class="mono">$<span data-fig="worstMonthUsd">155</span></span>. Neither cap was reached, let alone crossed.</p>
+        </div>
+      </li>
+
+      <li class="card card--ruled ruin-seq__item" data-reveal style="--d:70ms">
+        <span class="ruin-seq__n num--rule" aria-hidden="true">2</span>
+        <div class="ruin-seq__hd">
+          <p class="card__k">THE BACKUPS</p>
+          <p class="card__q">Will anything catch a failure?</p>
+        </div>
+        <div class="ruin-seq__b">
+          <p class="card__b">Two independent checks that don&rsquo;t share a failure mode &mdash; one on the instrument, one on the pilot. No single point of failure, including us.</p>
+        </div>
+      </li>
+
+      <li class="card card--ruled ruin-seq__item" data-reveal style="--d:140ms">
+        <span class="ruin-seq__n num--rule" aria-hidden="true">3</span>
+        <div class="ruin-seq__hd">
+          <p class="card__k">THE SAFE DEFAULT</p>
+          <p class="card__q">What happens automatically when something fails?</p>
+        </div>
+        <div class="ruin-seq__b">
+          <p class="card__b">The failure state is smaller, not larger &mdash; by rule, not willpower. Nothing about recovery depends on anyone being heroic in the moment.</p>
+        </div>
+      </li>
+
+      <li class="card card--ruled ruin-seq__item ruin-seq__item--living" data-reveal style="--d:210ms">
+        <span class="ruin-seq__n num--rule" aria-hidden="true">4</span>
+        <div class="ruin-seq__hd">
+          <p class="card__k">THE LIVING TEST</p>
+          <p class="card__q">The question the sky never asks.</p>
+        </div>
+        <div class="ruin-seq__b">
+          <p class="card__b">A wing&rsquo;s physics never changes &mdash; certify it once, done. A market adapts. So the system keeps testing itself, every day, with kill-criteria that never retire. The first three keep the account alive &mdash; this one keeps it right.</p>
+        </div>
+      </li>
+
+    </ul>
+
+    <p class="attrib attrib--boxed ruin-attrib" data-reveal>Ruin and drawdown figures are Monte-Carlo simulations over 200,000 five-year paths, with win/loss outcomes drawn from the same <span class="mono"><span data-fig="trades">149</span></span> Discord-logged trades (Feb&ndash;Aug 2026, net of all costs) and conditional on the edge being real out-of-sample. Live results can exceed the model. The 2.5% ceiling is the rule the simulation is run at and the rule going forward; <span class="mono"><span data-fig="tradesAboveCeiling">10</span></span> of the <span class="mono"><span data-fig="trades">149</span></span> logged trades were sized above it, the largest at <span class="mono"><span data-fig="maxRiskPctOfEquity">5.0</span>%</span>, against an average risk of <span class="mono">$<span data-fig="avgRiskUsd">261</span></span> (<span class="num--ext">1.3%</span>).</p>
+
+  </div>
+</section>
