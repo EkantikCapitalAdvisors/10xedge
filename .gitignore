@@ -1,2 +1,6 @@
 node_modules/
 edge/_build/node_modules
+
+# In-flight fixer agents were briefed with the pre-move edge/ paths.
+# These symlinks bridge them to the real files at the repo root; never deployed.
+edge/

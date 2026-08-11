@@ -19,10 +19,11 @@
    and the axis does not die at station 4: it fades on past it, because the road
    does not end when the last gate opens.
 
-   Legibility: nothing in stages 2–4 is dimmed. Every stage name is full --ink,
-   every status --ink-2, every body --ink-2 — identical to stage 1. The current
-   stage is marked by exactly two things: a filled node on the axis and the live
-   badge. Progression is signalled by rank, not by fade.
+   Legibility: nothing in stages 2–4 is dimmed. Every stage name is full --ink
+   and every body --ink-2 — identical to stage 1. The current stage is marked by
+   exactly two things: a filled node on the axis and the live badge. Progression
+   is signalled by rank, not by fade. All four gate labels carry the system's
+   own eyebrow tracking (.14em); this section invents no tracking of its own.
 
    Gold budget: ZERO. Gold is rationed to the H1 accent, the CTA and engine-
    measured figures; a stage marker is none of those. "Now" is carried by a
@@ -111,7 +112,6 @@
   align-items: center;
   min-height: var(--road-status-h);
   color: var(--ink-2);
-  letter-spacing: .12em;
 }
 
 /* The pill hangs into the margin by exactly its own padding + border, so its
@@ -122,11 +122,12 @@
    saying it, stacked, is one mark too many. */
 #road .road-stage--live .road-status { margin-left: calc(-1 * (.75rem + 1px)); }
 
+/* Symmetric padding: `.badge` is padded asymmetrically for a leading dot, and
+   this one has none. The symmetry is also what makes the hang above exact. */
 #road .road-live {
   padding-inline: .75rem;
   color: var(--ink);
   line-height: 1.2;
-  letter-spacing: .12em;
 }
 
 /* ---------- The station (below the axis) --------------------------------- */

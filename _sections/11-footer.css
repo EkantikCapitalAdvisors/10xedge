@@ -1,46 +1,62 @@
 /* =============================================================================
    11 — DISCLOSURE FOOTER  (#disclosures)  — DEEP NAVY
    ---------------------------------------------------------------------------
-   Composition — one rail, four rows:
+   Composition — a rail for the colophon, full width for the law:
 
      >=1024px   | Ekantik Capital Advisors |  anchors · anchors · anchors
                 |  ──                      |  Hiren Desai · Founder · email · tel
-                |                          | ------------------------------------
-                | Open the trade journal → |  snapshot caveat
+                | ------------------------------------------------------
+                | Open the public trade    |  snapshot caveat
+                | journal →                |
                 | ======================================================
-                | IMPORTANT DISCLOSURES    |  disclosure  |  disclosure
-                |                          |  disclosure  |  disclosure
+                | IMPORTANT DISCLOSURES
+                | disclosure | disclosure | disclosure
+                | disclosure | disclosure | disclosure
                 | ------------------------------------------------------
                 | private & confidential · © 2026
 
      <=1023px   the same four rows, each collapsed to a single column, in the
                 same order. Nothing reflows out of sequence.
 
-   The 14rem left rail is the footer's spine: wordmark, then affordance, then
-   section label, all landing on one vertical. The right field carries every
-   piece of running text. That is the whole idea — a ledger, not a sitemap.
+   The 15rem left rail is the colophon's spine: the wordmark, then the
+   verification affordance, landing on one vertical while the right field
+   carries the running text beside them. The disclosure block does NOT use it —
+   a 13px run-in label cannot hold down 270px of rail against 500px of prose,
+   and the rail turns into a void. The label runs in ABOVE the block instead
+   and the law uses the whole measure, in columns.
+
+   Measure: legal text is scanned, not read linearly, so a short measure is
+   what makes a paragraph findable. One column at phone width (capped), two
+   from 640px, three from 1024px — the set line stays between ~41 and ~61
+   characters at every width instead of running 100 across an uncapped 709px
+   wrap. The columns balance rather than break only between paragraphs: a
+   ragged 220px shortfall in the last column, underscored by a column rule
+   that runs past the text, reads as a bug. Continuous flow with orphans and
+   widows at 3 is how a prospectus sets itself.
 
    Legibility: the disclosure prose is 13px/1.62 in --ink-3 on --navy-900.
    Measured: rgba(250,248,245,.52) composited over #131F38 is ~#8B909A, which
-   is 5.06:1 against #131F38 — clear of the 4.5:1 floor, so --ink-3 stands and
+   is 5.11:1 against #131F38 — clear of the 4.5:1 floor, so --ink-3 stands and
    the --ink-2 fallback is not needed. Run-in labels step up to --ink-2 so a
    reader scanning for one paragraph can find it without a size change.
 
-   Gold budget: ONE mark in the entire footer — the 28px hairline under the
-   wordmark. Nothing else here is gold: not the rules, not the links, not the
-   verification affordance. A disclosure block is the last place on the page
-   that should ask for attention.
+   Gold budget: ZERO. Gold is rationed to the H1 accent, the CTA and
+   engine-measured figures. The hairline under the wordmark is decoration, so
+   it is ink. A disclosure block is the last place on the page that should ask
+   for attention.
 
-   Typeface law: no JetBrains Mono anywhere in this section. Mono is reserved
-   for *displayed* engine figures; the numerals here (246, 200,000, ~1.4–1.7,
-   $3M) sit inside legal prose as words, not as data points, and setting them
-   in mono would read as a second claim rather than a qualification. The phone
-   number and the copyright year are likewise DM Sans — neither is measured.
+   Typeface law: no JetBrains Mono anywhere in this section. Mono is this
+   page's attribution signal — it means "we measured this". The numerals here
+   (149, 200,000, ~1.4–1.7, $3M) sit inside legal prose as qualifications, not
+   as data points, and setting them in mono would read as a second claim. The
+   phone number and the copyright year are likewise DM Sans — neither is
+   measured.
    ========================================================================= */
 
 #disclosures {
-  /* The spine. One value, used by all four rows. */
-  --disc-rail: 14rem;
+  /* The colophon spine. Wide enough for the verification link to hold one
+     line: "Open the public trade journal →" measures 225px at 15px/500. */
+  --disc-rail: 15rem;
   --disc-gap: clamp(var(--s-6), 4vw, var(--s-9));
   /* A footer should settle, not float: trim the symmetric band padding at the
      bottom so the page ends on the copyright rather than on empty navy. */
@@ -55,7 +71,8 @@
 }
 
 @media (min-width: 64em) {
-  #disclosures .disc-row {
+  #disclosures .disc-colophon,
+  #disclosures .disc-verify {
     grid-template-columns: minmax(0, var(--disc-rail)) minmax(0, 1fr);
     column-gap: var(--disc-gap);
     align-items: start;
@@ -91,54 +108,75 @@
   text-wrap: balance;
 }
 
-/* The single permitted gold mark in this section. */
+/* Ink, not gold: a hairline under a wordmark is ornament, and ornament is not
+   one of the three things gold is allowed to mean on this page. */
 #disclosures .disc-mark__rule {
   display: block;
   width: 28px;
   height: 1px;
   margin-top: var(--s-3);
-  background: var(--gold);
-  transition: width .28s var(--ease);
+  background: var(--ink-4);
+  transition: width .22s var(--ease), background-color .22s var(--ease-io);
 }
-#disclosures .disc-mark:hover .disc-mark__rule { width: 44px; }
+#disclosures .disc-mark:hover .disc-mark__rule {
+  width: 44px;
+  background: var(--ink-3);
+}
 @media (prefers-reduced-motion: reduce) {
   #disclosures .disc-mark:hover .disc-mark__rule { width: 28px; }
 }
 
 /* `.eyebrow` leaves display alone; the sub-mark must be a block for its top
-   margin to take and for it to clear the gold hairline above it. */
+   margin to take and for it to clear the hairline above it. */
 #disclosures .disc-mark__s { display: block; margin-top: var(--s-3); }
 
 /* ---------- Row 1 · field: anchors, then contact ------------------------- */
 
 #disclosures .disc-field {
   display: grid;
-  gap: clamp(var(--s-5), 2.4vw, var(--s-6));
+  gap: var(--s-2);
 }
 
 #disclosures .disc-nav__list {
   display: flex;
   flex-wrap: wrap;
   column-gap: clamp(var(--s-5), 2.2vw, var(--s-7));
+  /* The anchors carry their own 12px of vertical padding, so the rows already
+     sit 24px apart; 4px is only there to keep two focus rings off each other. */
   row-gap: var(--s-1);
   margin: 0;
 }
-/* Hover underline is a border, not text-decoration: these anchors become flex
-   boxes at narrow widths for the 44px target, and text-decoration does not
-   paint inside a flex container. */
-#disclosures .disc-nav a {
+
+/* Every anchor in this footer is a real target at every width, not only on a
+   phone: 13px of text inside a >=44px box. The padding is what makes the box,
+   so the hover mark has to be a text-decoration rather than a border — a
+   border would paint 12px below the word, at the edge of the padding. */
+#disclosures .disc-nav a,
+#disclosures .disc-contact a {
   display: inline-block;
+  padding-block: .75rem;
+  color: var(--ink-2);
+  text-decoration-line: underline;
+  text-decoration-color: transparent;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 3px;
+  transition: color .2s var(--ease-io), text-decoration-color .2s var(--ease-io);
+}
+#disclosures .disc-nav a {
   font-size: var(--t-xs);
   font-weight: 500;
   letter-spacing: .01em;
-  color: var(--ink-2);
-  border-bottom: 1px solid transparent;
-  transition: color .2s var(--ease-io), border-color .2s var(--ease-io);
 }
-#disclosures .disc-nav a:hover {
+#disclosures .disc-nav a:hover,
+#disclosures .disc-contact a:hover {
   color: var(--ink);
-  border-bottom-color: var(--ink-4);
+  text-decoration-color: var(--ink-4);
 }
+
+/* Optical: the anchors' 12px of top padding would otherwise drop the first
+   nav line 12px below the wordmark it should align with. */
+#disclosures .disc-nav,
+#disclosures .disc-contact { margin-top: -.75rem; }
 
 #disclosures .disc-contact {
   font-style: normal;
@@ -150,59 +188,57 @@
   align-items: flex-start;
 }
 #disclosures .disc-contact__n { color: var(--ink-2); font-weight: 500; }
-#disclosures .disc-contact a {
-  display: inline-block;
-  color: var(--ink-3);
-  border-bottom: 1px solid transparent;
-  transition: color .2s var(--ease-io), border-color .2s var(--ease-io);
-}
-#disclosures .disc-contact a:hover {
-  color: var(--ink);
-  border-bottom-color: var(--ink-4);
-}
+#disclosures .disc-contact a { color: var(--ink-3); }
 #disclosures .disc-sep { display: none; }
 
-/* Stacked below 768px: every anchor and every contact link is a 44px row. */
+/* Stacked below 768px the contact is four rows, so all four carry the same
+   44px height — not just the two that happen to be links. */
 @media (max-width: 47.99em) {
   #disclosures .disc-nav__list { column-gap: var(--s-6); }
-  #disclosures .disc-nav a,
-  #disclosures .disc-contact a {
-    display: inline-flex;
-    align-items: center;
-    min-height: 44px;
-  }
+  #disclosures .disc-contact > :not(.disc-sep) { padding-block: .75rem; }
 }
 
-/* From 768px the contact collapses to one middot-separated line. */
+/* From 768px the contact collapses to one middot-separated line. The anchors
+   keep their padded hit box; baseline alignment keeps the line reading as one
+   sentence regardless. */
 @media (min-width: 48em) {
   #disclosures .disc-contact {
     flex-direction: row;
     flex-wrap: wrap;
     align-items: baseline;
     column-gap: .55em;
-    row-gap: var(--s-1);
+    row-gap: 0;
   }
   #disclosures .disc-sep { display: inline; color: var(--ink-4); }
 }
 
 /* ---------- Row 2 · verification ----------------------------------------- */
 
-#disclosures .disc-snapshot { max-width: 56ch; }
-
-/* Below the rail split the link is a standalone control, so give it a real
-   tap target; the system's 2px underline offset grows with it. */
-@media (max-width: 63.99em) {
-  #disclosures .verify-link { padding-block: .5rem; }
+/* The link sits in the 15rem rail and must hold one line: broken across two,
+   the inline-flex arrow stays on line 1 and opens ~110px of dead space.
+   `justify-self` keeps the rule under the words instead of stretching it the
+   full width of the grid track, where it would read as a divider. */
+#disclosures .verify-link {
+  justify-self: start;
+  white-space: nowrap;
+  position: relative;
 }
+/* The 1px rule 2px under the word IS the affordance, so the 44px target is an
+   invisible hit area rather than padding — padding would float that rule ten
+   pixels below the text and turn it into a stray hairline. 27.8 + 18 = 45.8. */
+#disclosures .verify-link::after {
+  content: '';
+  position: absolute;
+  inset: -9px -4px;
+}
+
+#disclosures .disc-snapshot { max-width: 56ch; }
 
 /* ---------- Row 3 · the disclosures --------------------------------------- */
 
-#disclosures .disc-label {
-  color: var(--ink-2);
-  /* Optical: the eyebrow's cap-height sits high in its line box, so nudge it
-     down onto the first line of prose in the field beside it. */
-  padding-top: .2em;
-}
+#disclosures .disc-body { row-gap: clamp(var(--s-5), 2.4vw, var(--s-6)); }
+
+#disclosures .disc-label { color: var(--ink-2); }
 
 #disclosures .disc-p {
   font-size: var(--t-xs);
@@ -210,7 +246,6 @@
   letter-spacing: .004em;
   color: var(--ink-3);
   text-wrap: pretty;
-  break-inside: avoid;
   margin-bottom: clamp(var(--s-4), 1.6vw, var(--s-5));
 }
 #disclosures .disc-p:last-child { margin-bottom: 0; }
@@ -221,17 +256,27 @@
   letter-spacing: .012em;
 }
 
-/* Two real columns of legal text, read down then across, with a hairline
-   between them. A 13px measure of ~48 characters per column — narrower than
-   the page's prose, which is correct: disclosures are scanned, not read
-   linearly, and a short measure makes a paragraph findable. */
-@media (min-width: 64em) {
+/* One column below 640px, where the wrap is already a short measure. The cap
+   only bites between ~530 and 639px, where an uncapped wrap would run 83
+   characters. 29rem is ~65 characters of 13px DM Sans — `ch` cannot be used
+   here, since this box inherits the 17px body size and its `ch` is 11.6px. */
+@media (max-width: 39.99em) {
+  #disclosures .disc-cols { max-width: 29rem; }
+}
+
+@media (min-width: 40em) {
   #disclosures .disc-cols {
     columns: 2;
-    column-gap: clamp(var(--s-7), 3.4vw, var(--s-9));
+    column-gap: clamp(var(--s-6), 3.2vw, var(--s-8));
     column-rule: 1px solid var(--line-2);
     orphans: 3;
     widows: 3;
+  }
+}
+@media (min-width: 64em) {
+  #disclosures .disc-cols {
+    columns: 3;
+    column-gap: clamp(var(--s-7), 3.4vw, var(--s-9));
   }
 }
 

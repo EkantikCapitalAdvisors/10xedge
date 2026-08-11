@@ -423,6 +423,11 @@ strong, b { font-weight: 500; }
   font-weight: 500;
   color: var(--ink-2);
   border-bottom: 1px solid var(--line);
+  /* 44px tap target without moving the underline: the padding is added above
+     the text and pulled back off the layout, so the rule still sits tight to
+     the baseline while the hit area clears the minimum. */
+  padding-top: 17px;
+  margin-top: -17px;
   padding-bottom: 2px;
   transition: color .2s var(--ease-io), border-color .2s var(--ease-io);
 }
@@ -488,7 +493,7 @@ strong, b { font-weight: 500; }
 }
 .nav__cta {
   font-size: var(--t-xs); font-weight: 500; color: var(--ivory);
-  border: 1px solid rgba(250,248,245,.28); padding: .55rem 1rem; border-radius: var(--radius);
+  border: 1px solid rgba(250,248,245,.28); padding: .72rem 1rem; border-radius: var(--radius);
   transition: all .22s var(--ease-io); white-space: nowrap;
 }
 .nav__cta:hover { border-color: var(--gold); color: var(--gold); }
