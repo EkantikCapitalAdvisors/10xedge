@@ -236,6 +236,16 @@ for (const b of goldBtns) {
   if (href === '#' || href === '') F('CTA', 'gold CTA still points at a placeholder href — substitute the Discord invite');
   else if (!/discord\.gg/.test(href)) F('CTA', `the gold CTA must point at the Discord invite, found "${href}"`);
 }
+/* The CTA's exact wording is reserved for links that actually open Discord, so the
+   phrase never means two different behaviours. */
+for (const a of stripped.matchAll(/<a\b([^>]*)>([\s\S]*?)<\/a>/gi)) {
+  const label = a[2].replace(/<[^>]*>/g, ' ').replace(/\s+/g, ' ').trim();
+  if (!/watch the edge live in discord/i.test(label)) continue;
+  const href = (a[1].match(/href="([^"]*)"/) || [, ''])[1];
+  if (!/discord\.gg/.test(href))
+    F('CTA', `"Watch the edge live in Discord" labels a link to "${href}" — that exact phrase is reserved for links that open Discord`);
+}
+
 if (goldTargets.size > 1) F('CTA', `gold CTAs point at ${goldTargets.size} different destinations — the page converts to ONE action: ${[...goldTargets].join(' , ')}`);
 
 /* ---------- 7b. Measured contrast of the semantic token ladder ----------- */
