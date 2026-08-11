@@ -552,10 +552,13 @@
    ------------------------------------------------------------------------ */
 
 #house {
-  /* One shared measure for every value line, numeric or verbal, so the four
-     rows keep a single vertical beat. */
-  --house-val: clamp(1.2rem, .95rem + .75vw, 1.7rem);
-  --house-val-lh: calc(var(--house-val) * 1.22);
+  /* ONE size for every value line, numeric or verbal. The two columns of a
+     comparison must be set at the same size or the comparison is not being
+     made; the mono/sans split carries the attribution, not the emphasis.
+     The floor is high enough that the value still outranks its 15px clause
+     at 390 (21.3px vs 15px), where the old 19.2px floor let them collide. */
+  --house-val: clamp(1.33rem, .87rem + .69vw, 1.56rem);
+  --house-val-lh: calc(var(--house-val) * 1.32);
   --house-pad-y: clamp(var(--s-5), 2.4vw, var(--s-7));
   --house-pad-x: clamp(var(--s-4), 2vw, var(--s-6));
 
@@ -636,9 +639,10 @@
 .house-cell--edge .house-tag { color: var(--ink-2); }
 
 /* --- Value line + clause -------------------------------------------------
-   The line box is a fixed length, not a ratio, so the mono figures and the
-   verbal values ("table limits", "thousands") sit on one baseline grid
-   across both columns even though their type sizes differ optically. */
+   The line box is a fixed length AND both variants render at one font-size,
+   so a mono figure and a verbal value land on the same baseline even when
+   they face each other across a single row (THE VOLUME: "thousands" vs
+   "~291"). Only tracking differs — mono is already tight by design. */
 .house-val {
   display: block;
   font-size: var(--house-val);
@@ -647,8 +651,10 @@
   color: var(--ink);
   text-wrap: pretty;
 }
-.house-val.mono { font-size: calc(var(--house-val) * .94); }
-.house-val--word { font-size: calc(var(--house-val) * .84); letter-spacing: -.008em; }
+/* Mono is the attribution signal, so it carries the tighter default; the
+   DM Sans variants (third-party figures, verbal values) need less. */
+.house-val.num--ext,
+.house-val--word { letter-spacing: -.008em; }
 .house-cell--casino .house-val { color: var(--ink-3); }
 
 .house-cl {
@@ -669,7 +675,9 @@
 .house-pull {
   font-family: 'Cormorant Garamond', 'Iowan Old Style', Georgia, 'Times New Roman', serif;
   font-weight: 400;
-  font-size: clamp(1.35rem, 1.08rem + 1.15vw, 2.15rem);
+  /* Shared token — this is the page's recurring section-closing pull
+     statement. One component, one job, one size. Never localise it. */
+  font-size: var(--t-pull);
   line-height: 1.22;
   letter-spacing: -.014em;
   color: var(--ink);
@@ -686,7 +694,10 @@
   .house-matrix { display: table; table-layout: fixed; }
   .house-matrix thead { display: table-header-group; }
   .house-matrix tbody { display: table-row-group; }
-  .house-r { display: table-row; padding-block: 0; border-top: 0; }
+  /* Qualified with the ancestor on purpose: the stacked base above sets
+     `.house-matrix tr { display: block }` at (0,1,1), so a bare `.house-r`
+     at (0,1,0) loses and the rows never become table-rows. */
+  .house-matrix tr.house-r { display: table-row; padding-block: 0; border-top: 0; }
   .house-matrix th,
   .house-matrix td { display: table-cell; vertical-align: top; }
   .house-tag { display: none; }
@@ -743,7 +754,9 @@
     border-inline: 1px solid var(--line);
     padding-inline: var(--house-pad-x);
   }
-  .house-matrix tbody .house-r:last-child { border-bottom: 0; }
+  /* The last row's hairline stays: it closes the matrix along the same edge
+     the white column already closes on. (A `border-bottom` on the <tr> would
+     be inert here anyway — separated borders never paint row borders.) */
   .house-matrix tbody .house-r:last-child .house-cell--edge {
     border-bottom-left-radius: var(--radius-lg);
     border-bottom-right-radius: var(--radius-lg);
