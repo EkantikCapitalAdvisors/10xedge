@@ -1,0 +1,284 @@
+/* ---------- 07 · CAPPED IN DOLLARS, NOT PEOPLE ---------------------------
+   The scarcity beat. It has to carry voltage without a single urgency
+   device, so the drama is spatial rather than temporal: the same rectangle
+   of capacity is drawn twice at identical size — once shattered into 150
+   real marks, once whole. Nothing counts down; a rectangle simply gets
+   taken.
+
+   Both fields are the SAME grid at the SAME height. That equality is the
+   whole argument, so it is enforced in one place (--cap-h) and the marks
+   are laid out with `grid-auto-rows: minmax(0,1fr)` so the rows divide that
+   height rather than dictate it. Column counts are always exact divisors of
+   150 — 150 / 75 / 50 / 25 — so the field never ends in a ragged part-row
+   at any width, and every mark lands on a whole-pixel pitch of ≥6px. No JS,
+   no gradients faking the ticks: 150 elements, counted.
+
+   Gold appears exactly twice in this section — on `150` and on the capacity
+   ceiling `$3M → ~$5M`. The Medallion figure stays in ink: it is context we
+   did not measure, and the colour says so.
+   ------------------------------------------------------------------------- */
+
+#capacity {
+  /* Field geometry. Cols must divide 150 exactly. */
+  --cap-cols: 25;          /* → 6 rows */
+  --cap-gap: 2px;
+  --cap-h: 4.25rem;
+
+  /* The two counts share one ramp so "150" and "one" are optical peers. */
+  --cap-count: clamp(1.7rem, 1.05rem + 2.6vw, 3.1rem);
+
+  /* Marks are slivers — deliberately faint against the one solid block. */
+  --cap-mark: rgba(27, 42, 74, .22);
+}
+
+/* --- The plot ------------------------------------------------------------- */
+.cap-row + .cap-row { margin-top: clamp(var(--s-6), 3.6vw, var(--s-8)); }
+
+/* Label and count sit on one baseline above the bar: a chart row, not a
+   caption. Read left-to-right, top-to-bottom the four text runs are the
+   mandated sentence, punctuation included. */
+.cap-row__head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--s-4);
+  margin-bottom: var(--s-4);
+}
+
+.cap-row__k {
+  font-size: var(--t-sm);
+  line-height: 1.4;
+  color: var(--ink-2);
+  min-width: 0;
+}
+/* .mono's .94em would drop an 15px label under the legibility floor. */
+.cap-row__k .mono { font-size: 1em; color: var(--ink); }
+
+.cap-row__v {
+  display: flex;
+  align-items: baseline;
+  gap: .42em;
+  flex: none;
+  white-space: nowrap;
+}
+
+/* "150" — a counted quantity, so mono, and gold because it is a capacity
+   figure. */
+.cap-row__n {
+  font-size: var(--cap-count);
+  letter-spacing: -.045em;
+}
+
+/* "one" is a word, not a numeral — it leaves the mono for the display serif.
+   The face change is the point: many countable units vs. a single whole.
+   Cormorant's small x-height needs ~1.3× to read as the same size, and it
+   carries full --ink so it rhymes with the solid block beneath it. */
+.cap-row__word {
+  font-family: 'Cormorant Garamond', 'Iowan Old Style', Georgia, 'Times New Roman', serif;
+  font-weight: 400;
+  font-size: calc(var(--cap-count) * 1.3);
+  line-height: 1;
+  letter-spacing: -.012em;
+  color: var(--ink);
+}
+
+.cap-row__u {
+  font-size: var(--t-sm);
+  line-height: 1.4;
+  color: var(--ink-2);
+}
+
+/* --- The two fields ------------------------------------------------------- */
+.cap-field {
+  height: var(--cap-h);
+  display: grid;
+  grid-template-columns: repeat(var(--cap-cols), minmax(0, 1fr));
+  grid-auto-rows: minmax(0, 1fr);
+  gap: var(--cap-gap);
+}
+.cap-m { display: block; background: var(--cap-mark); }
+
+/* One explicit row so the single mark can span the whole rectangle. Same
+   width, same height, same grid — one mark instead of 150. */
+.cap-field--one { grid-template-rows: minmax(0, 1fr); }
+.cap-m--whole {
+  grid-column: 1 / -1;
+  grid-row: 1 / -1;
+  background: var(--navy);
+  border-radius: var(--radius);
+}
+
+/* --- The mechanism, then the punch ---------------------------------------- */
+/* Hung off the plot on a hairline: this is the footnote that makes the
+   picture above possible. */
+.cap-nolimit {
+  margin-top: clamp(var(--s-7), 4vw, var(--s-9));
+  padding-top: var(--s-5);
+  border-top: 1px solid var(--line);
+  font-size: var(--t-lede);
+  line-height: 1.5;
+  letter-spacing: -.004em;
+  color: var(--ink-2);
+  text-wrap: pretty;
+}
+.cap-nolimit .mono { color: var(--ink); }
+.cap-nolimit strong { color: var(--ink); }
+
+.cap-punch {
+  margin-top: clamp(var(--s-6), 3.5vw, var(--s-7));
+  max-width: 22em;
+}
+
+/* --- Seams ---------------------------------------------------------------- */
+.cap-seam {
+  margin-top: clamp(var(--s-9), 6vw, var(--s-11));
+  margin-bottom: clamp(var(--s-8), 5vw, var(--s-10));
+}
+/* The closing beat gets more air above it than the others: everything before
+   this line is argument, everything after is the way out. */
+.cap-seam--eq { margin-top: clamp(var(--s-9), 7vw, var(--s-12)); }
+
+/* --- Why a low ceiling is the point --------------------------------------- */
+.cap-why__t { max-width: 16em; }
+.cap-why__p {
+  margin-top: var(--s-5);
+  font-size: var(--t-lede);
+  line-height: 1.56;
+  letter-spacing: -.004em;
+  color: var(--ink-2);
+  max-width: 40em;
+  text-wrap: pretty;
+}
+.cap-why__p strong { color: var(--ink); }
+
+/* --- The one comparison that earns its place ------------------------------
+   Two readings, one hairline. Stacked and rule-separated by default; side by
+   side with a vertical hairline once there is room for both to breathe. */
+.cap-scale {
+  margin-top: clamp(var(--s-7), 4.5vw, var(--s-9));
+  display: grid;
+  gap: var(--s-5);
+  max-width: 46rem;
+}
+.cap-scale__col {
+  padding-top: var(--s-5);
+  border-top: 1px solid var(--line);
+  min-width: 0;
+}
+.cap-scale__k { color: var(--ink-3); }
+
+.cap-scale__v {
+  margin-top: var(--s-4);
+  display: flex;
+  align-items: baseline;
+  gap: .45em;
+  flex-wrap: wrap;
+}
+.cap-scale__tag {
+  font-size: var(--t-sm);
+  line-height: 1.4;
+  color: var(--ink-3);
+}
+.cap-scale__n {
+  margin-top: var(--s-3);
+  font-size: var(--t-sm);
+  line-height: 1.55;
+  color: var(--ink-2);
+  text-wrap: pretty;
+}
+.cap-scale__n .mono { font-size: 1em; color: var(--ink); }
+
+.cap-attrib {
+  margin-top: clamp(var(--s-7), 4vw, var(--s-8));
+  max-width: 70ch;
+}
+/* .attrib already sits at the 13px floor — inline mono must not shrink under it. */
+.cap-attrib .mono { font-size: 1em; }
+
+/* --- The equalizer -------------------------------------------------------
+   The register here is relief, not pressure: the door is shut for everyone,
+   so the type is calm and the route out is a ghost button, never the gold
+   one — the gold CTA belongs to §10 and must not be spent twice. */
+.cap-eq { display: grid; gap: clamp(var(--s-6), 4vw, var(--s-8)); }
+
+.cap-eq__line {
+  font-family: 'Cormorant Garamond', 'Iowan Old Style', Georgia, 'Times New Roman', serif;
+  font-weight: 400;
+  font-size: clamp(1.5rem, 1.15rem + 1.5vw, 2.4rem);
+  line-height: 1.2;
+  letter-spacing: -.014em;
+  color: var(--ink);
+  max-width: 17em;
+  text-wrap: balance;
+}
+
+.cap-eq__btn { align-self: start; }
+.cap-eq__note { margin-top: var(--s-5); max-width: 46ch; }
+
+/* =========================================================================
+   40em — the field halves its rows; the comparison is still stacked
+   ========================================================================= */
+@media (min-width: 40em) {
+  #capacity {
+    --cap-cols: 50;        /* → 3 rows */
+    --cap-h: 4.75rem;
+  }
+}
+
+/* =========================================================================
+   52em — the two capacity readings face each other across a hairline
+   ========================================================================= */
+@media (min-width: 52em) {
+  .cap-scale {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    column-gap: clamp(var(--s-6), 4vw, var(--s-8));
+  }
+  .cap-scale__col {
+    padding-top: 0;
+    border-top: 0;
+  }
+  /* One rule between them, not a box around each. */
+  .cap-scale__col--ours {
+    padding-left: clamp(var(--s-5), 3vw, var(--s-7));
+    border-left: 1px solid var(--line);
+  }
+}
+
+/* =========================================================================
+   62em — the field becomes two rows of strokes; the equalizer resolves onto
+   a single line, statement left, route right
+   ========================================================================= */
+@media (min-width: 62em) {
+  #capacity {
+    --cap-cols: 75;        /* → 2 rows */
+    --cap-gap: 1px;
+    --cap-h: 5.5rem;
+  }
+
+  /* The heading drops into the margin as a sidehead — 19rem holds the longest
+     line of "Why a low ceiling is the point" at h3 size without a two-word
+     orphan, and leaves the paragraph its full 40em measure inside the wrap. */
+  .cap-why {
+    display: grid;
+    grid-template-columns: minmax(0, 19rem) minmax(0, 1fr);
+    column-gap: clamp(var(--s-7), 4.5vw, var(--s-9));
+    align-items: start;
+  }
+  .cap-why__p { margin-top: 0; }
+
+  .cap-eq {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 22rem);
+    column-gap: clamp(var(--s-7), 5vw, var(--s-10));
+    align-items: start;
+  }
+}
+
+/* =========================================================================
+   74em — 150 marks on one line: the comb the whole section is built around
+   ========================================================================= */
+@media (min-width: 74em) {
+  #capacity {
+    --cap-cols: 150;       /* → 1 row, ~6px pitch inside the 1160px wrap */
+    --cap-h: 6rem;
+  }
+}

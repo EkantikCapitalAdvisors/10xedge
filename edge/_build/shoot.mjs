@@ -18,9 +18,12 @@ mkdirSync(outDir, { recursive: true });
 const url = /^https?:/.test(target) ? target : 'file://' + resolve(target);
 
 const proxy = process.env.HTTPS_PROXY || process.env.https_proxy;
+const isLocal = /^https?:\/\/(127\.0\.0\.1|localhost|\[::1\])/.test(target);
 const browser = await chromium.launch({
   executablePath: '/opt/pw-browsers/chromium',
-  ...(/^https?:/.test(target) && proxy ? { proxy: { server: proxy } } : {}),
+  ...(/^https?:/.test(target) && proxy && !isLocal
+    ? { proxy: { server: proxy, bypass: '127.0.0.1,localhost,::1' } }
+    : {}),
 });
 for (const w of widths) {
   const ctx = await browser.newContext({
@@ -43,7 +46,10 @@ for (const w of widths) {
       await new Promise(r => setTimeout(r, 60));
     }
     window.scrollTo(0, 0);
-    await new Promise(r => setTimeout(r, 400));
+    // Capture the SETTLED state: a full-page shot resizes the viewport, which would
+    // otherwise leave un-intersected reveals at opacity 0. Motion is judged separately.
+    document.querySelectorAll('[data-reveal]').forEach(el => el.classList.add('is-in'));
+    await new Promise(r => setTimeout(r, 500));
   });
   const shot = selArg ? page.locator(selArg.slice(6)) : page;
   await shot.screenshot({ path: `${outDir}/${w}.png`, fullPage: selArg ? undefined : full, animations: 'disabled' });

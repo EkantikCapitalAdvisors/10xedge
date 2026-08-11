@@ -26,6 +26,10 @@
 
 /* ---------- 1. Tokens ---------------------------------------------------- */
 :root {
+  /* This page commits to a single visual world by brand mandate — it does not
+     follow the viewer's light/dark preference. Every ground is painted explicitly. */
+  color-scheme: light;
+
   /* Brand — exact, non-negotiable */
   --navy: #1B2A4A;
   --gold: #C8A951;

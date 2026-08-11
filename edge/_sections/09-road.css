@@ -1,0 +1,221 @@
+/* =============================================================================
+   09 — THE ROAD  (#road)  — LIGHT BAND
+   ---------------------------------------------------------------------------
+   Composition:
+
+     >=1024px   ●━━━━━━━━━━○━━━━━━━━━━○━━━━━━━━━━○      one hairline, four stations
+                1 · PROVE   2 · STRUCTURE  3 · LICENSE  4 · TRADE
+                [LIVE NOW]  INDICATIVE…    INDICATIVE…  GATE-CONDITIONAL
+                body        body           body         body
+
+     <=1023px   the same rail turned vertical: markers in a 24px left rail,
+                the hairline dropping between them, content to the right.
+
+   ONE geometry, two orientations — the marker, the connector and the content
+   block never change; only the axis does. That is why the vertical case does
+   not read as a fallback.
+
+   Legibility: nothing in stages 2–4 is dimmed. Every stage name is full --ink,
+   every status is --ink-2, every body is --ink-2 — identical to stage 1. The
+   current stage is marked by exactly two things: a gold node on the rail and
+   the live badge. Progression is signalled by rank, not by fade.
+
+   Gold budget: TWO marks, one idea — the stage-1 node and the pulse dot inside
+   its badge, both saying "this is the stage we are in now". The badge/.dot
+   pulse is lifted verbatim from the hero's soft-launch rail so the page rhymes.
+   Gold appears nowhere else here: not on the connector, not on the ordinals,
+   not on the vow rule.
+
+   Typeface law: the day ranges (60–90, 90–180) and "Series 3" are ESTIMATES
+   and registration labels, not engine output — they are set in DM Sans, in the
+   body and status flow, never in JetBrains Mono. The stage ordinals 1–4 ARE
+   set in mono, as ordinals: they are index positions in a fixed enumeration,
+   the same role the design system already gives mono in `.card__k .n`. They
+   carry no measured quantity, which is why they are --ink-3 and never gold.
+   ========================================================================= */
+
+#road {
+  /* Marker geometry — shared by both orientations. */
+  --road-node: 11px;
+  /* Height of the first line of a stage name; the node optically centres on it
+     in the vertical case. Tracks the small end of --road-name-size. */
+  --road-lead: 1.35rem;
+  --road-cap: calc((var(--road-lead) - var(--road-node)) / 2);
+
+  /* Vertical case */
+  --road-rail: 1.5rem;
+  --road-vgap: clamp(var(--s-7), 6vw, var(--s-9));
+
+  /* Horizontal case */
+  --road-gap: clamp(var(--s-5), 2.6vw, var(--s-8));
+}
+
+/* ---------- Stage: vertical timeline (default) --------------------------- */
+
+#road .road-stage {
+  position: relative;
+  display: grid;
+  grid-template-columns: var(--road-rail) minmax(0, 1fr);
+  column-gap: var(--s-3);
+}
+#road .road-stage + .road-stage { margin-top: var(--road-vgap); }
+
+#road .road-mark { display: block; position: relative; }
+
+#road .road-node {
+  display: block;
+  position: relative;
+  z-index: 1;
+  width: var(--road-node);
+  height: var(--road-node);
+  margin-top: var(--road-cap);
+  border: 1px solid var(--ink-4);
+  border-radius: 50%;
+  background: var(--bg);
+}
+
+/* The current stage. Solid gold, and the only filled node on the rail. */
+#road .road-stage--live .road-node {
+  border-color: var(--gold-deep);
+  background: var(--gold);
+}
+
+/* The connector. Vertical: drops from under the node to the next node. The
+   mark stretches to the full row height, so `bottom` is measured from the end
+   of this stage's content and pulled down through the row gap. */
+#road .road-stage:not(:last-child) .road-mark::before {
+  content: '';
+  position: absolute;
+  left: calc(var(--road-node) / 2);
+  top: calc(var(--road-cap) + var(--road-node) + var(--s-3));
+  bottom: calc(var(--s-3) - var(--road-vgap) - var(--road-cap));
+  width: 1px;
+  background: var(--line);
+}
+
+/* ---------- Stage type --------------------------------------------------- */
+
+/* Cormorant in caps: sized a step below `.h3`'s default because capitals read
+   optically larger, and opened up with tracking so the caps do not clot. */
+#road .road-name {
+  font-size: clamp(1.12rem, 1rem + .42vw, 1.4rem);
+  font-weight: 500;
+  line-height: 1.2;
+  letter-spacing: .055em;
+  color: var(--ink);
+}
+
+#road .road-n {
+  font-size: .66em;
+  letter-spacing: 0;
+  color: var(--ink-3);
+}
+#road .road-sep {
+  font-size: .66em;
+  color: var(--ink-4);
+  margin: 0 .34em 0 .3em;
+}
+
+#road .road-status { margin-top: var(--s-4); }
+
+/* Stage 1's pill sits in a bordered, padded box; the flat labels below carry
+   the same vertical box so all four statuses share one baseline across the
+   four columns without a second visible rule. */
+#road .road-status--plain {
+  color: var(--ink-2);
+  letter-spacing: .12em;
+  padding-block: .5rem;
+  border-block: 1px solid transparent;
+}
+
+/* Flex wrapper kills the paragraph strut, so the badge's box is exactly its own
+   height; `line-height: 1.2` matches `.eyebrow`. Together those two make the
+   live pill and the three flat labels resolve to the same box height, which is
+   what puts all four statuses on one line across the horizontal track. */
+#road .road-stage--live .road-status { display: flex; }
+
+#road .road-live {
+  color: var(--ink);
+  line-height: 1.2;
+  letter-spacing: .12em;
+}
+
+#road .road-b {
+  margin-top: var(--s-4);
+  font-size: var(--t-sm);
+  line-height: 1.62;
+  color: var(--ink-2);
+  max-width: 34em;
+  text-wrap: pretty;
+}
+
+/* ---------- Stage: horizontal progression (>=1024px) --------------------- */
+
+@media (min-width: 64em) {
+  #road .road-track {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    column-gap: var(--road-gap);
+    align-items: start;
+  }
+
+  #road .road-stage { display: block; }
+  #road .road-stage + .road-stage { margin-top: 0; }
+
+  #road .road-mark {
+    height: var(--road-node);
+    margin-bottom: var(--s-5);
+  }
+  #road .road-node { margin-top: 0; }
+
+  /* Horizontal: one hairline running from the node, under it, across the gap,
+     to the next node. The nodes sit on top of it (z-index 1, opaque fill), so
+     the line reads as continuous through all four stations. */
+  #road .road-stage:not(:last-child) .road-mark::before {
+    left: 0;
+    right: calc(-1 * var(--road-gap));
+    top: 50%;
+    bottom: auto;
+    width: auto;
+    height: 1px;
+    transform: translateY(-.5px);
+  }
+}
+
+/* ---------- The terminus ------------------------------------------------- */
+
+#road .road-close {
+  margin-top: clamp(var(--s-9), 7vw, var(--s-11));
+  padding-top: clamp(var(--s-6), 3.5vw, var(--s-8));
+  border-top: 1px solid var(--line);
+  display: grid;
+  gap: var(--s-6);
+}
+
+/* The no-capital line gets weight from scale, serif and isolation — not from
+   colour. No gold here: the section's gold is spent on "live", and a second
+   accent would blunt it. */
+#road .road-vow {
+  font-family: 'Cormorant Garamond', 'Iowan Old Style', Georgia, 'Times New Roman', serif;
+  font-weight: 400;
+  font-size: clamp(1.3rem, 1.04rem + 1.08vw, 2.05rem);
+  line-height: 1.28;
+  letter-spacing: -.014em;
+  color: var(--ink);
+  max-width: 20em;
+  text-wrap: pretty;
+}
+
+@media (min-width: 64em) {
+  #road .road-close {
+    grid-template-columns: minmax(0, 1.05fr) minmax(0, .95fr);
+    column-gap: clamp(var(--s-7), 5vw, var(--s-10));
+    align-items: start;
+  }
+  /* The same hairline-aside device the page uses elsewhere: the caveat hangs
+     off a rule rather than sitting in a box. */
+  #road .road-attrib {
+    border-left: 1px solid var(--line);
+    padding-left: clamp(var(--s-5), 2.4vw, var(--s-6));
+  }
+}

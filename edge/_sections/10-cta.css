@@ -1,0 +1,292 @@
+/* ---------- 10 · THE CTA -------------------------------------------------
+   The close. Two registers, deliberately at odds, stacked:
+
+   1. THE ASK — centre-set on a narrow column, the largest type on the page
+      after the hero. Centring is earned here because this is the only band
+      that addresses the reader instead of showing them evidence. Section 07
+      ends by shutting the door on everyone ("no one can allocate"); this
+      band restates that and then hands over the single thing that is
+      actually open.
+   2. THE RECORD — left-aligned, ruled top and bottom, full wrap width. Same
+      badge + rail construction as the hero's soft-launch strip, so the page
+      opens and closes on the identical sentence, in the identical form. A
+      statement of record must not look like centred marketing copy, so it
+      breaks the centre axis on purpose.
+
+   Gold appears exactly once in this band: the primary button. Nothing else
+   is gold — not the eyebrow, not a rule, not an accent word in the heading —
+   so the one action is the only bright object on a dark field. The ghost
+   secondary is quieted by text colour and size, never by removing its
+   border: a 60px control that is hard to see is worse than a quiet one.
+
+   No urgency devices of any kind. Nothing counts, nothing expires.
+   ------------------------------------------------------------------------- */
+
+#watch {
+  position: relative;
+  overflow: hidden;
+  isolation: isolate;
+  /* Extra air above so the band separates cleanly from the roadmap. */
+  padding-block: calc(var(--sec-y) + var(--s-6)) var(--sec-y);
+  text-align: center;
+}
+
+/* --- Atmosphere: a navy vignette and a single soft lift behind the ask.
+       Alpha-composites of navy-900 and ivory only — no new hues. --------- */
+#watch .cta__atmos {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+}
+#watch .cta__atmos::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(76% 58% at 50% 4%,   rgba(250, 248, 245, .045), rgba(250, 248, 245, 0) 62%),
+    radial-gradient(98% 80% at 50% 114%, rgba(19, 31, 56, .9),      rgba(19, 31, 56, 0)     68%);
+}
+
+#watch .cta__in {
+  position: relative;
+  z-index: 1;
+}
+
+/* =========================================================================
+   1 · THE ASK
+   ========================================================================= */
+#watch .cta-lead {
+  max-width: 46rem;
+  margin-inline: auto;
+}
+
+/* 11px is the system eyebrow; at the page's largest close it is raised to the
+   13px legibility floor and given a hair less tracking to compensate. */
+#watch .cta-eyebrow {
+  font-size: var(--t-xs);
+  letter-spacing: .16em;
+}
+
+#watch .cta-title {
+  /* Second-largest type on the page: above --t-h2, below the hero display.
+     Balanced, it sets as two even lines from ~420px upward. */
+  margin-top: var(--s-4);
+  font-size: clamp(2.6rem, 1.62rem + 3.55vw, 5.1rem);
+  font-weight: 300;
+  line-height: 1.015;
+  letter-spacing: -.019em;
+}
+
+#watch .cta-lede {
+  margin-top: var(--s-5);
+  margin-inline: auto;
+  max-width: 30em;
+}
+
+/* The equalizer. Serif, quiet, with a short hairline above it so it reads
+   as a turn in the argument rather than another paragraph. */
+#watch .cta-eq {
+  position: relative;
+  margin-top: clamp(var(--s-8), 4.5vw, var(--s-9));
+  padding-top: clamp(var(--s-6), 3vw, var(--s-7));
+  margin-inline: auto;
+  max-width: 19em;
+  font-family: 'Cormorant Garamond', 'Iowan Old Style', Georgia, serif;
+  font-size: clamp(1.45rem, 1.13rem + 1.2vw, 2.2rem);
+  font-weight: 400;
+  line-height: 1.24;
+  letter-spacing: -.013em;
+  color: var(--ink-2);
+  text-wrap: balance;
+}
+#watch .cta-eq::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 48px;
+  height: 1px;
+  background: var(--line);
+}
+#watch .cta-eq strong {
+  font-weight: 400;
+  color: var(--ink);
+}
+
+/* =========================================================================
+   2 · ONE ACTION
+   ========================================================================= */
+#watch .cta-act {
+  margin-top: clamp(var(--s-8), 4.5vw, var(--s-9));
+}
+
+/* 390px: full-width stack with a real gap — 24px, wide enough that the gold
+   control and the ghost control never read as one segmented object. */
+#watch .cta-act__row {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: var(--s-5);
+  max-width: 24rem;
+  margin-inline: auto;
+}
+
+/* Unmissable: larger label, deeper padding than the shared .btn. ~68px tall. */
+#watch .cta-primary {
+  font-size: 1rem;
+  padding: 1.25rem 2.25rem;
+  letter-spacing: .004em;
+}
+#watch .cta-primary__glyph {
+  width: 1.15em;
+  height: 1.15em;
+}
+
+/* Genuinely quieter: the label sits at --ink-2 (7.3:1 on navy) rather than
+   full ivory, and the control keeps the shared .btn--ghost hairline so the
+   tap target stays legible. ~60px tall. */
+#watch .cta-secondary {
+  color: var(--ink-2);
+}
+#watch .cta-secondary:hover,
+#watch .cta-secondary:focus-visible {
+  color: var(--ink);
+}
+
+/* The observation-only clarifier. It must be readable, not fine print —
+   --ink-3 at 15px is 4.7:1 on navy. */
+#watch .cta-clarify {
+  margin-top: var(--s-5);
+  margin-inline: auto;
+  max-width: 52ch;
+  font-size: var(--t-sm);
+  line-height: 1.6;
+  color: var(--ink-3);
+  text-wrap: pretty;
+}
+
+/* Tertiary verification link — below the button and below the clarifier,
+   subordinate to both. Never a button, never gold. Padded to a 46px tap
+   target without moving the label. */
+#watch .cta-verify {
+  margin-top: var(--s-6);
+}
+#watch .cta-verify__a {
+  padding-top: .95rem;
+  padding-bottom: .45rem;
+}
+
+/* =========================================================================
+   3 · THE RECORD — left-aligned, ruled
+   ========================================================================= */
+#watch .cta-seam {
+  margin-top: clamp(var(--s-9), 6vw, var(--s-11));
+  margin-bottom: clamp(var(--s-6), 3vw, var(--s-7));
+}
+#watch .cta-seam--sig {
+  margin-top: clamp(var(--s-7), 4vw, var(--s-8));
+  margin-bottom: clamp(var(--s-5), 2.5vw, var(--s-6));
+}
+
+#watch .cta-status {
+  display: grid;
+  gap: var(--s-4);
+  text-align: left;
+}
+#watch .cta-status__badge {
+  justify-self: start;
+  align-self: start;
+  font-size: var(--t-xs);
+  letter-spacing: .13em;
+  padding: .5rem .95rem .5rem .8rem;
+}
+#watch .cta-status__t {
+  max-width: 72ch;
+  text-wrap: pretty;
+}
+#watch .cta-status__t strong { color: var(--ink); }
+
+/* --- Signature: small, level, confident. Not a card, not centred. ------- */
+#watch .cta-sig {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--s-1) var(--s-6);
+  margin: 0;
+  font-style: normal;
+  font-size: var(--t-sm);
+  line-height: 1.6;
+  text-align: left;
+}
+#watch .cta-sig__id,
+#watch .cta-sig__ch {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0 .6em;
+  min-width: 0;
+}
+#watch .cta-sig__ch { align-items: center; }
+#watch .cta-sig__name {
+  font-weight: 500;
+  color: var(--ink);
+}
+#watch .cta-sig__role { color: var(--ink-3); }
+#watch .cta-sig__sep { color: var(--ink-4); }
+
+#watch .cta-sig__a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 2.75rem;            /* 44px tap target */
+  font-weight: 500;
+  color: var(--ink-2);
+  border-bottom: 1px solid transparent;
+  transition: color .2s var(--ease-io), border-color .2s var(--ease-io);
+}
+#watch .cta-sig__a:hover {
+  color: var(--ink);
+  border-bottom-color: var(--ink-3);
+}
+
+/* =========================================================================
+   Narrow — 390px pass
+   ========================================================================= */
+@media (max-width: 34em) {
+  /* Name over role, no dangling middot at a wrap point. */
+  #watch .cta-sig__id { display: block; }
+  #watch .cta-sig__id .cta-sig__name,
+  #watch .cta-sig__id .cta-sig__role { display: block; }
+  #watch .cta-sig__id .cta-sig__sep { display: none; }
+}
+
+/* =========================================================================
+   544px — the two controls sit side by side, primary first
+   ========================================================================= */
+@media (min-width: 34em) {
+  #watch .cta-act__row {
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+    gap: var(--s-5) var(--s-6);
+    max-width: none;
+  }
+}
+
+/* =========================================================================
+   1024px — the record splits into badge | statement, mirroring the hero rail
+   ========================================================================= */
+@media (min-width: 64em) {
+  #watch .cta-status {
+    grid-template-columns: auto minmax(0, 1fr);
+    column-gap: var(--s-7);
+    align-items: start;
+  }
+  #watch .cta-status__t {
+    border-left: 1px solid var(--line-2);
+    padding-left: var(--s-7);
+  }
+}
