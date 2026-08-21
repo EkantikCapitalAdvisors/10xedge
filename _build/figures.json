@@ -50,7 +50,7 @@
   "tradedEquity": {
     "usd": 20000,
     "display": "$20,000",
-    "_comment": "Confirmed by the operator on 2026-08-11: the 246-trade record was traded on a $20,000 portfolio. This is a published claim \u2014 the same $9,984 of realised P&L would be +20.0% on $50,000.",
+    "_comment": "Confirmed by the operator on 2026-08-11: the 149-trade record was traded on a $20,000 portfolio. THIS IS NOT THE MINIMUM ALLOCATION, which is $30,000 \u2014 it is the measured balance the record happened to run on, and it must never be changed to track the minimum. The same realised P&L would be a different percentage on a different balance.",
     "_conflict": "PARTIALLY RESOLVED. Balance confirmed. Remaining note: 10 of the 246 trades risked more than 2.5% of $20,000 (largest $1,000 = 5.0%). The deck's ruin figure is simulated AT a 2.5% per-trade ceiling, so that simulation is more disciplined than the record it draws from. The page must not imply every historical trade sat inside 2.5%. Average risk was $232 = 1.2%, consistent with the deck.",
     "verified": true,
     "verifiedBy": "Hiren Desai (operator)",
@@ -92,5 +92,19 @@
     "trades": 149,
     "_comment": "2026-08-11: the record was narrowed to Discord-called trades only, so the page's central attribution ('called in real time in our Discord channel') is literally true of every trade counted. The dashboard was re-published on the same basis. The feed carries 151 rows; the dashboard reports 149 closed trades, excluding trade_num F8 (a $450 win, 2/11) and F38 (a -$50 loss, 4/13). Reconciled: on that 149 basis every dashboard KPI matches to within $1.",
     "_selectionNote": "MATERIAL AND MUST BE DISCLOSED. The excluded broker-sourced trades were the WEAKER half of the prior record (net R/trade +0.123 vs +0.264; net profit factor 1.16 vs 1.64). Narrowing to Discord-only therefore RAISES every headline figure. The rationale is sound - it makes the attribution literally true and removes an unverifiable claim - but the effect is favourable, and a skeptical reader who saw the earlier 246-trade record will notice. The page must disclose the narrowing and its direction."
+  },
+  "capacity": {
+    "ceilingUsd": 5000000,
+    "ceilingDisplay": "$5M",
+    "minimumAllocationUsd": 30000,
+    "minimumAllocationDisplay": "$30,000",
+    "slotsAtMinimum": 166,
+    "_comment": "Revised by the operator 2026-08-11. Capacity is a single $5,000,000 ceiling; the earlier '$3M at launch stretching toward ~$5M' framing is retired. Minimum allocation raised $20,000 -> $30,000. $5,000,000 / $30,000 = 166.67, so 166 full allocations fit \u2014 the page states 166.",
+    "maximumAllocation": null,
+    "_maximumNote": "THE PAGE STATES NO MAXIMUM. The $300,000 per-account cap published earlier on 2026-08-11 was retired at the operator's instruction: 'we are saying minimum is 30k and not talking about maximum.' Note this is NOT a claim that no maximum exists \u2014 the page is silent on the question. The retired claim 'there is no per-account limit' therefore remains forbidden, and lint fails on both it and on any reappearance of $300,000.",
+    "_medallionRatio": "$10B / $5M = 2,000x, so the '\u2248 2,000\u00d7 smaller than Medallion' figure is correct on the new ceiling (it was computed against $5M all along).",
+    "verified": true,
+    "verifiedBy": "Hiren Desai (operator)",
+    "verifiedOn": "2026-08-11"
   }
 }

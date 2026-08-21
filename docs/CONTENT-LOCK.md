@@ -37,7 +37,21 @@ Every performance figure on the page must sit within visual reach of one of thes
 | Aviation | `≈28` → `~0.2` fatal accidents per million flights, 1960 → 2024, `≈100×` | "(Airbus data)" — industry-reported context |
 | Medallion | `~$10B · capped` | "≈ 2,000× smaller than Medallion" / "three orders of magnitude earlier" |
 
-### Permitted derived scarcity arithmetic — REVISED 2026-08-11 (per-account cap added)
+### Capacity — REVISED AGAIN 2026-08-11 (single $5M ceiling, $30,000 minimum, no maximum)
+- Capacity is a single **$5,000,000** ceiling. The "$3M at launch, stretching toward ~$5M" framing
+  is retired; `$3M` is now a forbidden string.
+- Minimum allocation **$30,000** (was $20,000). `$5,000,000 ÷ $30,000 = 166.67` → **"166 fit."**
+- **The page states NO maximum.** The $300,000 per-account cap published earlier the same day is
+  retired. This is *not* a claim that no maximum exists — the page is silent. So the old
+  "there is no per-account limit" wording stays forbidden, and `$300,000` now fails the build too.
+- Second row of the graphic is illustrative, not a cap: *"The same room, arriving larger, far fewer
+  do."* Uneven widths, no count, no stated size.
+- Punch line: **"A handful of large allocations could close the door on everyone else."**
+- `≈ 2,000× smaller than Medallion` is unchanged and correct — it was always $10B ÷ $5M.
+- ⚠️ **$20,000 still appears on the page and is correct** — it is the traded equity behind the
+  +41.0% / −5.8% figures, not the minimum. Never conform it to the minimum.
+
+### Superseded — the per-account cap era (retained for audit)
 The operator introduced a **$300,000 per-account maximum**, superseding the earlier
 "no per-account limit". Two consequences, both mandatory:
 - `$3,000,000 ÷ $20,000 = 150` · `$3,000,000 ÷ $300,000 = 10`

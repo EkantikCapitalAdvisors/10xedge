@@ -85,13 +85,11 @@ const REQUIRED = [
   [/computed, not promised/i, '"computed, not promised"'],
   [/1 in 200,000/i, '< 1 in 200,000 ruin figure'],
   [/1\.4\s*[–-]\s*1\.7/, 'Sharpe ~1.4–1.7'],
-  [/\$3\s?M|\$3,000,000/i, '$3M capacity'],
-  [/\$5\s?M|\$5,000,000/i, '~$5M ceiling'],
-  [/\$20,000/, '$20,000 minimum'],
-  [/maximum\s*(<[^>]*>)?\s*\$300,000\s*(<[^>]*>)?\s*per account/i, 'the $300,000 per-account maximum'],
-  [/150 fit/i, 'the 150-vs-10 line, first half'],
-  [/ten\s*(<[^>]*>)?\s*do\./i, 'the 150-vs-10 line, second half'],
-  [/ten allocations could close the door on everyone else/i, 'the scarcity punch line (restated for the $300,000 cap)'],
+  [/\$5\s?M|\$5,000,000/i, 'the $5M capacity ceiling'],
+  [/\$30,000/, 'the $30,000 minimum allocation'],
+  [/166\s*(<[^>]*>)?\s*fit\./i, 'the capacity count: 166 fit at the minimum'],
+  [/far fewer\s*(<[^>]*>)?\s*do\./i, 'the second half: far fewer do'],
+  [/a handful of large allocations could close the door on everyone else/i, 'the scarcity punch line'],
   [/a low ceiling is exactly what a real edge looks like/i, 'the low-ceiling line'],
   [/observation is the only open position/i, 'the equalizer'],
   [/no one can allocate/i, 'the equalizer, first clause'],
@@ -132,8 +130,12 @@ if (/\b62\s?%/.test(allCopy) && !/62\.4\s?%\s*exactly/i.test(allCopy))
    wording and the old arithmetic are now false and must never reappear. */
 if (/no per[- ]account limit/i.test(allCopy))
   F('FIGURE-DRIFT', '"no per-account limit" is superseded — a $300,000 per-account maximum now applies');
-if (/one allocation could close the door/i.test(allCopy))
-  F('FIGURE-DRIFT', 'the one-allocation-takes-all line is false under the $300,000 cap; the floor is ten allocations');
+if (/\$300,000/.test(allCopy))
+  F('FIGURE-DRIFT', 'the $300,000 per-account maximum was retired — the page states a minimum only and names no maximum');
+if (/\$3\s?M\b|\$3,000,000/.test(allCopy))
+  F('FIGURE-DRIFT', 'the $3M launch cap is superseded — capacity is a single $5M ceiling');
+if (/\$20,000\s*(<[^>]*>)?\s*minimum|minimum[^.]{0,24}\$20,000/i.test(allCopy))
+  F('FIGURE-DRIFT', 'the minimum allocation is $30,000, not $20,000 — note $20,000 remains correct as the traded equity in the record');
 
 /* ---------- 5. Section 08 must contain zero digits ----------------------- */
 const s8 = stripped.match(/<section[^>]*id="expressions"[\s\S]*?<\/section>/i);
