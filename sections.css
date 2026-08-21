@@ -1700,13 +1700,13 @@
    ------------------------------------------------------------------------- */
 
 #capacity {
-  /* Field geometry. Cols must divide 150 exactly. */
-  --cap-cols: 25;          /* → 6 rows */
-  /* 5 × 2 only while the wrap is too narrow for ten marks to stay chunky. At
-     this width the derived gutters come out equal (10px each way), so the pair
-     of rows still reads as ten, not as five. Above 40em the field resolves to
-     a single row of ten — see below. */
-  --cap-few-cols: 5;
+  /* Field geometry. 166 = 2 x 83, so only 83 divides it evenly; below the
+     widest breakpoint the final row runs a little short, which is correct —
+     the field is a COUNT, not a rectangle, and 166 is not a round number. */
+  --cap-cols: 24;          /* → 7 rows, last row of 22 */
+  /* The second field carries no count and no stated size: the page does not
+     name a maximum. Uneven widths on one row say "larger pieces, fewer of
+     them" without asserting a cap. */
   --cap-gap: 2px;
   --cap-h: 4.25rem;
 
@@ -1775,14 +1775,23 @@
 }
 .cap-m { display: block; background: var(--cap-mark); }
 
-/* Same width, same height, same fill — 10 marks instead of 150. The gutters
-   are derived from the fine field's so the two rectangles carry equal ink;
-   the eye then reads the ratio and nothing else. */
+/* Same rectangle, same ink, filled by a handful of uneven pieces. Flex rather
+   than grid: the widths are deliberately not a repeating unit, because a
+   repeating unit would imply a fixed allocation size and the page names none. */
 .cap-field--few {
-  grid-template-columns: repeat(var(--cap-few-cols), minmax(0, 1fr));
-  grid-auto-rows: minmax(0, 1fr);
-  column-gap: calc(var(--cap-gap) * var(--cap-cols) / var(--cap-few-cols));
-  row-gap: calc(var(--cap-gap) * (150 / var(--cap-cols) - 1));
+  display: flex;
+  gap: calc(var(--cap-gap) * 6);
+  height: var(--cap-h);
+}
+.cap-m--w2 { --w: 2; }
+.cap-m--w3 { --w: 3; }
+.cap-m--w4 { --w: 4; }
+.cap-m--w5 { --w: 5; }
+.cap-m--w6 { --w: 6; }
+.cap-m--big {
+  flex: var(--w, 3) 1 0;
+  background: var(--navy);
+  border-radius: var(--radius);
 }
 
 /* --- The mechanism, then the punch ---------------------------------------- */
@@ -1910,12 +1919,8 @@
    ========================================================================= */
 @media (min-width: 40em) {
   #capacity {
-    --cap-cols: 50;        /* → 3 rows */
+    --cap-cols: 42;        /* → 4 rows, last row of 40 */
     --cap-h: 4.75rem;
-    /* One row of ten. Two rows would need a row gutter far tighter than the
-       column gutter to hold equal ink, and the eye then pairs the marks
-       vertically and counts five. */
-    --cap-few-cols: 10;
   }
 }
 
@@ -1944,7 +1949,7 @@
    ========================================================================= */
 @media (min-width: 62em) {
   #capacity {
-    --cap-cols: 75;        /* → 2 rows */
+    --cap-cols: 83;        /* → 2 rows, exact */
     --cap-gap: 1px;
     --cap-h: 5.5rem;
   }
@@ -1962,19 +1967,22 @@
 }
 
 /* =========================================================================
-   74em — 150 marks on one line: the comb the whole section is built around.
-   The marks are pinned to exactly 6px rather than left as 1fr: a fractional
-   6.109px pitch snaps to alternating 6/7px columns at 1x and the strip
-   visibly beats. Both fields take the same derived width so the rectangles
-   stay identical; only the transparent gutters carry the remainder.
+   74em — 83 x 2, the only even split of 166. Marks are pinned to 6px rather
+   than left as 1fr: a fractional pitch snaps to alternating 6/7px columns at
+   1x and the strip visibly beats. Both fields take the same derived width so
+   the two rectangles stay identical; only the gutters carry the remainder.
    ========================================================================= */
 @media (min-width: 74em) {
   #capacity {
-    --cap-cols: 150;       /* → 1 row */
+    --cap-cols: 166;       /* → 1 row: the comb the section is built around */
     --cap-h: 6rem;
   }
-  .cap-field { width: min(100%, calc(150 * 7px - 1px)); }
-  .cap-field--many { grid-template-columns: repeat(150, minmax(0, 6px)); }
+  /* 166 marks at a pinned 5px on a 6px pitch = 995px, inside the 1080px
+     measure. Pinned rather than 1fr because a fractional pitch snaps to
+     alternating 5/6px columns at 1x and the strip visibly beats. Both fields
+     take the same derived width so the two rectangles stay identical. */
+  .cap-field { width: min(100%, calc(166 * 6px - 1px)); }
+  .cap-field--many { grid-template-columns: repeat(166, minmax(0, 5px)); }
 }
 
 /* ===== 08-expressions.css ============================================ */
