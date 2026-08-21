@@ -106,5 +106,15 @@
     "verified": true,
     "verifiedBy": "Hiren Desai (operator)",
     "verifiedOn": "2026-08-11"
+  },
+  "executionVenue": {
+    "forward": "Interactive Brokers",
+    "_comment": "Confirmed by the operator 2026-08-11: members open their own Interactive Brokers account, and execution runs there \u2014 either a managed account (trade authorization granted at the broker) or copy trading. The page names Interactive Brokers wherever it describes the FORWARD execution vehicle.",
+    "historical": "Tradovate",
+    "_historicalNote": "DO NOT RELABEL. The 149-trade record was traded on the operator's own Tradovate account, and every net figure on the page ($1.69 profit factor, +41.0%, -5.8%) is net of the Tradovate Free-plan schedule actually paid. Restating those figures against Interactive Brokers rates would model costs the record never incurred. 'Tradovate' must never appear in page copy \u2014 it is the operator's own broker, not a member's \u2014 but it stays here as the true cost basis.",
+    "_clientCostNote": "Interactive Brokers ES is roughly $0.85/contract commission plus about $1.60 exchange/clearing, i.e. ~$4.90 round turn against Tradovate Free's $5.26 \u2014 slightly cheaper, and immaterial to the published figures either way. A member's actual costs are their own broker schedule, plus any future Ekantik fee (none exists yet; schedule TBD). The footer says so.",
+    "verified": true,
+    "verifiedBy": "Hiren Desai (operator)",
+    "verifiedOn": "2026-08-11"
   }
 }

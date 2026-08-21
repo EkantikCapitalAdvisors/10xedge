@@ -101,6 +101,7 @@ const REQUIRED = [
   [/three orders of magnitude earlier/i, 'the Medallion category line'],
   [/Expression Gate/i, 'the Expression Gate'],
   [/Fidelity Gate/i, 'the Fidelity Gate'],
+  [/Interactive Brokers/i, 'the execution venue named where the page describes the forward vehicle'],
 ];
 for (const [re, why] of REQUIRED) if (!re.test(allCopy)) F('MISSING-REQUIRED', why);
 
@@ -136,6 +137,13 @@ if (/\$3\s?M\b|\$3,000,000/.test(allCopy))
   F('FIGURE-DRIFT', 'the $3M launch cap is superseded — capacity is a single $5M ceiling');
 if (/\$20,000\s*(<[^>]*>)?\s*minimum|minimum[^.]{0,24}\$20,000/i.test(allCopy))
   F('FIGURE-DRIFT', 'the minimum allocation is $30,000, not $20,000 — note $20,000 remains correct as the traded equity in the record');
+
+/* The operator's own broker must not appear in page copy. The record was traded
+   at Tradovate and the net figures are net of that schedule — which is recorded
+   in figures.json — but a member opens an Interactive Brokers account, and
+   naming the operator's venue on the page would only mislead. */
+if (/tradovate/i.test(allCopy))
+  F('BROKER', '"Tradovate" appears in page copy — it is the operator\'s own broker and the historical cost basis, not the member-facing venue. Members open Interactive Brokers accounts.');
 
 /* ---------- 5. Section 08 must contain zero digits ----------------------- */
 const s8 = stripped.match(/<section[^>]*id="expressions"[\s\S]*?<\/section>/i);
