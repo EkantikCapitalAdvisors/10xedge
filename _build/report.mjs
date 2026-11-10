@@ -1,12 +1,12 @@
 #!/usr/bin/env node
-/* Appends one round of critic findings to docs/COMPARISON-REPORT.md.
+/* Appends one round of critic findings to _docs/COMPARISON-REPORT.md.
    Usage: node report.mjs <round-json-file> */
 import { readFileSync, writeFileSync, existsSync } from 'node:fs';
 import { join, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
-const repo = join(dirname(fileURLToPath(import.meta.url)), '..', '..');
-const out = join(repo, 'docs', 'COMPARISON-REPORT.md');
+const repo = join(dirname(fileURLToPath(import.meta.url)), '..');
+const out = join(repo, '_docs', 'COMPARISON-REPORT.md');
 const data = JSON.parse(readFileSync(process.argv[2], 'utf8'));
 
 const sev = { BLOCKER: 0, MAJOR: 1, MINOR: 2 };
@@ -34,7 +34,7 @@ if (findings.length) {
 const header = `# Side-by-side comparison report — THE EKANTIK STRUCTURAL EDGE
 
 Reference standard: stripe.com / linear.app, encoded as the D1–D10 rubric in
-\`_build/../docs/CRITIC-RUBRIC.md\`. Every round runs one global design critic, five per-section design
+\`_docs/CRITIC-RUBRIC.md\`. Every round runs one global design critic, five per-section design
 critics, a CEG compliance critic and a direct-response (control-standard) editor. A round PASSES only
 when every critic returns SHIP.
 
@@ -47,4 +47,4 @@ when every critic returns SHIP.
 
 const prev = existsSync(out) ? readFileSync(out, 'utf8') : header;
 writeFileSync(out, (prev.startsWith('#') ? prev : header) + md);
-console.log(`round ${data.round} appended → docs/COMPARISON-REPORT.md (${count('BLOCKER')}B/${count('MAJOR')}M/${count('MINOR')}m)`);
+console.log(`round ${data.round} appended → _docs/COMPARISON-REPORT.md (${count('BLOCKER')}B/${count('MAJOR')}M/${count('MINOR')}m)`);

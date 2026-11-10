@@ -12,6 +12,13 @@ Page: `index.html` → served at the **root** of `10xedge.ekantikcapital.com`.
 >   one-file copy: `cp _archive/holding-page.html index.html`.
 > - The design fixer round was mid-flight at publish time (2 of 11 sections verified complete).
 
+> **2026-11-10 — INCIDENT, CLOSED.** GitHub Pages publishes any folder that does not start with an
+> underscore. This folder was named `docs/`, so from the August merge to `main` until this date the
+> internal working documents — including `INTERNAL-20k-analysis.md`, marked not-for-client — were
+> publicly reachable at `/docs/…`. Renamed to `_docs/`, which Jekyll does not publish. Standing rules:
+> internal material lives only in underscore-prefixed folders; never add `.nojekyll`; after every
+> deploy, check that `/_docs/…`, `/_build/…` and `/_sections/…` return 404.
+
 ---
 
 ## 🔴 HARD BLOCKERS — the page is UNSHIPPABLE until both clear
@@ -58,7 +65,7 @@ and no investment is offered or solicited. Every one of those is a regulatory re
 
 ## Deferred decision — `noindex`
 
-`edge/index.html` currently ships with `<meta name="robots" content="noindex,nofollow">`.
+`index.html` currently ships with `<meta name="robots" content="noindex,nofollow">`.
 
 **Recommendation: keep noindex until BOTH blockers clear.** A publicly indexed page describing a live
 futures track record from an entity whose CTA registration is still in progress is exactly the surface
@@ -75,7 +82,7 @@ reversible in the HTML and effectively irreversible in caches, archives and scre
 
 ## Content and compliance gates (all must be green)
 
-- [ ] `cd edge/_build && node lint.mjs` exits 0 — zero blocking issues.
+- [ ] `node _build/lint.mjs` exits 0 — zero blocking issues.
 - [ ] CEG compliance critic: zero flags at any severity.
 - [ ] Every figure traced to the deck, with its conditionality attached.
 - [ ] Forbidden strings absent: `guarantee*`, `protect*`, "never lose", "principal protected",

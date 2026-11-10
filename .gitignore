@@ -1,6 +1,10 @@
 node_modules/
-edge/_build/node_modules
+_build/node_modules
 
 # In-flight fixer agents were briefed with the pre-move edge/ paths.
 # These symlinks bridge them to the real files at the repo root; never deployed.
 edge/
+
+# Internal working documents live in _docs/. GitHub Pages (Jekyll) does not publish
+# underscore-prefixed directories — the folder was once named docs/ and was served publicly.
+# Never rename it back, and never add .nojekyll (that would publish _build, _sections, _archive).
