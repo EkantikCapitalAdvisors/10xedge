@@ -1,0 +1,721 @@
+/* ===== x0-shared.css ================================================= */
+/* ---------- X0 · components shared by the experiment sections --------------
+   Tables, stat tiles and plots. Tokens come from styles.css; nothing here
+   declares a colour of its own.
+   ------------------------------------------------------------------------ */
+
+/* --- Table: a real <table> from 720px, stacked records below ------------- */
+.xtbl-wrap { max-width: 62rem; }
+.xtbl {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: var(--t-sm);
+  line-height: 1.5;
+  text-align: left;
+}
+.xtbl__cap {
+  caption-side: top;
+  text-align: left;
+  padding-bottom: var(--s-4);
+}
+.xtbl thead th {
+  font-size: var(--t-eyebrow);
+  font-weight: 500;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+  padding: 0 var(--s-5) var(--s-3) 0;
+  border-bottom: 1px solid var(--line);
+  vertical-align: bottom;
+}
+.xtbl tbody th,
+.xtbl tbody td {
+  padding: var(--s-4) var(--s-5) var(--s-4) 0;
+  border-bottom: 1px solid var(--line);
+  vertical-align: top;
+  color: var(--ink-2);
+  font-weight: 400;
+}
+.xtbl tbody th { color: var(--ink); font-weight: 500; width: 32%; }
+.xtbl tbody td:last-child, .xtbl thead th:last-child { padding-right: 0; }
+.xtbl__sub {
+  display: block;
+  margin-top: 2px;
+  font-size: var(--t-xs);
+  font-weight: 400;
+  color: var(--ink-3);
+}
+.xtbl__q { color: var(--ink-3); white-space: nowrap; }
+
+@media (max-width: 719px) {
+  .xtbl thead { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
+  .xtbl, .xtbl caption:not(.sr-only), .xtbl tbody, .xtbl tr, .xtbl th, .xtbl td { display: block; width: auto; }
+  .xtbl tbody tr { padding-block: var(--s-4); border-bottom: 1px solid var(--line); }
+  .xtbl tbody tr:first-child { border-top: 1px solid var(--line); }
+  .xtbl tbody th, .xtbl tbody td { padding: 0; border: 0; width: auto; }
+  .xtbl tbody td { margin-top: var(--s-3); }
+  .xtbl tbody td::before {
+    content: attr(data-k);
+    display: block;
+    font-size: var(--t-eyebrow);
+    font-weight: 500;
+    letter-spacing: .14em;
+    text-transform: uppercase;
+    color: var(--ink-3);
+    margin-bottom: 2px;
+  }
+}
+
+/* --- Stat tiles ----------------------------------------------------------- */
+.xt, .xh {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: var(--s-6) var(--s-6);
+  margin: 0;
+}
+.xt__i, .xh__i {
+  border-top: 1px solid var(--line);
+  padding-top: var(--s-4);
+  min-width: 0;
+}
+.xt__k, .xh__k {
+  font-size: var(--t-eyebrow);
+  font-weight: 500;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  line-height: 1.3;
+  color: var(--ink-3);
+}
+.xt__v, .xh__v {
+  margin: var(--s-3) 0 0;
+  font-size: var(--t-fig-lg);
+  line-height: 1.05;
+  letter-spacing: -.035em;
+  color: var(--ink);
+}
+/* A rule value or an opening balance is not a measurement, so it does not wear
+   the mono face: it stays in the body sans, with tabular figures. */
+.xt__v:not(.mono) { letter-spacing: -.03em; }
+.xt__s, .xh__s {
+  margin: var(--s-2) 0 0;
+  font-size: var(--t-xs);
+  line-height: 1.45;
+  color: var(--ink-3);
+}
+@media (max-width: 760px) {
+  .xt, .xh { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--s-6) var(--s-5); }
+}
+
+/* --- Plot primitives ------------------------------------------------------
+   The SVG carries lines only and is stretched to its box; strokes do not scale.
+   Labels and markers are HTML, placed with --x / --y percentages. */
+.xc__svg, .xp__svg, .xs-plot__svg {
+  position: absolute; inset: 0;
+  width: 100%; height: 100%;
+  overflow: visible;
+}
+.xc__svg *, .xp__svg *, .xs-plot__svg * {
+  fill: none;
+  vector-effect: non-scaling-stroke;
+}
+
+/* Small-print notes beside a reference */
+.xd__note { max-width: 62ch; }
+.xd__note + .xd__note { margin-top: var(--s-3); }
+
+/* ===== x1-hero.css =================================================== */
+/* ---------- X1 · HERO ---------------------------------------------------
+   Full-bleed navy, one left type axis. Two horizontal structures only: the
+   status strip above the headline and the state rail seated at the foot.
+   ------------------------------------------------------------------------ */
+.x1 {
+  position: relative;
+  overflow: hidden;
+  isolation: isolate;
+  display: flex;
+  flex-direction: column;
+  padding-top: calc(var(--s-10) + var(--s-5));
+  padding-bottom: 0;
+  min-height: 34rem;
+  min-height: min(100svh, 62rem);
+}
+.x1__atmos { position: absolute; inset: 0; z-index: 0; pointer-events: none; }
+.x1__atmos::before {
+  content: '';
+  position: absolute; inset: 0;
+  background:
+    radial-gradient(72% 58% at 16% 2%,  rgba(250, 248, 245, .045), rgba(250, 248, 245, 0) 60%),
+    radial-gradient(88% 74% at 92% 100%, rgba(19, 31, 56, .92),    rgba(19, 31, 56, 0)   64%);
+}
+.x1__body {
+  position: relative; z-index: 1;
+  flex: 1 1 auto;
+  display: flex; flex-direction: column; justify-content: center;
+  padding-block: var(--s-6) var(--s-7);
+}
+
+.x1__top { display: flex; align-items: center; gap: var(--s-5); }
+.x1__badge { flex: none; white-space: normal; }
+.x1__top .dot::after { animation: none; }
+.x1__rule { display: none; flex: 1 1 0; min-width: 0; height: 1px; background: var(--line); }
+.x1__top-k { display: none; flex: none; }
+
+.x1__lead { margin-top: var(--s-5); }
+.x1__title {
+  /* A full sentence, not a two-word title: it runs a step below --t-display so
+     it holds to three lines at desktop and never orphans the year. */
+  font-size: clamp(2.6rem, .9rem + 6.6vw, 5.6rem);
+  line-height: 1;
+}
+.x1__nb { white-space: nowrap; }
+.x1__lede { margin-top: var(--s-6); max-width: 33em; }
+
+.x1__actions {
+  margin-top: var(--s-7);
+  display: flex; flex-wrap: wrap; align-items: center;
+  gap: var(--s-4) var(--s-6);
+}
+.x1__quiet {
+  display: inline-flex; align-items: center; gap: .55em;
+  padding-block: var(--s-3);
+  font-size: var(--t-sm); font-weight: 500; color: var(--ink-2);
+  transition: color .2s var(--ease-io);
+}
+.x1__quiet-t { border-bottom: 1px solid var(--line); padding-bottom: .15em; }
+.x1__quiet-a { transition: transform .2s var(--ease); }
+.x1__quiet:hover { color: var(--ink); }
+.x1__quiet:hover .x1__quiet-a { transform: translateX(3px); }
+
+/* --- State rail ---------------------------------------------------------- */
+.x1__rail {
+  position: relative; z-index: 1;
+  border-top: 1px solid var(--line);
+  background: rgba(19, 31, 56, .38);
+}
+.x1__rail-in { padding-block: var(--s-5) var(--s-6); }
+
+.xr {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--s-4) var(--s-5);
+  margin: 0;
+}
+.xr__i { min-width: 0; }
+.xr dt {
+  font-size: var(--t-eyebrow);
+  font-weight: 500;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+}
+.xr dd {
+  margin: 2px 0 0;
+  font-size: var(--t-body);
+  color: var(--ink);
+  white-space: nowrap;
+}
+
+.x1__foot {
+  margin-top: var(--s-5);
+  padding-top: var(--s-4);
+  border-top: 1px solid var(--line);
+  display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between;
+  gap: var(--s-3) var(--s-6);
+}
+.x1__stamp { max-width: 46ch; }
+.x1__status { margin-top: var(--s-4); max-width: 74ch; text-wrap: pretty; }
+.x1__status strong { color: var(--ink); }
+
+@media (min-width: 34em) {
+  .xr { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+}
+@media (min-width: 48em) {
+  .x1__body { padding-block: var(--s-7) var(--s-8); }
+  .x1__rule, .x1__top-k { display: block; }
+  .x1__lead { max-width: 58rem; }
+  .x1__lede { margin-top: var(--s-7); }
+  .x1__actions { margin-top: var(--s-8); }
+}
+@media (min-width: 64em) {
+  .xr { grid-template-columns: repeat(6, auto); justify-content: space-between; }
+}
+
+/* ===== x10-footer.css ================================================ */
+/* ---------- X10 · DISCLOSURES ------------------------------------------- */
+.x10__row + .x10__row { margin-top: var(--s-7); padding-top: var(--s-7); border-top: 1px solid var(--line); }
+.x10__colophon { display: grid; grid-template-columns: minmax(0, 1fr); gap: var(--s-6); }
+.x10__mark { display: inline-grid; gap: var(--s-2); align-content: start; padding-block: var(--s-2); }
+.x10__mark-n { font-family: 'Cormorant Garamond', Georgia, serif; font-size: 1.375rem; line-height: 1.1; color: var(--ink); }
+.x10__nav { display: flex; flex-wrap: wrap; gap: 0 var(--s-6); }
+.x10__nav a, .x10__contact a {
+  display: inline-block;
+  padding-block: .8rem;
+  font-size: var(--t-sm);
+  color: var(--ink-2);
+  transition: color .2s var(--ease-io);
+}
+.x10__nav a:hover, .x10__contact a:hover { color: var(--ink); }
+.x10__contact {
+  margin-top: var(--s-3);
+  display: flex; flex-wrap: wrap; align-items: baseline; gap: 0 var(--s-6);
+  font-style: normal; font-size: var(--t-sm); color: var(--ink-3);
+}
+.x10__verify { display: flex; flex-wrap: wrap; align-items: baseline; gap: var(--s-3) var(--s-6); }
+.x10__cols { margin-top: var(--s-5); display: grid; grid-template-columns: minmax(0, 1fr); gap: var(--s-4) var(--s-8); }
+.x10__p { font-size: var(--t-xs); line-height: 1.65; color: var(--ink-3); text-wrap: pretty; }
+.x10__p strong { color: var(--ink-2); }
+.x10__p a {
+  color: var(--ink-2);
+  text-decoration: underline; text-decoration-thickness: 1px;
+  text-decoration-color: var(--ink-4); text-underline-offset: .22em;
+  padding-block: .875rem;
+}
+.x10__p cite { font-style: italic; }
+.x10__copy { margin-top: var(--s-7); font-size: var(--t-xs); color: var(--ink-3); }
+
+@media (min-width: 64em) {
+  .x10__colophon { grid-template-columns: minmax(0, 1fr) minmax(0, 2.2fr); gap: var(--s-9); }
+  .x10__cols { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+
+/* ===== x2-scoreboard.css ============================================= */
+/* ---------- X2 · THE SCOREBOARD -----------------------------------------
+   One wide log-scale plot, four tiles, one quiet link. The pace line is a
+   reference (dashed, recessive); the realised balance is the only solid mark.
+   ------------------------------------------------------------------------ */
+.xc { margin: 0; }
+.xc__frame { padding-left: 4.25rem; }
+.xc__plot {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 16 / 7.5;
+}
+.xc__grid { stroke: var(--line); stroke-width: 1; }
+.xc__grid--target { stroke: var(--ink-3); }
+.xc__vgrid { stroke: var(--line-2); stroke-width: 1; }
+.xc__pace { stroke: var(--ink-3); stroke-width: 1.5; stroke-dasharray: 6 5; }
+.xc__eq { stroke: var(--ink); stroke-width: 2; stroke-linejoin: round; }
+
+.xc__y {
+  position: absolute; right: 100%; top: var(--y);
+  transform: translateY(-50%);
+  padding-right: var(--s-3);
+  font-size: var(--t-xs); line-height: 1;
+  color: var(--ink-2);
+  white-space: nowrap;
+}
+.xc__band {
+  position: absolute; left: var(--s-2); top: var(--y);
+  transform: translateY(-100%);
+  padding-bottom: 3px;
+  font-size: var(--t-xs); line-height: 1.2;
+  color: var(--ink-3);
+  white-space: nowrap;
+}
+.xc__dot {
+  position: absolute; left: var(--x); top: var(--y);
+  width: 9px; height: 9px; margin: -4.5px 0 0 -4.5px;
+  border-radius: 50%;
+  background: var(--ink);
+  box-shadow: 0 0 0 2px var(--bg);
+}
+.xc__dot--target { background: var(--bg); border: 1.5px solid var(--ink-3); box-shadow: none; }
+/* The current balance is the one earned figure in the plot — it takes the gold. */
+.xc__dot--now { width: 11px; height: 11px; margin: -5.5px 0 0 -5.5px; background: var(--gold-deep); }
+.xc__tag {
+  position: absolute; left: var(--x); top: var(--y);
+  font-size: var(--t-xs); line-height: 1.2;
+  color: var(--ink-2);
+  white-space: nowrap;
+}
+.xc__tag--pace { transform: translate(-100%, -100%); padding: 0 var(--s-3) var(--s-2) 0; color: var(--ink-3); }
+.xc__tag--now { transform: translate(var(--s-3), -150%); color: var(--ink); font-weight: 500; }
+.xc__tag--now.xc__tag--left { transform: translate(calc(-100% - var(--s-3)), -150%); }
+
+.xc__x { position: relative; height: 2.25rem; }
+.xc__xl {
+  position: absolute; left: var(--x); top: var(--s-3);
+  transform: translateX(-50%);
+  font-size: var(--t-xs); line-height: 1;
+  color: var(--ink-3);
+  white-space: nowrap;
+}
+.xc__xl:first-child { transform: none; }
+.xc__xl:last-child { transform: translateX(-100%); }
+
+.xc__cap {
+  margin-top: var(--s-4);
+  padding-top: var(--s-4);
+  border-top: 1px solid var(--line);
+  display: flex; flex-wrap: wrap; gap: var(--s-3) var(--s-7);
+  font-size: var(--t-xs); line-height: 1.55;
+  color: var(--ink-3);
+}
+.xc__key { display: inline-flex; align-items: baseline; gap: var(--s-3); max-width: min(46ch, 100%); min-width: 0; }
+.xc__sw { flex: none; width: 26px; height: 0; align-self: center; border-top: 2px solid var(--ink); }
+.xc__sw--pace { border-top: 1.5px dashed var(--ink-3); }
+.xc__scale { flex-basis: 100%; }
+.xc__read {
+  margin-top: var(--s-5);
+  font-size: var(--t-lede); line-height: 1.5;
+  color: var(--ink-2);
+  max-width: 44em;
+  text-wrap: pretty;
+}
+.xc__read strong { color: var(--ink); }
+
+.x2__tiles { margin-top: clamp(var(--s-7), 4vw, var(--s-9)); }
+.x2__verify {
+  margin-top: var(--s-7);
+  display: flex; flex-wrap: wrap; align-items: baseline;
+  gap: var(--s-3) var(--s-6);
+}
+.x2__snap { max-width: 52ch; }
+
+@media (max-width: 640px) {
+  .xc__frame { padding-left: 3.75rem; }
+  .xc__plot { aspect-ratio: 1 / 1.08; }
+  .xc__cap { gap: var(--s-3); }
+}
+
+/* ===== x3-takes.css ================================================== */
+/* ---------- X3 · WHAT TEN TIMES TAKES ----------------------------------- */
+.x3__hyp {
+  margin-top: var(--s-6);
+  padding: var(--s-4) 0 var(--s-4) var(--s-5);
+  border-left: 1px solid var(--line);
+  max-width: 68ch;
+}
+.x3__hyp strong { color: var(--ink); }
+.x3__punch { margin-top: clamp(var(--s-8), 5vw, var(--s-10)); max-width: 26em; }
+
+/* ===== x4-why.css ==================================================== */
+/* ---------- X4 · WHY OPTIONS -------------------------------------------- */
+.x4__grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--s-7);
+}
+.xp { margin: 0; }
+.xp__plot {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 16 / 9.5;
+  border-left: 1px solid var(--line);
+  border-bottom: 1px solid var(--line);
+}
+.xp__zero { stroke: var(--line); stroke-width: 1; }
+.xp__expiry { stroke: var(--ink-3); stroke-width: 1.5; stroke-dasharray: 6 5; }
+.xp__value { stroke: var(--ink); stroke-width: 2; }
+.xp__t {
+  position: absolute;
+  font-size: var(--t-xs); line-height: 1.3;
+  color: var(--ink-2);
+}
+.xp__t--floor { left: var(--s-3); top: 86%; max-width: 46%; }
+.xp__t--zero { left: var(--s-3); top: 64%; transform: translateY(-100%); padding-bottom: 3px; color: var(--ink-3); }
+.xp__t--up { right: 40%; top: 12%; max-width: 13em; text-align: right; color: var(--ink); }
+.xp__axis { margin-top: var(--s-3); font-size: var(--t-xs); color: var(--ink-3); text-align: right; }
+.xp__cap { margin-top: var(--s-3); max-width: 56ch; }
+
+.x4__side { display: grid; gap: var(--s-6); align-content: start; }
+.x4__call { border-top: 1px solid var(--line); padding-top: var(--s-4); }
+.x4__p { margin-top: var(--s-3); max-width: 46ch; }
+.x4__spec { margin-top: clamp(var(--s-8), 5vw, var(--s-10)); }
+
+@media (max-width: 640px) {
+  .xp__plot { aspect-ratio: 4 / 3.2; }
+  .xp__t--up { right: 44%; top: 6%; }
+}
+@media (min-width: 60em) {
+  .x4__grid { grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr); gap: var(--s-9); align-items: start; }
+}
+
+/* ===== x5-rules.css ================================================== */
+/* ---------- X5 · THE PROTOCOL ------------------------------------------- */
+.x5__k { margin-bottom: var(--s-5); }
+.xl {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 2px;
+  max-width: 58rem;
+}
+.xl__s {
+  display: grid;
+  grid-template-rows: 9rem auto auto auto;
+  min-width: 0;
+}
+.xl__bar {
+  align-self: end;
+  height: var(--h);
+  background: var(--bg-raise);
+  border-top: 2px solid var(--ink);
+}
+.xl__size {
+  margin-top: var(--s-3);
+  font-size: var(--t-fig-md);
+  line-height: 1.1;
+  letter-spacing: -.02em;
+  color: var(--ink);
+}
+.xl__earn { margin-top: var(--s-2); font-size: var(--t-sm); line-height: 1.35; color: var(--ink); }
+.xl__at { margin-top: 2px; padding-right: var(--s-2); font-size: var(--t-xs); line-height: 1.35; color: var(--ink-3); }
+.x5__sum { margin-top: var(--s-6); }
+
+.x5__defs {
+  margin-top: var(--s-8);
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--s-5) var(--s-7);
+  max-width: 62rem;
+}
+.x5__defs li {
+  border-top: 1px solid var(--line);
+  padding-top: var(--s-4);
+  font-size: var(--t-sm); line-height: 1.6;
+  color: var(--ink-2);
+}
+.x5__defs strong { color: var(--ink); }
+.x5__risk { margin-top: clamp(var(--s-8), 5vw, var(--s-10)); }
+.x5__draft {
+  margin-top: var(--s-7);
+  padding: var(--s-4) 0 var(--s-4) var(--s-5);
+  border-left: 1px solid var(--line);
+  max-width: 68ch;
+}
+.x5__draft strong { color: var(--ink); }
+
+@media (max-width: 560px) {
+  .xl__earn { font-size: var(--t-xs); padding-right: var(--s-2); }
+}
+@media (min-width: 48em) {
+  .x5__defs { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .xl__s { grid-template-rows: 11rem auto auto auto; }
+}
+
+/* ===== x6-kill.css =================================================== */
+/* ---------- X6 · HOW IT STOPS ------------------------------------------- */
+.x6__gates {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--s-7);
+}
+.x6__gate { border-top: 1px solid var(--line); padding-top: var(--s-5); }
+.x6__q { margin-top: var(--s-3); }
+.x6__b { margin-top: var(--s-4); max-width: 50ch; }
+.x6__b strong { color: var(--ink); }
+.x6__check { margin-top: var(--s-4); display: grid; gap: var(--s-3); }
+.x6__check li {
+  position: relative;
+  padding-left: var(--s-5);
+  color: var(--ink-2);
+}
+.x6__check li::before {
+  content: '';
+  position: absolute; left: 0; top: .72em;
+  width: 10px; height: 1px;
+  background: var(--ink-3);
+}
+
+.x6__kc {
+  margin-top: clamp(var(--s-8), 5vw, var(--s-10));
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  border-top: 1px solid var(--line);
+}
+.x6__kc li {
+  display: grid;
+  grid-template-columns: 2.5rem minmax(0, 1fr);
+  column-gap: var(--s-3);
+  padding-block: var(--s-4);
+  border-bottom: 1px solid var(--line);
+}
+.x6__n { font-size: var(--t-sm); color: var(--ink-3); padding-top: 1px; }
+.x6__t { color: var(--ink); line-height: 1.4; }
+.x6__r { grid-column: 2; margin-top: 2px; font-size: var(--t-sm); line-height: 1.45; color: var(--ink-3); }
+
+.x6__seam { margin-top: clamp(var(--s-8), 5vw, var(--s-10)); }
+.x6__witness {
+  margin-top: var(--s-7);
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--s-4);
+}
+.x6__witness .x6__b { margin-top: 0; max-width: 58ch; }
+.x6__punch { margin-top: clamp(var(--s-8), 5vw, var(--s-10)); max-width: 26em; }
+
+@media (min-width: 48em) {
+  .x6__gates { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--s-9); }
+  .x6__kc { grid-template-columns: repeat(2, minmax(0, 1fr)); column-gap: var(--s-9); }
+  .x6__witness { grid-template-columns: minmax(0, 1fr) minmax(0, 1.4fr); gap: var(--s-9); }
+}
+
+/* ===== x7-record.css ================================================= */
+/* ---------- X7 · THE RECORD SO FAR --------------------------------------
+   History, kept visibly apart from the experiment's own scoreboard. The
+   reference card is the section's destination: a bordered block, never gold.
+   ------------------------------------------------------------------------ */
+.x7__grid {
+  margin-top: clamp(var(--s-8), 5vw, var(--s-10));
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--s-7);
+}
+.xs-plot { margin: 0; }
+.xs-plot__box { position: relative; height: 9rem; }
+.xs-plot__zero { stroke: var(--line); stroke-width: 1; }
+.xs-plot__line { stroke: var(--ink); stroke-width: 2; stroke-linejoin: round; }
+.xs-plot__dot {
+  position: absolute; left: var(--x); top: var(--y);
+  width: 11px; height: 11px; margin: -5.5px 0 0 -5.5px;
+  border-radius: 50%;
+  background: var(--gold-deep);
+  box-shadow: 0 0 0 2px var(--bg);
+}
+.xs-plot__ends {
+  margin-top: var(--s-3);
+  display: flex; justify-content: space-between; gap: var(--s-4);
+  font-size: var(--t-xs); color: var(--ink-2);
+}
+.xs-plot__cap { margin-top: var(--s-3); max-width: 56ch; }
+.x7__read { display: grid; gap: var(--s-4); align-content: start; max-width: 48ch; }
+.x7__punch { margin-top: clamp(var(--s-8), 5vw, var(--s-10)); max-width: 24em; }
+
+.x7__ref {
+  margin-top: clamp(var(--s-8), 5vw, var(--s-10));
+  padding: clamp(var(--s-5), 3vw, var(--s-8));
+  background: var(--bg-raise);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-1);
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--s-6);
+}
+.x7__ref-title { margin-top: var(--s-3); max-width: 20em; }
+.x7__ref-p { margin-top: var(--s-4); max-width: 46ch; }
+.x7__ref-link { margin-top: var(--s-6); }
+.x7__ref-notes { border-top: 1px solid var(--line); padding-top: var(--s-5); }
+
+@media (min-width: 60em) {
+  .x7__grid { grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr); gap: var(--s-9); align-items: start; }
+  .x7__ref { grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr); gap: var(--s-9); }
+  .x7__ref-notes { border-top: 0; padding-top: 0; border-left: 1px solid var(--line); padding-left: var(--s-7); }
+}
+
+/* ===== x8-follow.css ================================================= */
+/* ---------- X8 · FOLLOW IT ---------------------------------------------- */
+.x8__grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--s-8);
+}
+.x8__card {
+  padding: clamp(var(--s-5), 3vw, var(--s-8));
+  background: var(--bg-raise);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-lg);
+}
+.xf__title { margin-bottom: var(--s-5); }
+.xf__row { margin-top: var(--s-4); }
+.xf__l {
+  display: block;
+  font-size: var(--t-sm); font-weight: 500;
+  color: var(--ink);
+  margin-bottom: var(--s-2);
+}
+.xf__in {
+  display: block; width: 100%;
+  min-height: 3rem;
+  padding: .75rem 1rem;
+  font: inherit;
+  font-size: 1rem;              /* 16px: iOS does not zoom the page on focus */
+  color: var(--ink);
+  background: rgba(19, 31, 56, .38);
+  border: 1px solid var(--ink-4);
+  border-radius: var(--radius);
+  transition: border-color .2s var(--ease-io);
+}
+.xf__in:hover { border-color: var(--ink-3); }
+.xf__in:focus-visible { border-color: var(--ink); }
+
+/* Honeypot: off-screen for people, present for bots. */
+.xf__hp { position: absolute; left: -9999px; width: 1px; height: 1px; overflow: hidden; }
+
+.xf__consent {
+  margin-top: var(--s-5);
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: var(--s-3);
+  align-items: start;
+}
+.xf__cb {
+  width: 1.375rem; height: 1.375rem;
+  margin: .75rem 0 0;
+  accent-color: var(--gold);
+}
+.xf__cl {
+  display: block;
+  padding-block: .625rem;      /* the label is the tap target: >= 44px */
+  font-size: var(--t-sm); line-height: 1.55;
+  color: var(--ink-2);
+  cursor: pointer;
+}
+.xf__go { margin-top: var(--s-5); width: 100%; min-height: 3.25rem; font-family: inherit; }
+.xf__go:disabled { opacity: .6; cursor: progress; transform: none; }
+.xf__status { margin-top: var(--s-3); min-height: 1.5em; }
+.xf__status.is-bad { color: var(--ink); }
+.xf__priv { margin-top: var(--s-4); }
+.xf__a {
+  color: var(--ink);
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-decoration-color: var(--ink-4);
+  text-underline-offset: .22em;
+  padding-block: .875rem;
+}
+.xf__done-p { max-width: 44ch; }
+.xf__open { margin-top: var(--s-6); width: 100%; min-height: 3.25rem; }
+.xf__done:focus { outline: none; }
+
+/* Without JavaScript the form cannot return the invite, so it is replaced by the
+   email fallback in <noscript>. */
+.no-js .xf { display: none; }
+
+.x8__side { display: grid; gap: var(--s-6); align-content: start; }
+.x8__what { border-top: 1px solid var(--line); padding-top: var(--s-4); }
+.x8__p { margin-top: var(--s-3); max-width: 46ch; }
+.x8__p strong { color: var(--ink); }
+.x8__links { margin-top: var(--s-5); display: flex; flex-wrap: wrap; gap: var(--s-4) var(--s-6); }
+
+@media (min-width: 60em) {
+  .x8__grid { grid-template-columns: minmax(0, 1.05fr) minmax(0, 1fr); gap: var(--s-10); align-items: start; }
+}
+
+/* ===== x9-operator.css =============================================== */
+/* ---------- X9 · THE OPERATOR ------------------------------------------- */
+.x9 { border-top: 1px solid var(--line); }
+.x9__q {
+  margin-top: var(--s-5);
+  font-family: 'Cormorant Garamond', Georgia, serif;
+  font-size: var(--t-pull);
+  line-height: 1.32;
+  letter-spacing: -.012em;
+  color: var(--ink);
+  text-wrap: pretty;
+}
+.x9__sig { margin-top: var(--s-6); display: flex; flex-wrap: wrap; align-items: center; gap: var(--s-3) var(--s-4); }
+.x9__name { font-weight: 500; color: var(--ink); }
+.x9__rule { width: 32px; height: 1px; background: var(--line); }
+.x9__role { font-size: var(--t-sm); color: var(--ink-3); }
+.x9__p { margin-top: var(--s-7); max-width: 52ch; }
+.x9__a {
+  color: var(--ink);
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-decoration-color: var(--ink-4);
+  text-underline-offset: .22em;
+  padding-block: .875rem;
+  white-space: nowrap;
+}
+.x9__a:hover { text-decoration-color: var(--ink-3); }

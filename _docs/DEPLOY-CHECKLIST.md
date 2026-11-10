@@ -214,3 +214,47 @@ credibility rests on that one sentence.
 - [ ] Related: the deck's disclosure says the trades are *"not independently broker-reconciled"*, yet
       107 rows come directly from Tradovate. That line may now understate the actual rigour and
       should be re-checked against reality.
+
+---
+
+# Deploy checklist — THE EXPERIMENT page (`/`), added 2026-11-10
+
+The site now builds two pages. `/program/` is the Structural Edge page above, moved
+intact. `/` is the experiment: **$3,000 to $30,000 in one year**, in long options.
+Everything above still applies to `/program/`. This section gates `/`.
+
+`node _build/lint.mjs` exits non-zero while any item below is open.
+`node _build/lint.mjs --preview` reports them without enforcing, for private previews.
+
+## Gates on `/`
+
+| # | Gate | State |
+|---|---|---|
+| 1 | **Sign-up endpoint** — deploy `_build/signup-apps-script.gs`, set `experiment.signup.endpoint` (`_docs/SIGNUP-SETUP.md`). Without it nobody's name is collected. | ❌ open |
+| 2 | **Start date**, and whether fills before it count | ❌ open |
+| 3 | **The account** — funded $3,000 account (and broker) or model portfolio | ❌ open |
+| 4 | **Protocol at the $3,000 scale** — premium unit, weekly cap, buffer; resolve the cap-versus-unit tension | ❌ open |
+| 5 | **Witness countersignature** of the options protocol | ❌ open |
+| 6 | **Journal clean-up** — 4 duplicated and 5 undated rows, 2 without a logged risk | ❌ open |
+| 7 | **Counsel review** — option alerts are securities, not futures; the "Regulatory status" paragraph needs a lawyer's wording | ❌ open |
+| 8 | Dashboard base — switch the options dashboard to 3,000 / 30,000 (warning only; the page explains the difference meanwhile) | ⚠️ open |
+| 9 | Costs — is `dollar_pl` net? | ✅ resolved by arithmetic: gross on every row with an exit price; the page says "before commissions and fees" |
+
+## Before `/` replaces what is live
+
+- [ ] Operator has reviewed the private preview and said go
+- [ ] `node _build/build.mjs && node _build/lint.mjs` exits 0 (no `--preview`)
+- [ ] `node _build/audit.mjs` passes at 390 / 768 / 1440 for both pages
+- [ ] Sign-up tested end to end against a **test** Sheet (see `_docs/SIGNUP-SETUP.md`)
+- [ ] `/program/` opens, and an old deep link such as `/#capacity` lands on `/program/#capacity`
+- [ ] `/_build/`, `/_docs/`, `/_sections/` still return 404 (never add `.nojekyll`)
+
+## Refreshing the experiment's figures
+
+```
+node _build/refresh-experiment.mjs            # dry run
+node _build/refresh-experiment.mjs --apply
+node _build/build.mjs && node _build/lint.mjs
+```
+
+Human-initiated, like the futures refresh. The page states a dated snapshot.

@@ -1,0 +1,9 @@
+/* ---------- X3 · WHAT TEN TIMES TAKES ----------------------------------- */
+.x3__hyp {
+  margin-top: var(--s-6);
+  padding: var(--s-4) 0 var(--s-4) var(--s-5);
+  border-left: 1px solid var(--line);
+  max-width: 68ch;
+}
+.x3__hyp strong { color: var(--ink); }
+.x3__punch { margin-top: clamp(var(--s-8), 5vw, var(--s-10)); max-width: 26em; }

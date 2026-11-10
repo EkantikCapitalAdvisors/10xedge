@@ -1,0 +1,51 @@
+/* ---------- X7 · THE RECORD SO FAR --------------------------------------
+   History, kept visibly apart from the experiment's own scoreboard. The
+   reference card is the section's destination: a bordered block, never gold.
+   ------------------------------------------------------------------------ */
+.x7__grid {
+  margin-top: clamp(var(--s-8), 5vw, var(--s-10));
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--s-7);
+}
+.xs-plot { margin: 0; }
+.xs-plot__box { position: relative; height: 9rem; }
+.xs-plot__zero { stroke: var(--line); stroke-width: 1; }
+.xs-plot__line { stroke: var(--ink); stroke-width: 2; stroke-linejoin: round; }
+.xs-plot__dot {
+  position: absolute; left: var(--x); top: var(--y);
+  width: 11px; height: 11px; margin: -5.5px 0 0 -5.5px;
+  border-radius: 50%;
+  background: var(--gold-deep);
+  box-shadow: 0 0 0 2px var(--bg);
+}
+.xs-plot__ends {
+  margin-top: var(--s-3);
+  display: flex; justify-content: space-between; gap: var(--s-4);
+  font-size: var(--t-xs); color: var(--ink-2);
+}
+.xs-plot__cap { margin-top: var(--s-3); max-width: 56ch; }
+.x7__read { display: grid; gap: var(--s-4); align-content: start; max-width: 48ch; }
+.x7__punch { margin-top: clamp(var(--s-8), 5vw, var(--s-10)); max-width: 24em; }
+
+.x7__ref {
+  margin-top: clamp(var(--s-8), 5vw, var(--s-10));
+  padding: clamp(var(--s-5), 3vw, var(--s-8));
+  background: var(--bg-raise);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-1);
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--s-6);
+}
+.x7__ref-title { margin-top: var(--s-3); max-width: 20em; }
+.x7__ref-p { margin-top: var(--s-4); max-width: 46ch; }
+.x7__ref-link { margin-top: var(--s-6); }
+.x7__ref-notes { border-top: 1px solid var(--line); padding-top: var(--s-5); }
+
+@media (min-width: 60em) {
+  .x7__grid { grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr); gap: var(--s-9); align-items: start; }
+  .x7__ref { grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr); gap: var(--s-9); }
+  .x7__ref-notes { border-top: 0; padding-top: 0; border-left: 1px solid var(--line); padding-left: var(--s-7); }
+}

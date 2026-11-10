@@ -1,0 +1,87 @@
+/* ---------- X8 · FOLLOW IT ---------------------------------------------- */
+.x8__grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--s-8);
+}
+.x8__card {
+  padding: clamp(var(--s-5), 3vw, var(--s-8));
+  background: var(--bg-raise);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-lg);
+}
+.xf__title { margin-bottom: var(--s-5); }
+.xf__row { margin-top: var(--s-4); }
+.xf__l {
+  display: block;
+  font-size: var(--t-sm); font-weight: 500;
+  color: var(--ink);
+  margin-bottom: var(--s-2);
+}
+.xf__in {
+  display: block; width: 100%;
+  min-height: 3rem;
+  padding: .75rem 1rem;
+  font: inherit;
+  font-size: 1rem;              /* 16px: iOS does not zoom the page on focus */
+  color: var(--ink);
+  background: rgba(19, 31, 56, .38);
+  border: 1px solid var(--ink-4);
+  border-radius: var(--radius);
+  transition: border-color .2s var(--ease-io);
+}
+.xf__in:hover { border-color: var(--ink-3); }
+.xf__in:focus-visible { border-color: var(--ink); }
+
+/* Honeypot: off-screen for people, present for bots. */
+.xf__hp { position: absolute; left: -9999px; width: 1px; height: 1px; overflow: hidden; }
+
+.xf__consent {
+  margin-top: var(--s-5);
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: var(--s-3);
+  align-items: start;
+}
+.xf__cb {
+  width: 1.375rem; height: 1.375rem;
+  margin: .75rem 0 0;
+  accent-color: var(--gold);
+}
+.xf__cl {
+  display: block;
+  padding-block: .625rem;      /* the label is the tap target: >= 44px */
+  font-size: var(--t-sm); line-height: 1.55;
+  color: var(--ink-2);
+  cursor: pointer;
+}
+.xf__go { margin-top: var(--s-5); width: 100%; min-height: 3.25rem; font-family: inherit; }
+.xf__go:disabled { opacity: .6; cursor: progress; transform: none; }
+.xf__status { margin-top: var(--s-3); min-height: 1.5em; }
+.xf__status.is-bad { color: var(--ink); }
+.xf__priv { margin-top: var(--s-4); }
+.xf__a {
+  color: var(--ink);
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-decoration-color: var(--ink-4);
+  text-underline-offset: .22em;
+  padding-block: .875rem;
+}
+.xf__done-p { max-width: 44ch; }
+.xf__open { margin-top: var(--s-6); width: 100%; min-height: 3.25rem; }
+.xf__done:focus { outline: none; }
+
+/* Without JavaScript the form cannot return the invite, so it is replaced by the
+   email fallback in <noscript>. */
+.no-js .xf { display: none; }
+
+.x8__side { display: grid; gap: var(--s-6); align-content: start; }
+.x8__what { border-top: 1px solid var(--line); padding-top: var(--s-4); }
+.x8__p { margin-top: var(--s-3); max-width: 46ch; }
+.x8__p strong { color: var(--ink); }
+.x8__links { margin-top: var(--s-5); display: flex; flex-wrap: wrap; gap: var(--s-4) var(--s-6); }
+
+@media (min-width: 60em) {
+  .x8__grid { grid-template-columns: minmax(0, 1.05fr) minmax(0, 1fr); gap: var(--s-10); align-items: start; }
+}

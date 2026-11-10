@@ -1,0 +1,40 @@
+/* ---------- X4 · WHY OPTIONS -------------------------------------------- */
+.x4__grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--s-7);
+}
+.xp { margin: 0; }
+.xp__plot {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 16 / 9.5;
+  border-left: 1px solid var(--line);
+  border-bottom: 1px solid var(--line);
+}
+.xp__zero { stroke: var(--line); stroke-width: 1; }
+.xp__expiry { stroke: var(--ink-3); stroke-width: 1.5; stroke-dasharray: 6 5; }
+.xp__value { stroke: var(--ink); stroke-width: 2; }
+.xp__t {
+  position: absolute;
+  font-size: var(--t-xs); line-height: 1.3;
+  color: var(--ink-2);
+}
+.xp__t--floor { left: var(--s-3); top: 86%; max-width: 46%; }
+.xp__t--zero { left: var(--s-3); top: 64%; transform: translateY(-100%); padding-bottom: 3px; color: var(--ink-3); }
+.xp__t--up { right: 40%; top: 12%; max-width: 13em; text-align: right; color: var(--ink); }
+.xp__axis { margin-top: var(--s-3); font-size: var(--t-xs); color: var(--ink-3); text-align: right; }
+.xp__cap { margin-top: var(--s-3); max-width: 56ch; }
+
+.x4__side { display: grid; gap: var(--s-6); align-content: start; }
+.x4__call { border-top: 1px solid var(--line); padding-top: var(--s-4); }
+.x4__p { margin-top: var(--s-3); max-width: 46ch; }
+.x4__spec { margin-top: clamp(var(--s-8), 5vw, var(--s-10)); }
+
+@media (max-width: 640px) {
+  .xp__plot { aspect-ratio: 4 / 3.2; }
+  .xp__t--up { right: 44%; top: 6%; }
+}
+@media (min-width: 60em) {
+  .x4__grid { grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr); gap: var(--s-9); align-items: start; }
+}

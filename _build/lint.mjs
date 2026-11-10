@@ -17,8 +17,12 @@ function makeCtx(page) {
   const htmlRaw = readFileSync(join(root, page.outHtml), 'utf8');
   const sectionCss = existsSync(join(root, page.outCss)) ? readFileSync(join(root, page.outCss), 'utf8') : '';
   const css = sectionCss + readFileSync(join(root, 'styles.css'), 'utf8');
-  const fails = [], warns = [];
+  const fails = [], warns = [], gates = [];
   const F = (rule, detail) => fails.push(`${rule}: ${detail}`);
+  /* A gate is not a defect in the page: it is an operator input that has not arrived.
+     It blocks publication exactly as a failure does, but is reported apart so the two
+     are never confused. `--preview` lets a private preview build through its gates. */
+  const G = (rule, detail) => gates.push(`${rule}: ${detail}`);
   const W = (rule, detail) => warns.push(`${rule}: ${detail}`);
 
   /* Visible text only: strip comments, script, style; svg <title>/<desc> kept. */
@@ -40,7 +44,7 @@ function makeCtx(page) {
   const attrText = [...stripped.matchAll(/(?:alt|aria-label|title|content|placeholder)="([^"]*)"/gi)]
     .map(m => m[1]).join(' | ');
   const allCopy = text + ' | ' + attrText;
-  return { page, htmlRaw, css, sectionCss, stripped, text, allCopy, fails, warns, F, W };
+  return { page, htmlRaw, css, sectionCss, stripped, text, allCopy, fails, warns, gates, F, W, G };
 }
 
 /* ======================= SHARED — every page ======================= */
@@ -105,9 +109,10 @@ function shared(ctx) {
       F('DESIGN-SYSTEM', `non-brand font-family: ${v.trim().slice(0, 70)}`);
   }
 
-  /* Inline styles limited to the reveal delay */
+  /* Inline styles carry custom properties only: the reveal delay (--d) and the
+     percentage coordinates of a build-time plot (--x, --y, --h). Never a declaration. */
   for (const m of stripped.matchAll(/\sstyle="([^"]*)"/gi)) {
-    if (!/^--d:\s*\d+ms;?$/.test(m[1].trim())) W('DESIGN-SYSTEM', `inline style beyond --d: ${m[1].slice(0, 60)}`);
+    if (!/^(?:--[a-z]+:\s*-?[\d.]+(?:ms|%);?\s*)+$/.test(m[1].trim())) W('DESIGN-SYSTEM', `inline style beyond a custom property: ${m[1].slice(0, 60)}`);
   }
 
   /* No external network requests */
@@ -363,18 +368,164 @@ function program(ctx) {
 
 }
 
-const PROFILES = { program };
+/* ============ PROFILE — experiment ($3,000 → $30,000, options) ============ */
+function experiment(ctx) {
+  const { htmlRaw, stripped, text, allCopy, F, W, G } = ctx;
+  const fig = JSON.parse(readFileSync(join(root, '_build', 'figures.json'), 'utf8'));
+  const X = fig.experiment || {};
+  const section = id => {
+    const m = stripped.match(new RegExp(`<(section|footer)[^>]*id="${id}"[\\s\\S]*?</\\1>`, 'i'));
+    return m ? m[0].replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ') : '';
+  };
+
+  /* ---------- 1. Forbidden content ---------------------------------------- */
+  const FORBIDDEN_CONTENT = [
+    [/\bEPIG\b/i, 'EPIG reference'],
+    [/\bCAGR\b/i, 'CAGR'],
+    [/only\s+\d+\s+(spots?|seats?|places?|left)/i, 'manufactured scarcity ("only N left")'],
+    [/\bcountdown\b|\bacts? now\b|\bhurry\b|\bdon.t miss out\b/i, 'manufactured urgency'],
+    [/\bpriority access\b|\breserve (your |a )?(seat|spot|allocation)\b|\bfirst access\b|\bearly access\b/i, 'allocation-priority promise'],
+    [/revolutionary|unprecedented|game[- ]?chang|supercharge|unlock the|secret sauce|explosive/i, 'hype adjective'],
+    /* "10× in a year" is the objective of an experiment, never an expected return. */
+    [/\bwill (reach|hit|make|turn|grow|deliver|return)\b/i, 'a statement that the result WILL happen'],
+    [/\bexpected return\b|\bon track to\b|\brisk[- ]free\b|\bcan(no|')t lose\b|\bsure thing\b|\bproven (edge|system|strategy)\b/i, 'outcome language the experiment cannot support'],
+    /* The other page's engine. None of its figures or venues belong here. */
+    [/62\.4\s?%|\$\s?1\.69\b|\b149\s+(live\s+)?trades|\$5\s?M\b|\$5,000,000|\b166\s+fit/i, 'a figure from the ES-futures record'],
+    [/Interactive Brokers|Tradovate/i, 'a brokerage named — this page describes a model portfolio and names no venue'],
+    [/Cash[- ]Flow Engine|Compounding Engine|Never Lose Money/i, 'a label from the reference page that is not carried over'],
+  ];
+  for (const [re, why] of FORBIDDEN_CONTENT) {
+    const m = allCopy.match(new RegExp(`.{0,60}(?:${re.source}).{0,60}`, 'i'));
+    if (m) F('FORBIDDEN-CONTENT', `${why} → "…${m[0].trim()}…"`);
+  }
+  const wl = [...allCopy.matchAll(/waitlist/gi)];
+  if (wl.length && !/no waitlist/i.test(allCopy)) F('FORBIDDEN-CONTENT', '"waitlist" appears without the negating "no waitlist"');
+  if (wl.length > 1) W('CHECK', `"waitlist" appears ${wl.length}× — only the negating use is permitted`);
+
+  /* ---------- 2. Required statements -------------------------------------- */
+  const REQUIRED = [
+    [/take \$3,000 to \$30,000 in one year/i, 'the challenge, as the H1 states it'],
+    [/3\.32/, 'the doublings arithmetic (3.32)'],
+    [/it is not a forecast/i, '"it is not a forecast" beside the objective'],
+    [/is not indicative of future results/i, 'the past-performance line'],
+    [/trades is not proof/i, 'the sample caveat ("… trades is not proof")'],
+    [/Expression Gate/i, 'the Expression Gate'],
+    [/Fidelity Gate/i, 'the Fidelity Gate'],
+    [/Characteristics and Risks of Standardized Options/i, 'the options disclosure document'],
+    [/whole premium paid can be lost/i, 'the options risk of total loss of premium'],
+    [/before commissions and fees/i, 'the cost basis of the record'],
+    [/not an audited or broker-reconciled statement/i, 'the status of the record'],
+    [/no waitlist/i, 'the negated waitlist'],
+    [/observation and education/i, 'what following is'],
+    [/Hypothetical performance has inherent limitations|Hypothetical and model results have inherent limitations/i, 'the hypothetical-performance limitation'],
+    [/dated snapshot/i, 'the snapshot framing'],
+    [/small sample/i, 'the sample-size statement'],
+  ];
+  for (const [re, why] of REQUIRED) if (!re.test(allCopy)) F('MISSING-REQUIRED', why);
+
+  const soft = (allCopy.match(/no capital is managed/gi) || []).length;
+  if (soft < 2) F('MISSING-REQUIRED', `"No capital is managed" appears ${soft}× — it must appear above the fold AND at the sign-up`);
+  if (!/no capital is managed/i.test(section('top'))) F('MISSING-REQUIRED', 'the status sentence is not in the hero');
+  if (!/no capital is managed/i.test(section('follow'))) F('MISSING-REQUIRED', 'the status sentence is not beside the sign-up form');
+
+  /* Every block that shows a trajectory says, inside itself, what it is. */
+  if (!/not a forecast/i.test(section('scoreboard'))) F('HYPOTHETICAL', 'the scoreboard shows a pace line without "not a forecast"');
+  if (!/hypothetical/i.test(section('takes'))) F('HYPOTHETICAL', 'the scenario table has no "Hypothetical" label');
+  if (!/not a projection/i.test(section('rules'))) F('HYPOTHETICAL', 'the ladder arithmetic is not labelled "not a projection"');
+  if (!/not a projection/i.test(section('why'))) F('HYPOTHETICAL', 'the payoff sketch is not labelled "not a projection"');
+  /* Three of the four scenarios fall short; the table may never show the good one alone. */
+  for (const row of ['Cooperative', 'Mixed', 'Hostile', 'Falsified'])
+    if (!new RegExp(row).test(section('takes'))) F('HYPOTHETICAL', `the scenario table is missing its "${row}" row`);
+
+  const kc = (stripped.match(/<ol class="x6__kc"[\s\S]*?<\/ol>/) || [''])[0];
+  const kcN = (kc.match(/<li>/g) || []).length;
+  if (kcN !== 8) F('STRUCTURE', `the stop-condition list has ${kcN} items — the protocol names eight`);
+
+  /* ---------- 3. One record per page -------------------------------------- */
+  const H = X.history || {};
+  if (!new RegExp(`\\b${H.trades}\\b`).test(section('record'))) F('FIGURE-DRIFT', `the record section does not state ${H.trades} closed alerts (figures.json)`);
+  if (!new RegExp(`${String(H.winRatePct).replace('.', '\\.')}\\s?%`).test(section('record'))) F('FIGURE-DRIFT', `the record section does not state the ${H.winRatePct}% win rate (figures.json)`);
+  if (/\[MISSING VALUE|MISSING CHART/.test(htmlRaw)) F('STRUCTURE', 'a build-time value or chart failed to resolve');
+  if (!/href="program\/"/.test(stripped)) F('STRUCTURE', 'no link to the Structural Edge page at program/');
+
+  /* ---------- 4. The dashboard reference ---------------------------------- */
+  const dash = (X.dashboard || '').replace(/^https?:\/\//, '');
+  const dashLinks = [...stripped.matchAll(new RegExp(`<a\\b[^>]*href="[^"]*${dash.replace(/[.]/g, '\\.')}"[^>]*>`, 'gi'))];
+  if (dashLinks.length < 3) F('DASHBOARD', `the options dashboard is linked ${dashLinks.length}× — it is the page's reference point (hero rail, scoreboard, record card, footer)`);
+  for (const a of dashLinks) {
+    if (/class="[^"]*\bbtn\b/.test(a[0])) F('DASHBOARD', `dashboard linked as a button — it must never compete with the sign-up: ${a[0].slice(0, 90)}`);
+    if (!/rel="[^"]*noopener/.test(a[0])) F('DASHBOARD', `dashboard link missing rel="noopener": ${a[0].slice(0, 80)}`);
+  }
+  if (!/<aside class="x7__ref"/.test(stripped)) F('DASHBOARD', 'the reference card is missing from the record section');
+  if (!/keeps counting/i.test(section('record'))) F('DASHBOARD', 'the reference card lacks the snapshot framing (page = dated snapshot, dashboard = live)');
+  if (/accelerator\.ekantikcapital\.com\/experiment\.html/.test(stripped)) F('DASHBOARD', 'the ES-futures dashboard is linked from the options page');
+
+  /* ---------- 5. One action: sign up -------------------------------------- */
+  /* The Discord invite is returned by the sign-up endpoint after the row is written.
+     If it is anywhere in what the browser downloads, the gate is decorative. */
+  const served = htmlRaw + readFileSync(join(root, 'signup.js'), 'utf8');
+  if (/discord\.gg\/\w+|discord\.com\/invite\/\w+/i.test(served)) F('CTA', 'a Discord invite is written into the page or signup.js — it must come only from the sign-up endpoint');
+  const goldLinks = [...stripped.matchAll(/<a\b[^>]*class="[^"]*btn--gold[^"]*"[^>]*>/gi)];
+  for (const b of goldLinks) {
+    const href = (b[0].match(/href="([^"]*)"/) || [, null])[1];
+    if (href === null && /id="signup-open"/.test(b[0])) continue;      // filled in after a recorded sign-up
+    if (href !== '#follow') F('CTA', `a gold button points at "${href}" — on this page gold means the sign-up, and only that`);
+  }
+  if (!goldLinks.some(b => /href="#follow"/.test(b[0]))) F('CTA', 'no gold "Follow the experiment" button points at #follow');
+
+  const form = (stripped.match(/<form\b[^>]*data-signup[^>]*>[\s\S]*?<\/form>/i) || [''])[0];
+  if (!form) F('SIGNUP', 'the sign-up form is missing');
+  else {
+    for (const [re, why] of [
+      [/name="name"[^>]*required|required[^>]*name="name"/, 'a required name field'],
+      [/type="email"[^>]*required|required[^>]*type="email"/, 'a required email field'],
+      [/name="consent"[^>]*type="checkbox"[^>]*required|type="checkbox"[^>]*required/, 'a required consent checkbox'],
+      [/name="website"/, 'the honeypot field'],
+      [/type="submit"/, 'a submit button'],
+    ]) if (!re.test(form)) F('SIGNUP', `the form lacks ${why}`);
+    if (!/to be removed, email/i.test(form.replace(/<[^>]+>/g, ' '))) F('SIGNUP', 'the form has no privacy line saying how to be removed');
+    if (!/<noscript>/i.test(htmlRaw)) F('SIGNUP', 'no <noscript> fallback for the form');
+    if (!/id="signup-status"[^>]*aria-live/.test(stripped)) F('SIGNUP', 'the form status is not an aria-live region');
+    const action = (form.match(/action="([^"]*)"/) || [, ''])[1];
+    if (!/^https:\/\/script\.google\.com\/macros\/s\/[\w-]+\/exec$/.test(action))
+      G('SIGNUP', `the form is not connected — action is "${action}". Deploy _build/signup-apps-script.gs and put the /exec URL in figures.json → experiment.signup.endpoint. Until then nobody's name is collected.`);
+  }
+
+  /* ---------- 6. Operator inputs ------------------------------------------ */
+  const ch = X.challenge || {}, ac = X.account || {}, pr = X.protocol || {}, d = H.defects || {};
+  if (!ch.verified) G('START', `challenge.startDate is ${ch.startDate ? `"${ch.startDate}" but unverified` : 'not set'} — the page shows its pre-launch state. Set the date, and whether earlier fills count.`);
+  if (!ac.verified) G('ACCOUNT', `account.kind is "${ac.kind}" and unverified — the page says "model portfolio" because the dashboard does. Confirm, or state the funded account and its broker.`);
+  if (!pr.verified) G('PROTOCOL', 'the rules at the $3,000 scale are unconfirmed (premium unit, weekly cap, buffer). Note the tension recorded in figures.json: a 12% weekly cap is $360, less than one full-premium loss at 2×.');
+  if (!pr.countersigned) {
+    G('WITNESS', 'the options protocol is not countersigned by the witness.');
+    if (!/countersignature is still pending/i.test(allCopy) || !/Status: draft/i.test(allCopy))
+      F('UNVERIFIED-CLAIM', 'the protocol is not countersigned, but the page does not say so (needs "Status: draft" and "countersignature is still pending")');
+  } else if (/countersignature is still pending|Status: draft/i.test(allCopy))
+    F('UNVERIFIED-CLAIM', 'figures.json says the protocol is countersigned, but the page still calls it a draft');
+  if ((d.duplicated || []).length)
+    G('JOURNAL', `the options journal repeats ${d.duplicated.join(', ')}, so the dashboard shows ${H.dashboardCounts.trades} fills where this page states ${H.trades}. The page explains the difference; the fix is to remove the duplicate rows at source.`);
+  if ((d.undated || []).length || (d.riskless || []).length)
+    G('JOURNAL', `journal rows without a date (${(d.undated || []).join(', ') || 'none'}) or without a logged risk (${(d.riskless || []).join(', ') || 'none'}). Undated rows can never be placed on the experiment's timeline.`);
+  if (!(X.dashboardBase || {}).aligned)
+    W('DASHBOARD', `the dashboard is denominated $${X.dashboardBase.startUsd} → $${X.dashboardBase.targetUsd}; the page says so beside the reference card. Switching the dashboard to 3,000 / 30,000 removes the sentence.`);
+  if (ac.kind === 'model-portfolio' && !/model portfolio/i.test(section('top')))
+    F('UNVERIFIED-CLAIM', 'the hero does not say the experiment is a model portfolio');
+  G('COUNSEL', 'not reviewed by counsel. Real-time option alerts concern securities, not futures; the regulatory-status paragraph in particular needs a lawyer\'s wording.');
+}
+
+const PROFILES = { program, experiment };
 
 /* ---------- run --------------------------------------------------------- */
 const only = (process.argv.find(a => a.startsWith('--page=')) || '').slice(7);
+const PREVIEW = process.argv.includes('--preview');
 const bar = '─'.repeat(72);
-let failed = 0;
+let failed = 0, gated = 0;
 for (const page of PAGES) {
   if (only && page.name !== only) continue;
   const ctx = makeCtx(page);
   shared(ctx);
   PROFILES[page.profile](ctx);
-  const { fails, warns, text, htmlRaw, css } = ctx;
+  const { fails, warns, gates, text, htmlRaw, css } = ctx;
   console.log(bar);
   console.log(`[${page.name}] ${page.outHtml}`);
   if (fails.length) {
@@ -384,6 +535,11 @@ for (const page of PAGES) {
   } else {
     console.log('PASS — 0 blocking issues');
   }
+  if (gates.length) {
+    console.log(`\nGATED — ${gates.length} input${gates.length > 1 ? 's' : ''} outstanding${PREVIEW ? ' (preview: reported, not enforced)' : ' — not publishable'}`);
+    gates.forEach(g => console.log('  ◇ ' + g));
+    gated++;
+  }
   if (warns.length) {
     console.log(`\n${warns.length} warning${warns.length > 1 ? 's' : ''}`);
     warns.forEach(w => console.log('  ! ' + w));
@@ -391,4 +547,4 @@ for (const page of PAGES) {
   console.log(`page copy: ${text.split(/\s+/).length} words · html ${(htmlRaw.length / 1024).toFixed(1)} kB · css ${(css.length / 1024).toFixed(1)} kB`);
 }
 console.log(bar);
-process.exit(failed ? 1 : 0);
+process.exit(failed || (gated && !PREVIEW) ? 1 : 0);

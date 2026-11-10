@@ -1,0 +1,66 @@
+<section class="band band--dark x5" id="rules" aria-labelledby="rules-title">
+  <div class="wrap">
+
+    <header class="sec-head">
+      <p class="eyebrow" data-reveal>THE PROTOCOL</p>
+      <h2 class="sec-title" id="rules-title" data-reveal style="--d:80ms">Size is earned, never chosen.</h2>
+      <p class="lede" data-reveal style="--d:160ms">The account trades one size until it has won {{protocol.buffer}} uncorrelated trades&rsquo; worth of premium. Then size doubles. Give that cushion back and size steps down again &mdash; on the next entry, without discussion.</p>
+    </header>
+
+    <div class="x5__ladder" data-reveal>
+      <p class="eyebrow x5__k">THE EARNED-DOUBLING LADDER</p>
+      <!--#chart ladder-->
+      <p class="note x5__sum">At a <span class="num--rule">{{protocol.unit}}</span> premium unit the first cushion is <span class="num--rule">{{protocol.firstBuffer}}</span>, and each one after it is twice the last. The four of them add up to <span class="num--rule">{{protocol.ladderSum}}</span> &mdash; the whole distance from <span class="num--rule">$3,000</span> to <span class="num--rule">$30,000</span>. That is arithmetic, not a projection.</p>
+    </div>
+
+    <ul class="x5__defs" role="list" data-reveal>
+      <li><strong>Uncorrelated</strong> is a bright-line test of entry session, directional view and class of underlying &mdash; not a judgment call. Two SPX trades in one session count once.</li>
+      <li><strong>No early step.</strong> The ladder moves when the balance reaches the milestone, or it does not move. Confidence is not an input.</li>
+      <li><strong>After a revert</strong> the next step needs a fresh cushion at the smaller size. The old one does not carry over.</li>
+    </ul>
+
+    <div class="xtbl-wrap x5__risk" data-reveal>
+      <table class="xtbl">
+        <caption class="xtbl__cap eyebrow">THE RISK RULES</caption>
+        <thead>
+          <tr><th scope="col">What is watched</th><th scope="col">Threshold</th><th scope="col">What happens</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <th scope="row">Losses in a day</th>
+            <td data-k="Threshold"><span class="num--rule">1</span> realised loss</td>
+            <td data-k="What happens">Stop for the day. Resume next session.</td>
+          </tr>
+          <tr>
+            <th scope="row">Loss in a week</th>
+            <td data-k="Threshold"><span class="num--rule">{{protocol.weeklyPct}}%</span> of the unit <span class="xtbl__q">(<span class="num--rule">{{protocol.weeklyCap}}</span> at the start)</span></td>
+            <td data-k="What happens">Stand down for the rest of the week.</td>
+          </tr>
+          <tr>
+            <th scope="row">Losing weeks in a row</th>
+            <td data-k="Threshold"><span class="num--rule">2</span></td>
+            <td data-k="What happens">Stand down for the rest of the month.</td>
+          </tr>
+          <tr>
+            <th scope="row">Expectancy over the last <span class="num--rule">100</span> trades</th>
+            <td data-k="Threshold"><span class="num--rule">$0</span> per trade or lower</td>
+            <td data-k="What happens">The Expression Gate fires. Trading stops.</td>
+          </tr>
+          <tr>
+            <th scope="row">Cushion given back</th>
+            <td data-k="Threshold">Balance returns to where the last step fired</td>
+            <td data-k="What happens">Size reverts one step. Posted within <span class="num--rule">24</span> hours.</td>
+          </tr>
+          <tr>
+            <th scope="row">Reverts close together</th>
+            <td data-k="Threshold"><span class="num--rule">2</span> within <span class="num--rule">14</span> days</td>
+            <td data-k="What happens">Pause. Restart only after the witness has reviewed it.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <p class="note x5__draft" data-reveal><strong>Status: draft.</strong> These rules are the operator&rsquo;s published options protocol, restated at a <span class="num--rule">$3,000</span> scale. The independent witness has not yet countersigned them at this scale. Until that is done, read them as the stated intent, not as a signed rulebook.</p>
+
+  </div>
+</section>

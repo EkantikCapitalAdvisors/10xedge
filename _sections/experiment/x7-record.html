@@ -1,0 +1,43 @@
+<section class="band x7" id="record" aria-labelledby="record-title">
+  <div class="wrap">
+
+    <header class="sec-head">
+      <p class="eyebrow" data-reveal>THE RECORD SO FAR</p>
+      <h2 class="sec-title" id="record-title" data-reveal style="--d:80ms">What the edge did before the clock started.</h2>
+      <p class="lede" data-reveal style="--d:160ms">This is history, not the experiment. <span class="mono">{{history.trades}}</span> option alerts were posted in Discord, closed and journalled before this page was built &mdash; <span class="mono">{{history.index}}</span> on the S&amp;P 500 through SPX and SPY, <span class="mono">{{history.singleStock}}</span> on other names. They are the reference point. They are also a small sample.</p>
+    </header>
+
+    <div class="x7__ledger" data-reveal>
+      <!--#chart ledger-->
+    </div>
+
+    <div class="x7__grid">
+      <div class="x7__plot" data-reveal>
+        <!--#chart spark-->
+      </div>
+      <div class="x7__read" data-reveal style="--d:80ms">
+        <p class="body"><!--#chart ci-sentence--></p>
+        <p class="body">The low end of that range is a thin edge. The high end is a very good one. This many trades cannot tell them apart &mdash; which is the reason to run the experiment in the open.</p>
+      </div>
+    </div>
+
+    <p class="caveat x7__punch" data-reveal>{{history.Trades}} trades is not proof. It is a reason to look, and a date to measure from.</p>
+
+    <aside class="x7__ref" aria-labelledby="ref-title" data-reveal>
+      <div class="x7__ref-main">
+        <p class="eyebrow">THE REFERENCE</p>
+        <h3 class="h3 x7__ref-title" id="ref-title">Every fill, the equity curve and the numbers are on the live dashboard.</h3>
+        <p class="body x7__ref-p">Each closed alert is listed there with its entry, exit, result and R, and the full log can be downloaded. Check anything on this page against it.</p>
+        <p class="x7__ref-link">
+          <a class="verify-link" href="{{dashboard.url}}" target="_blank" rel="noopener"><span>Open the options dashboard</span><span class="sr-only">(opens in a new tab)</span><span class="arw" aria-hidden="true">&rarr;</span></a>
+        </p>
+      </div>
+      <div class="x7__ref-notes">
+        <p class="xs xd__note">This page states a dated snapshot, as of {{history.asOf}}. The dashboard is live and keeps counting, so its totals will have moved past these.</p>
+        <!--#chart reconcile-->
+        <p class="xs xd__note">The record is a model portfolio built from the alerts as posted. It is educational, and it is not an audited or broker-reconciled statement.</p>
+      </div>
+    </aside>
+
+  </div>
+</section>

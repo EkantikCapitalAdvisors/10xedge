@@ -39,8 +39,10 @@ for (const page of PAGES) {
         parseFloat(getComputedStyle(t).fontSize) * (t.ownerSVGElement.getBoundingClientRect().width /
           (t.ownerSVGElement.viewBox.baseVal.width || t.ownerSVGElement.getBoundingClientRect().width)) < 12.5);
       const taps = [...document.querySelectorAll('a, button, input:not([type=hidden]), select, textarea')]
-        .filter(e => visible(e) && !e.closest('.sr-only') && e.getBoundingClientRect().height < 44 &&
-          getComputedStyle(e).position !== 'absolute');
+        .filter(e => visible(e) && !e.closest('.sr-only') && !e.closest('[aria-hidden="true"]') &&
+          e.getBoundingClientRect().height < 44 && getComputedStyle(e).position !== 'absolute' &&
+          /* a checkbox whose own <label> is a 44px target is reachable through that label */
+          !(e.type === 'checkbox' && e.labels && [...e.labels].some(l => l.getBoundingClientRect().height >= 44)));
       const bands = [...document.querySelectorAll('main > section, main > header, body > footer')]
         .map(s => (s.className.includes('band--dark') ? 'D' : 'L')).join('');
       let flips = 0; for (let i = 1; i < bands.length; i++) if (bands[i] !== bands[i - 1]) flips++;

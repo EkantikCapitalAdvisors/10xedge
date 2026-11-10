@@ -28,7 +28,7 @@
     "tradesPerYear": 291,
     "edgePerTradeR": 0.27,
     "casinoMultiple": 5,
-    "returnPct": 41.0,
+    "returnPct": 41,
     "maxDrawdownPct": 5.8,
     "windowDays": 187,
     "windowStart": "Feb 4",
@@ -36,7 +36,7 @@
     "worstWeekUsd": 571,
     "worstMonthUsd": 155,
     "tradesAboveCeiling": 10,
-    "maxRiskPctOfEquity": 5.0,
+    "maxRiskPctOfEquity": 5,
     "avgRiskUsd": 261
   },
   "tolerance": {
@@ -44,13 +44,13 @@
     "winRatePctAbs": 0.5,
     "profitFactorAbs": 0.03,
     "tradesPctRel": 0.1,
-    "returnPctAbs": 1.0,
+    "returnPctAbs": 1,
     "maxDrawdownPctAbs": 0.5
   },
   "tradedEquity": {
     "usd": 20000,
     "display": "$20,000",
-    "_comment": "Confirmed by the operator on 2026-08-11: the 149-trade record was traded on a $20,000 portfolio. THIS IS NOT THE MINIMUM ALLOCATION, which is $30,000 \u2014 it is the measured balance the record happened to run on, and it must never be changed to track the minimum. The same realised P&L would be a different percentage on a different balance.",
+    "_comment": "Confirmed by the operator on 2026-08-11: the 149-trade record was traded on a $20,000 portfolio. THIS IS NOT THE MINIMUM ALLOCATION, which is $30,000 — it is the measured balance the record happened to run on, and it must never be changed to track the minimum. The same realised P&L would be a different percentage on a different balance.",
     "_conflict": "PARTIALLY RESOLVED. Balance confirmed. Remaining note: 10 of the 246 trades risked more than 2.5% of $20,000 (largest $1,000 = 5.0%). The deck's ruin figure is simulated AT a 2.5% per-trade ceiling, so that simulation is more disciplined than the record it draws from. The page must not imply every historical trade sat inside 2.5%. Average risk was $232 = 1.2%, consistent with the deck.",
     "verified": true,
     "verifiedBy": "Hiren Desai (operator)",
@@ -99,22 +99,479 @@
     "minimumAllocationUsd": 30000,
     "minimumAllocationDisplay": "$30,000",
     "slotsAtMinimum": 166,
-    "_comment": "Revised by the operator 2026-08-11. Capacity is a single $5,000,000 ceiling; the earlier '$3M at launch stretching toward ~$5M' framing is retired. Minimum allocation raised $20,000 -> $30,000. $5,000,000 / $30,000 = 166.67, so 166 full allocations fit \u2014 the page states 166.",
+    "_comment": "Revised by the operator 2026-08-11. Capacity is a single $5,000,000 ceiling; the earlier '$3M at launch stretching toward ~$5M' framing is retired. Minimum allocation raised $20,000 -> $30,000. $5,000,000 / $30,000 = 166.67, so 166 full allocations fit — the page states 166.",
     "maximumAllocation": null,
-    "_maximumNote": "THE PAGE STATES NO MAXIMUM. The $300,000 per-account cap published earlier on 2026-08-11 was retired at the operator's instruction: 'we are saying minimum is 30k and not talking about maximum.' Note this is NOT a claim that no maximum exists \u2014 the page is silent on the question. The retired claim 'there is no per-account limit' therefore remains forbidden, and lint fails on both it and on any reappearance of $300,000.",
-    "_medallionRatio": "$10B / $5M = 2,000x, so the '\u2248 2,000\u00d7 smaller than Medallion' figure is correct on the new ceiling (it was computed against $5M all along).",
+    "_maximumNote": "THE PAGE STATES NO MAXIMUM. The $300,000 per-account cap published earlier on 2026-08-11 was retired at the operator's instruction: 'we are saying minimum is 30k and not talking about maximum.' Note this is NOT a claim that no maximum exists — the page is silent on the question. The retired claim 'there is no per-account limit' therefore remains forbidden, and lint fails on both it and on any reappearance of $300,000.",
+    "_medallionRatio": "$10B / $5M = 2,000x, so the '≈ 2,000× smaller than Medallion' figure is correct on the new ceiling (it was computed against $5M all along).",
     "verified": true,
     "verifiedBy": "Hiren Desai (operator)",
     "verifiedOn": "2026-08-11"
   },
   "executionVenue": {
     "forward": "Interactive Brokers",
-    "_comment": "Confirmed by the operator 2026-08-11: members open their own Interactive Brokers account, and execution runs there \u2014 either a managed account (trade authorization granted at the broker) or copy trading. The page names Interactive Brokers wherever it describes the FORWARD execution vehicle.",
+    "_comment": "Confirmed by the operator 2026-08-11: members open their own Interactive Brokers account, and execution runs there — either a managed account (trade authorization granted at the broker) or copy trading. The page names Interactive Brokers wherever it describes the FORWARD execution vehicle.",
     "historical": "Tradovate",
-    "_historicalNote": "DO NOT RELABEL. The 149-trade record was traded on the operator's own Tradovate account, and every net figure on the page ($1.69 profit factor, +41.0%, -5.8%) is net of the Tradovate Free-plan schedule actually paid. Restating those figures against Interactive Brokers rates would model costs the record never incurred. 'Tradovate' must never appear in page copy \u2014 it is the operator's own broker, not a member's \u2014 but it stays here as the true cost basis.",
-    "_clientCostNote": "Interactive Brokers ES is roughly $0.85/contract commission plus about $1.60 exchange/clearing, i.e. ~$4.90 round turn against Tradovate Free's $5.26 \u2014 slightly cheaper, and immaterial to the published figures either way. A member's actual costs are their own broker schedule, plus any future Ekantik fee (none exists yet; schedule TBD). The footer says so.",
+    "_historicalNote": "DO NOT RELABEL. The 149-trade record was traded on the operator's own Tradovate account, and every net figure on the page ($1.69 profit factor, +41.0%, -5.8%) is net of the Tradovate Free-plan schedule actually paid. Restating those figures against Interactive Brokers rates would model costs the record never incurred. 'Tradovate' must never appear in page copy — it is the operator's own broker, not a member's — but it stays here as the true cost basis.",
+    "_clientCostNote": "Interactive Brokers ES is roughly $0.85/contract commission plus about $1.60 exchange/clearing, i.e. ~$4.90 round turn against Tradovate Free's $5.26 — slightly cheaper, and immaterial to the published figures either way. A member's actual costs are their own broker schedule, plus any future Ekantik fee (none exists yet; schedule TBD). The footer says so.",
     "verified": true,
     "verifiedBy": "Hiren Desai (operator)",
     "verifiedOn": "2026-08-11"
+  },
+  "experiment": {
+    "_comment": "The ROOT page: a public experiment, $3,000 to $30,000 in one year, in long options. A different engine from the ES-futures record above; no figure crosses between the two pages. history and run are written by refresh-experiment.mjs; everything else here is an operator input.",
+    "source": "https://accelerator.ekantikcapital.com/data/options_trades.json",
+    "dashboard": "https://accelerator.ekantikcapital.com/options-dashboard.html",
+    "instruments": "SPX 0DTE options and single-stock options with 7-10 days to expiry (operator, 2026-11-10)",
+    "challenge": {
+      "startUsd": 3000,
+      "targetUsd": 30000,
+      "days": 365,
+      "startDate": null,
+      "verified": false,
+      "_gate": "OPERATOR INPUT 1. The start date, and whether fills before it count. While startDate is null the page renders its pre-launch state: pace line only, balance $3,000, day 0. Set an ISO date (e.g. 2026-11-17) and run refresh-experiment.mjs --apply."
+    },
+    "account": {
+      "kind": "model-portfolio",
+      "broker": null,
+      "verified": false,
+      "_gate": "OPERATOR INPUT 2. Is the $3,000 a separately funded brokerage account (name the broker) or a model portfolio tracked from the Discord alerts? The dashboard calls the record a 'model portfolio for educational purposes only', so the page uses that wording until told otherwise. If funded, set kind to 'funded' and rewrite the X1 strip, X7 and X10 sentences listed in _docs/CONTENT-LOCK-EXPERIMENT.md."
+    },
+    "protocol": {
+      "premiumUnitUsd": 300,
+      "bufferTrades": 6,
+      "ladderUsd": [
+        4800,
+        8400,
+        15600,
+        30000
+      ],
+      "weeklyCapPct": 12,
+      "weeklyCapUsd": 360,
+      "dailyMaxLosses": 1,
+      "consecutiveLosingWeeks": 2,
+      "rollingWindowTrades": 100,
+      "provisionalFromTrades": 80,
+      "revertPauseDays": 14,
+      "verified": false,
+      "countersigned": false,
+      "_source": "Scaled from the operator's published Convexity protocol (accelerator.ekantikcapital.com/convexity.html, $10,000 unit): one loss per day, weekly cap 12% of the unit, two losing weeks, rolling-100 expectancy, six-uncorrelated-trade buffer, revert, two reverts in 14 days.",
+      "_gate": "OPERATOR INPUT 3 and 5. Nothing here has been confirmed at the $3,000 scale or countersigned. The $300 premium unit is the median premium in the record (10% of $3,000). KNOWN TENSION: a 12% weekly cap is $360, so one full-premium loss at 1x ($300) uses 83% of the week and one at 2x ($600) exceeds it. Either the cap scales with size, or premium per trade is capped lower. The page states the published rule and must not ship until this is settled."
+    },
+    "costs": {
+      "basis": "gross",
+      "verified": true,
+      "_evidence": "Every journal row that logs an exit price has dollar_pl equal to (exit - entry) x 100 on one contract, so the record is before commissions and fees. The page says so."
+    },
+    "signup": {
+      "endpoint": null,
+      "verified": false,
+      "_gate": "OPERATOR INPUT 6. Deploy _build/signup-apps-script.gs as a web app and paste the /exec URL here. Until then the form renders its email fallback and lint blocks publication."
+    },
+    "dashboardBase": {
+      "startUsd": 10000,
+      "targetUsd": 100000,
+      "aligned": false,
+      "_gate": "OPERATOR INPUT 8. The options dashboard is hard-coded to a $10,000 start and $100,000 target. Until it is switched to 3,000 / 30,000 the page says, beside the reference card, that the dashboard shows the same fills on a $10,000 base."
+    },
+    "witness": {
+      "countersigned": false,
+      "_gate": "OPERATOR INPUT 5. The published options protocol is marked 'draft, witness countersignature pending'. The page says pending and names nobody."
+    },
+    "history": {
+      "asOf": "2026-10-16",
+      "refreshedOn": "2026-11-10",
+      "rawRows": 43,
+      "closedRows": 43,
+      "trades": 39,
+      "wins": 25,
+      "losses": 14,
+      "winRatePct": 64.1,
+      "netUsd": 5489,
+      "grossProfitUsd": 8022,
+      "grossLossUsd": 2533,
+      "profitFactor": 3.17,
+      "avgR": 0.5,
+      "avgRCi95": [
+        0.15,
+        0.84
+      ],
+      "rSample": 37,
+      "medianRiskUsd": 300,
+      "maxDrawdownUsd": 799,
+      "index": 36,
+      "singleStock": 3,
+      "tickers": {
+        "SPY": 8,
+        "SPX": 28,
+        "MSFT": 1,
+        "MU": 1,
+        "SPCX": 1
+      },
+      "lastDated": "2026-10-16",
+      "firstDated": "2026-04-03",
+      "grossOfCosts": {
+        "pricedRows": 18,
+        "matchPriceDifference": 18
+      },
+      "dashboardCounts": {
+        "trades": 43,
+        "netUsd": 6629,
+        "winRatePct": 67.4,
+        "profitFactor": 3.62
+      },
+      "defects": {
+        "duplicated": [
+          "O19",
+          "O21",
+          "O20",
+          "O22"
+        ],
+        "undated": [
+          "O34",
+          "O35",
+          "O36",
+          "O37",
+          "O38"
+        ],
+        "riskless": [
+          "O33",
+          "O34"
+        ],
+        "importDated": [
+          "O2",
+          "O3",
+          "O4",
+          "O5",
+          "O6",
+          "O7",
+          "O9",
+          "O10"
+        ]
+      },
+      "series": [
+        {
+          "n": 1,
+          "id": "O2",
+          "date": "2026-04-03",
+          "ticker": "SPY",
+          "pl": 120,
+          "cum": 120
+        },
+        {
+          "n": 2,
+          "id": "O3",
+          "date": "2026-04-03",
+          "ticker": "SPY",
+          "pl": -100,
+          "cum": 20
+        },
+        {
+          "n": 3,
+          "id": "O4",
+          "date": "2026-04-03",
+          "ticker": "SPY",
+          "pl": 122,
+          "cum": 142
+        },
+        {
+          "n": 4,
+          "id": "O5",
+          "date": "2026-04-03",
+          "ticker": "SPX",
+          "pl": 300,
+          "cum": 442
+        },
+        {
+          "n": 5,
+          "id": "O6",
+          "date": "2026-04-03",
+          "ticker": "SPX",
+          "pl": 400,
+          "cum": 842
+        },
+        {
+          "n": 6,
+          "id": "O7",
+          "date": "2026-04-03",
+          "ticker": "MSFT",
+          "pl": 50,
+          "cum": 892
+        },
+        {
+          "n": 7,
+          "id": "O8",
+          "date": "2026-04-03",
+          "ticker": "SPX",
+          "pl": 200,
+          "cum": 1092
+        },
+        {
+          "n": 8,
+          "id": "O9",
+          "date": "2026-04-03",
+          "ticker": "SPY",
+          "pl": -4,
+          "cum": 1088
+        },
+        {
+          "n": 9,
+          "id": "O10",
+          "date": "2026-04-03",
+          "ticker": "SPY",
+          "pl": 300,
+          "cum": 1388
+        },
+        {
+          "n": 10,
+          "id": "O11",
+          "date": "2026-04-08",
+          "ticker": "SPY",
+          "pl": 150,
+          "cum": 1538
+        },
+        {
+          "n": 11,
+          "id": "O12",
+          "date": "2026-05-21",
+          "ticker": "SPY",
+          "pl": -349,
+          "cum": 1189
+        },
+        {
+          "n": 12,
+          "id": "O13",
+          "date": "2026-06-01",
+          "ticker": "MU",
+          "pl": -200,
+          "cum": 989
+        },
+        {
+          "n": 13,
+          "id": "O14",
+          "date": "2026-06-16",
+          "ticker": "SPCX",
+          "pl": -250,
+          "cum": 739
+        },
+        {
+          "n": 14,
+          "id": "O15",
+          "date": "2026-06-18",
+          "ticker": "SPX",
+          "pl": 300,
+          "cum": 1039
+        },
+        {
+          "n": 15,
+          "id": "O16",
+          "date": "2026-06-18",
+          "ticker": "SPX",
+          "pl": 500,
+          "cum": 1539
+        },
+        {
+          "n": 16,
+          "id": "O17",
+          "date": "2026-06-24",
+          "ticker": "SPX",
+          "pl": 600,
+          "cum": 2139
+        },
+        {
+          "n": 17,
+          "id": "O18",
+          "date": "2026-06-24",
+          "ticker": "SPX",
+          "pl": -320,
+          "cum": 1819
+        },
+        {
+          "n": 18,
+          "id": "O19",
+          "date": "2026-06-25",
+          "ticker": "SPX",
+          "pl": 400,
+          "cum": 2219
+        },
+        {
+          "n": 19,
+          "id": "O21",
+          "date": "2026-06-25",
+          "ticker": "SPX",
+          "pl": 200,
+          "cum": 2419
+        },
+        {
+          "n": 20,
+          "id": "O20",
+          "date": "2026-06-25",
+          "ticker": "SPX",
+          "pl": 270,
+          "cum": 2689
+        },
+        {
+          "n": 21,
+          "id": "O22",
+          "date": "2026-06-25",
+          "ticker": "SPX",
+          "pl": 270,
+          "cum": 2959
+        },
+        {
+          "n": 22,
+          "id": "O23",
+          "date": "2026-06-26",
+          "ticker": "SPX",
+          "pl": -165,
+          "cum": 2794
+        },
+        {
+          "n": 23,
+          "id": "O24",
+          "date": "2026-06-26",
+          "ticker": "SPX",
+          "pl": -135,
+          "cum": 2659
+        },
+        {
+          "n": 24,
+          "id": "O25",
+          "date": "2026-06-29",
+          "ticker": "SPX",
+          "pl": -140,
+          "cum": 2519
+        },
+        {
+          "n": 25,
+          "id": "O26",
+          "date": "2026-07-15",
+          "ticker": "SPX",
+          "pl": 600,
+          "cum": 3119
+        },
+        {
+          "n": 26,
+          "id": "O27",
+          "date": "2026-07-16",
+          "ticker": "SPX",
+          "pl": 400,
+          "cum": 3519
+        },
+        {
+          "n": 27,
+          "id": "O28",
+          "date": "2026-07-17",
+          "ticker": "SPX",
+          "pl": 320,
+          "cum": 3839
+        },
+        {
+          "n": 28,
+          "id": "O29",
+          "date": "2026-07-17",
+          "ticker": "SPX",
+          "pl": 420,
+          "cum": 4259
+        },
+        {
+          "n": 29,
+          "id": "O30",
+          "date": "2026-07-21",
+          "ticker": "SPX",
+          "pl": -120,
+          "cum": 4139
+        },
+        {
+          "n": 30,
+          "id": "O31",
+          "date": "2026-07-23",
+          "ticker": "SPX",
+          "pl": -300,
+          "cum": 3839
+        },
+        {
+          "n": 31,
+          "id": "O32",
+          "date": "2026-07-24",
+          "ticker": "SPX",
+          "pl": 500,
+          "cum": 4339
+        },
+        {
+          "n": 32,
+          "id": "O33",
+          "date": "2026-07-27",
+          "ticker": "SPX",
+          "pl": 380,
+          "cum": 4719
+        },
+        {
+          "n": 33,
+          "id": "O34",
+          "date": null,
+          "ticker": "SPX",
+          "pl": -200,
+          "cum": 4519
+        },
+        {
+          "n": 34,
+          "id": "O35",
+          "date": null,
+          "ticker": "SPX",
+          "pl": -200,
+          "cum": 4319
+        },
+        {
+          "n": 35,
+          "id": "O36",
+          "date": null,
+          "ticker": "SPY",
+          "pl": 200,
+          "cum": 4519
+        },
+        {
+          "n": 36,
+          "id": "O37",
+          "date": null,
+          "ticker": "SPX",
+          "pl": -50,
+          "cum": 4469
+        },
+        {
+          "n": 37,
+          "id": "O38",
+          "date": null,
+          "ticker": "SPX",
+          "pl": 750,
+          "cum": 5219
+        },
+        {
+          "n": 38,
+          "id": "O39",
+          "date": "2026-10-09",
+          "ticker": "SPX",
+          "pl": 20,
+          "cum": 5239
+        },
+        {
+          "n": 39,
+          "id": "O40",
+          "date": "2026-10-16",
+          "ticker": "SPX",
+          "pl": 250,
+          "cum": 5489
+        }
+      ]
+    },
+    "run": {
+      "started": false,
+      "startDate": null,
+      "fills": [],
+      "balanceUsd": 3000,
+      "multiple": 1,
+      "doublings": 0,
+      "day": 0,
+      "asOf": null
+    }
   }
 }

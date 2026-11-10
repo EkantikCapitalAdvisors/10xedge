@@ -1,0 +1,77 @@
+<section class="band band--dark x8" id="follow" aria-labelledby="follow-title">
+  <div class="wrap">
+
+    <header class="sec-head">
+      <p class="eyebrow" data-reveal>FOLLOW IT</p>
+      <h2 class="sec-title" id="follow-title" data-reveal style="--d:80ms">Watch every trade as it is called.</h2>
+      <p class="lede" data-reveal style="--d:160ms">Each alert &mdash; entry, strike, stop and exit &mdash; is posted in a public Discord channel. Leave your name and email and the channel opens straight away.</p>
+    </header>
+
+    <div class="x8__grid">
+
+      <div class="x8__card" data-reveal>
+
+        <form class="xf" data-signup action="{{signup.action}}" method="post" aria-labelledby="xf-title">
+          <h3 class="h3 xf__title" id="xf-title">Sign up to follow</h3>
+
+          <p class="xf__row">
+            <label class="xf__l" for="xf-name">Your name</label>
+            <input class="xf__in" id="xf-name" name="name" type="text" autocomplete="name" required minlength="2" maxlength="80">
+          </p>
+          <p class="xf__row">
+            <label class="xf__l" for="xf-email">Email</label>
+            <input class="xf__in" id="xf-email" name="email" type="email" autocomplete="email" inputmode="email" required maxlength="254">
+          </p>
+
+          <p class="xf__hp" aria-hidden="true">
+            <label for="xf-website">Leave this field empty</label>
+            <input id="xf-website" name="website" type="text" tabindex="-1" autocomplete="off">
+          </p>
+
+          <p class="xf__consent">
+            <input class="xf__cb" id="xf-consent" name="consent" type="checkbox" value="yes" required>
+            <label class="xf__cl" for="xf-consent">I understand this is educational and for observation only, that it is not an offer of any investment, and that Ekantik may email me about the experiment.</label>
+          </p>
+
+          <button class="btn btn--gold xf__go" type="submit"><span data-label>Sign up and open Discord</span></button>
+
+          <p class="sm xf__status" id="signup-status" role="status" aria-live="polite"></p>
+
+          <p class="xs xf__priv">We store your name and email in a spreadsheet that only Ekantik Capital Advisors can open, and use them only to contact you about this experiment. To be removed, email <a class="xf__a" href="mailto:hd@ekantikcapital.com">hd@ekantikcapital.com</a>.</p>
+        </form>
+
+        <div class="xf__done" id="signup-done" tabindex="-1" hidden>
+          <h3 class="h3 xf__title" id="signup-hello">You are in.</h3>
+          <p class="body xf__done-p">Your sign-up is recorded. The channel is <strong>#the-convexity-experiment</strong>, on the Ekantik Trading Alerts server.</p>
+          <a class="btn btn--gold xf__open" id="signup-open" target="_blank" rel="noopener">Open the Discord channel</a>
+        </div>
+
+        <noscript>
+          <p class="body xf__nojs">This form needs JavaScript. To follow without it, email <a class="xf__a" href="mailto:hd@ekantikcapital.com?subject=Follow%20the%20experiment">hd@ekantikcapital.com</a> with your name and we will send the channel link.</p>
+        </noscript>
+
+      </div>
+
+      <div class="x8__side" data-reveal style="--d:80ms">
+        <div class="x8__what">
+          <p class="eyebrow">WHAT FOLLOWING IS</p>
+          <p class="body x8__p">Observation and education. You see the alerts, the running balance, each step up and each step down, and every stop condition if it fires.</p>
+        </div>
+        <div class="x8__what">
+          <p class="eyebrow">WHAT IT IS NOT</p>
+          <p class="body x8__p">It is not an application and there is no waitlist. Signing up gives no standing for anything else. <strong>No capital is managed, and no investment is offered or solicited.</strong> Nothing posted is advice for your circumstances.</p>
+        </div>
+        <div class="x8__what">
+          <p class="eyebrow">A QUESTION FIRST?</p>
+          <p class="body x8__p">Ask the operator directly.</p>
+          <p class="x8__links">
+            <a class="verify-link" href="https://calendly.com/hd-ekantikcapital/30min" target="_blank" rel="noopener"><span>Book a <span class="num--rule">30</span>-minute call</span><span class="sr-only">(opens in a new tab)</span><span class="arw" aria-hidden="true">&rarr;</span></a>
+            <a class="verify-link" href="mailto:hd@ekantikcapital.com"><span>hd@ekantikcapital.com</span></a>
+          </p>
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+</section>

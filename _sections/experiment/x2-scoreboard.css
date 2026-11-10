@@ -1,0 +1,98 @@
+/* ---------- X2 · THE SCOREBOARD -----------------------------------------
+   One wide log-scale plot, four tiles, one quiet link. The pace line is a
+   reference (dashed, recessive); the realised balance is the only solid mark.
+   ------------------------------------------------------------------------ */
+.xc { margin: 0; }
+.xc__frame { padding-left: 4.25rem; }
+.xc__plot {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 16 / 7.5;
+}
+.xc__grid { stroke: var(--line); stroke-width: 1; }
+.xc__grid--target { stroke: var(--ink-3); }
+.xc__vgrid { stroke: var(--line-2); stroke-width: 1; }
+.xc__pace { stroke: var(--ink-3); stroke-width: 1.5; stroke-dasharray: 6 5; }
+.xc__eq { stroke: var(--ink); stroke-width: 2; stroke-linejoin: round; }
+
+.xc__y {
+  position: absolute; right: 100%; top: var(--y);
+  transform: translateY(-50%);
+  padding-right: var(--s-3);
+  font-size: var(--t-xs); line-height: 1;
+  color: var(--ink-2);
+  white-space: nowrap;
+}
+.xc__band {
+  position: absolute; left: var(--s-2); top: var(--y);
+  transform: translateY(-100%);
+  padding-bottom: 3px;
+  font-size: var(--t-xs); line-height: 1.2;
+  color: var(--ink-3);
+  white-space: nowrap;
+}
+.xc__dot {
+  position: absolute; left: var(--x); top: var(--y);
+  width: 9px; height: 9px; margin: -4.5px 0 0 -4.5px;
+  border-radius: 50%;
+  background: var(--ink);
+  box-shadow: 0 0 0 2px var(--bg);
+}
+.xc__dot--target { background: var(--bg); border: 1.5px solid var(--ink-3); box-shadow: none; }
+/* The current balance is the one earned figure in the plot — it takes the gold. */
+.xc__dot--now { width: 11px; height: 11px; margin: -5.5px 0 0 -5.5px; background: var(--gold-deep); }
+.xc__tag {
+  position: absolute; left: var(--x); top: var(--y);
+  font-size: var(--t-xs); line-height: 1.2;
+  color: var(--ink-2);
+  white-space: nowrap;
+}
+.xc__tag--pace { transform: translate(-100%, -100%); padding: 0 var(--s-3) var(--s-2) 0; color: var(--ink-3); }
+.xc__tag--now { transform: translate(var(--s-3), -150%); color: var(--ink); font-weight: 500; }
+.xc__tag--now.xc__tag--left { transform: translate(calc(-100% - var(--s-3)), -150%); }
+
+.xc__x { position: relative; height: 2.25rem; }
+.xc__xl {
+  position: absolute; left: var(--x); top: var(--s-3);
+  transform: translateX(-50%);
+  font-size: var(--t-xs); line-height: 1;
+  color: var(--ink-3);
+  white-space: nowrap;
+}
+.xc__xl:first-child { transform: none; }
+.xc__xl:last-child { transform: translateX(-100%); }
+
+.xc__cap {
+  margin-top: var(--s-4);
+  padding-top: var(--s-4);
+  border-top: 1px solid var(--line);
+  display: flex; flex-wrap: wrap; gap: var(--s-3) var(--s-7);
+  font-size: var(--t-xs); line-height: 1.55;
+  color: var(--ink-3);
+}
+.xc__key { display: inline-flex; align-items: baseline; gap: var(--s-3); max-width: min(46ch, 100%); min-width: 0; }
+.xc__sw { flex: none; width: 26px; height: 0; align-self: center; border-top: 2px solid var(--ink); }
+.xc__sw--pace { border-top: 1.5px dashed var(--ink-3); }
+.xc__scale { flex-basis: 100%; }
+.xc__read {
+  margin-top: var(--s-5);
+  font-size: var(--t-lede); line-height: 1.5;
+  color: var(--ink-2);
+  max-width: 44em;
+  text-wrap: pretty;
+}
+.xc__read strong { color: var(--ink); }
+
+.x2__tiles { margin-top: clamp(var(--s-7), 4vw, var(--s-9)); }
+.x2__verify {
+  margin-top: var(--s-7);
+  display: flex; flex-wrap: wrap; align-items: baseline;
+  gap: var(--s-3) var(--s-6);
+}
+.x2__snap { max-width: 52ch; }
+
+@media (max-width: 640px) {
+  .xc__frame { padding-left: 3.75rem; }
+  .xc__plot { aspect-ratio: 1 / 1.08; }
+  .xc__cap { gap: var(--s-3); }
+}

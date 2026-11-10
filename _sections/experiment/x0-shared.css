@@ -1,0 +1,123 @@
+/* ---------- X0 · components shared by the experiment sections --------------
+   Tables, stat tiles and plots. Tokens come from styles.css; nothing here
+   declares a colour of its own.
+   ------------------------------------------------------------------------ */
+
+/* --- Table: a real <table> from 720px, stacked records below ------------- */
+.xtbl-wrap { max-width: 62rem; }
+.xtbl {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: var(--t-sm);
+  line-height: 1.5;
+  text-align: left;
+}
+.xtbl__cap {
+  caption-side: top;
+  text-align: left;
+  padding-bottom: var(--s-4);
+}
+.xtbl thead th {
+  font-size: var(--t-eyebrow);
+  font-weight: 500;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+  padding: 0 var(--s-5) var(--s-3) 0;
+  border-bottom: 1px solid var(--line);
+  vertical-align: bottom;
+}
+.xtbl tbody th,
+.xtbl tbody td {
+  padding: var(--s-4) var(--s-5) var(--s-4) 0;
+  border-bottom: 1px solid var(--line);
+  vertical-align: top;
+  color: var(--ink-2);
+  font-weight: 400;
+}
+.xtbl tbody th { color: var(--ink); font-weight: 500; width: 32%; }
+.xtbl tbody td:last-child, .xtbl thead th:last-child { padding-right: 0; }
+.xtbl__sub {
+  display: block;
+  margin-top: 2px;
+  font-size: var(--t-xs);
+  font-weight: 400;
+  color: var(--ink-3);
+}
+.xtbl__q { color: var(--ink-3); white-space: nowrap; }
+
+@media (max-width: 719px) {
+  .xtbl thead { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
+  .xtbl, .xtbl caption:not(.sr-only), .xtbl tbody, .xtbl tr, .xtbl th, .xtbl td { display: block; width: auto; }
+  .xtbl tbody tr { padding-block: var(--s-4); border-bottom: 1px solid var(--line); }
+  .xtbl tbody tr:first-child { border-top: 1px solid var(--line); }
+  .xtbl tbody th, .xtbl tbody td { padding: 0; border: 0; width: auto; }
+  .xtbl tbody td { margin-top: var(--s-3); }
+  .xtbl tbody td::before {
+    content: attr(data-k);
+    display: block;
+    font-size: var(--t-eyebrow);
+    font-weight: 500;
+    letter-spacing: .14em;
+    text-transform: uppercase;
+    color: var(--ink-3);
+    margin-bottom: 2px;
+  }
+}
+
+/* --- Stat tiles ----------------------------------------------------------- */
+.xt, .xh {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: var(--s-6) var(--s-6);
+  margin: 0;
+}
+.xt__i, .xh__i {
+  border-top: 1px solid var(--line);
+  padding-top: var(--s-4);
+  min-width: 0;
+}
+.xt__k, .xh__k {
+  font-size: var(--t-eyebrow);
+  font-weight: 500;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  line-height: 1.3;
+  color: var(--ink-3);
+}
+.xt__v, .xh__v {
+  margin: var(--s-3) 0 0;
+  font-size: var(--t-fig-lg);
+  line-height: 1.05;
+  letter-spacing: -.035em;
+  color: var(--ink);
+}
+/* A rule value or an opening balance is not a measurement, so it does not wear
+   the mono face: it stays in the body sans, with tabular figures. */
+.xt__v:not(.mono) { letter-spacing: -.03em; }
+.xt__s, .xh__s {
+  margin: var(--s-2) 0 0;
+  font-size: var(--t-xs);
+  line-height: 1.45;
+  color: var(--ink-3);
+}
+@media (max-width: 760px) {
+  .xt, .xh { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--s-6) var(--s-5); }
+}
+
+/* --- Plot primitives ------------------------------------------------------
+   The SVG carries lines only and is stretched to its box; strokes do not scale.
+   Labels and markers are HTML, placed with --x / --y percentages. */
+.xc__svg, .xp__svg, .xs-plot__svg {
+  position: absolute; inset: 0;
+  width: 100%; height: 100%;
+  overflow: visible;
+}
+.xc__svg *, .xp__svg *, .xs-plot__svg * {
+  fill: none;
+  vector-effect: non-scaling-stroke;
+}
+
+/* Small-print notes beside a reference */
+.xd__note { max-width: 62ch; }
+.xd__note + .xd__note { margin-top: var(--s-3); }

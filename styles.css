@@ -497,6 +497,21 @@ strong, b { font-weight: 500; }
   transition: all .22s var(--ease-io); white-space: nowrap;
 }
 .nav__cta:hover { border-color: var(--gold); color: var(--gold); }
+/* Section links — the experiment page only; a page without them keeps the
+   two-item row. Hidden below 900px, where the mark and the button are the nav. */
+.nav__links { display: none; margin-left: auto; gap: var(--s-2); }
+.nav__links a {
+  padding: .72rem .75rem;
+  font-size: var(--t-xs); font-weight: 500;
+  color: rgba(250, 248, 245, .78);
+  transition: color .22s var(--ease-io);
+  white-space: nowrap;
+}
+.nav__links a:hover { color: var(--ivory); }
+.nav.is-stuck .nav__links a { color: rgba(27, 42, 74, .72); }
+.nav.is-stuck .nav__links a:hover { color: var(--navy); }
+@media (min-width: 900px) { .nav__links { display: flex; } }
+@media (max-width: 479px) { .nav__cta-x { display: none; } }
 .nav.is-stuck {
   background: rgba(250, 248, 245, .86);
   backdrop-filter: saturate(180%) blur(14px);

@@ -24,12 +24,17 @@ for (const page of PAGES) {
     return readFileSync(f, 'utf8').trimEnd();
   });
 
-  /* Build-time charts: <!--#chart name--> is replaced by inline SVG generated from
-     figures.json. No chart library ships and the page fetches nothing at runtime. */
+  /* Build-time charts and figures. <!--#chart name--> is replaced by a generated block
+     (inline SVG / HTML); {{name}} by a plain scalar. Both come from figures.json — no
+     chart library ships and the page fetches nothing at runtime. */
   if (page.charts) {
-    const charts = await page.charts(root);
+    const { blocks, values } = await page.charts(root);
     html = html.replace(/[ \t]*<!--#chart ([a-z0-9-]+)-->/g, (_, name) =>
-      charts[name] ?? `<!-- MISSING CHART: ${name} -->`);
+      blocks[name] ?? `<!-- MISSING CHART: ${name} -->`);
+    html = html.replace(/\{\{([A-Za-z0-9.-]+)\}\}/g, (m, name) => {
+      if (!(name in values)) { console.warn(`  ! unknown value: ${m}`); return `[MISSING VALUE ${name}]`; }
+      return values[name];
+    });
   }
 
   const outHtml = join(root, page.outHtml);
