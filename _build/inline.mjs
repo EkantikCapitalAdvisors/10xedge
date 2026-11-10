@@ -28,7 +28,7 @@ css = css
   .replace(/url\(fonts\/([^)]+)\)/g, (_, f) =>
     `url(data:font/woff2;base64,${readFileSync(join(root, 'fonts', f)).toString('base64')})`);
 
-const title = (html.match(/<title>([\s\S]*?)<\/title>/) || [, 'Preview'])[1];
+const title = (html.match(/<title>([\s\S]*?)<\/title>/) || [, 'Preview'])[1].replace(/\s+[—-]\s+Ekantik Capital Advisors$/, '');
 let body = (html.match(/<body[^>]*>([\s\S]*)<\/body>/) || [, html])[1];
 
 /* Inline every local script the page loads, in order. */
@@ -38,8 +38,15 @@ body = body.replace(/<script src="((?:\.\.\/)?[a-z0-9-]+\.js)"[^>]*><\/script>\n
   if (existsSync(f)) scripts.push(readFileSync(f, 'utf8'));
   return '';
 });
-/* Never let a preview post to the real endpoint. */
-body = body.replace(/(<form\b[^>]*\baction=")https:\/\/script\.google\.com\/[^"]*"/g, '$1about:blank" data-preview-stub="1"');
+/* A preview never posts anywhere. The form is detached from its endpoint and marked
+   with a stub, which signup.js answers locally: a reviewer can walk the whole flow and
+   nothing is written to the sign-up sheet. The invite shown is the public one. */
+body = body.replace(/<form\b([^>]*)\bdata-signup\b([^>]*)>/g, (m, pre, post) =>
+  `<form${pre}data-signup data-preview-stub="https://discord.gg/GawjC6ef7t"${post}>`.replace(/\saction="[^"]*"/, ' action=""'));
+/* Relative links have nowhere to go inside a single-file preview. */
+const site = 'https://10xedge.ekantikcapital.com/';
+body = body.replace(/href="program\/"/g, `href="${site}" target="_blank" rel="noopener"`)
+  .replace(/href="\.\.\/"/g, `href="${site}" target="_blank" rel="noopener"`);
 
 const js = scripts.join('\n;\n');
 const doc = bodyOnly
