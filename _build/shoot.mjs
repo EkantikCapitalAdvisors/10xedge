@@ -2,7 +2,10 @@
 /* Screenshot harness. Usage:
      node shoot.mjs <fileOrUrl> <outDir> [--full] [--sel=#id] [--w=390,768,1440]
    Writes <outDir>/<w>.png for each width. */
-import { chromium } from 'playwright';
+import { createRequire } from 'node:module';
+/* Playwright is installed globally in this environment; resolve it the CommonJS way so
+   the repo needs no node_modules of its own. */
+const { chromium } = createRequire(import.meta.url)('playwright');
 import { mkdirSync } from 'node:fs';
 import { resolve } from 'node:path';
 

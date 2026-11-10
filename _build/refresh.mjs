@@ -18,7 +18,10 @@ import { join, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 const here = dirname(fileURLToPath(import.meta.url));
-const secDir = join(here, '..', '_sections');
+/* This script owns the PROGRAM page only (the ES-futures record). Its data-fig keys are
+   substituted only inside that page's own sections, so a refresh here can never write
+   into another page. The experiment page has its own script, refresh-experiment.mjs. */
+const secDir = join(here, '..', '_sections', 'program');
 const cfgPath = join(here, 'figures.json');
 const cfg = JSON.parse(readFileSync(cfgPath, 'utf8'));
 const APPLY = process.argv.includes('--apply');
@@ -26,7 +29,8 @@ const APPLY = process.argv.includes('--apply');
 /* ---------- fetch ------------------------------------------------------- */
 const res = await fetch(cfg.source);
 if (!res.ok) { console.error(`FAILED to fetch ${cfg.source} — ${res.status}`); process.exit(2); }
-const rows = await res.json();
+/* The journal repeats some trade_num values; count each trade once (last row wins). */
+const rows = [...new Map((await res.json()).map(r => [r.trade_num, r])).values()];
 
 /* ---------- compute ------------------------------------------------------ */
 const num = v => Number(v ?? 0);
@@ -35,8 +39,11 @@ const pl = rows.map(r => num(r.dollar_pl));
 const grossProfit = pl.filter(p => p > 0).reduce((a, b) => a + b, 0);
 const grossLoss = -pl.filter(p => p < 0).reduce((a, b) => a + b, 0);
 
-const cost = cfg.costModel.roundTurnUsd;
-const netPl = pl.map(p => p - cost);
+/* All-in round turn per contract (the key was renamed when the cost basis was
+   confirmed; reading the old name made this script throw). */
+const cost = cfg.costModel.blendedRoundTurnUsd;
+if (!(cost > 0)) { console.error('costModel.blendedRoundTurnUsd is missing from figures.json'); process.exit(2); }
+const netPl = rows.map(r => num(r.dollar_pl) - cost * (num(r.contracts) || 1));
 const netProfit = netPl.filter(p => p > 0).reduce((a, b) => a + b, 0);
 const netLoss = -netPl.filter(p => p < 0).reduce((a, b) => a + b, 0);
 
