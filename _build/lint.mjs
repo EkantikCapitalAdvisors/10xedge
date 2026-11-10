@@ -446,7 +446,11 @@ function experiment(ctx) {
   if (!new RegExp(`\\b${H.trades}\\b`).test(section('record'))) F('FIGURE-DRIFT', `the record section does not state ${H.trades} closed alerts (figures.json)`);
   if (!new RegExp(`${String(H.winRatePct).replace('.', '\\.')}\\s?%`).test(section('record'))) F('FIGURE-DRIFT', `the record section does not state the ${H.winRatePct}% win rate (figures.json)`);
   if (/\[MISSING VALUE|MISSING CHART/.test(htmlRaw)) F('STRUCTURE', 'a build-time value or chart failed to resolve');
-  if (!/href="program\/"/.test(stripped)) F('STRUCTURE', 'no link to the Structural Edge page at program/');
+  /* Operator, 2026-11-10: this page carries no reference to the futures edge for now —
+     no link to /program/, no mention of the futures record. (/program/ is still built,
+     and old deep links still forward to it.) */
+  if (/href="program\/|Structural Edge|ES futures|futures (record|edge|engine)|Commodity Trading Advisor|Series 3/i.test(stripped.replace(/<head[\s\S]*?<\/head>/i, '')))
+    F('SCOPE', 'the page refers to the futures edge or links to /program/ — removed at the operator\'s instruction');
 
   /* ---------- 4. The dashboard reference ---------------------------------- */
   const dash = (X.dashboard || '').replace(/^https?:\/\//, '');
@@ -510,7 +514,7 @@ function experiment(ctx) {
     W('DASHBOARD', `the dashboard is denominated $${X.dashboardBase.startUsd} → $${X.dashboardBase.targetUsd}; the page says so beside the reference card. Switching the dashboard to 3,000 / 30,000 removes the sentence.`);
   if (ac.kind === 'model-portfolio' && !/model portfolio/i.test(section('top')))
     F('UNVERIFIED-CLAIM', 'the hero does not say the experiment is a model portfolio');
-  G('COUNSEL', 'not reviewed by counsel. Real-time option alerts concern securities, not futures; the regulatory-status paragraph in particular needs a lawyer\'s wording.');
+  G('COUNSEL', 'not reviewed by counsel. Real-time option alerts concern securities; the "Status" paragraph in the disclosures says nothing about registration and needs a lawyer\'s wording.');
 }
 
 const PROFILES = { program, experiment };

@@ -5,6 +5,14 @@ options (SPX same-day expiry; single-stock options 7–10 days out). It is a dif
 engine from the ES-futures record on `/program/`. **No figure crosses between the two
 pages**, and the linter fails either page if one does.
 
+## No reference to the futures edge (operator, 2026-11-10)
+
+The page does not link to `/program/` and does not mention the futures record, the
+Structural Edge page, or the futures registration. `/program/` is still built and old
+deep links such as `/#capacity` still forward to it, but nothing a visitor reads on `/`
+points there. The linter fails the page if a reference comes back. The disclosures
+therefore say nothing about registration status — that paragraph is for counsel.
+
 ## What is locked
 
 | Statement | Where | Source |

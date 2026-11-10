@@ -236,7 +236,7 @@ Everything above still applies to `/program/`. This section gates `/`.
 | 4 | **Protocol at the $3,000 scale** — premium unit, weekly cap, buffer; resolve the cap-versus-unit tension | ❌ open |
 | 5 | **Witness countersignature** of the options protocol | ❌ open |
 | 6 | **Journal clean-up** — 4 duplicated and 5 undated rows, 2 without a logged risk | ❌ open |
-| 7 | **Counsel review** — option alerts are securities, not futures; the "Regulatory status" paragraph needs a lawyer's wording | ❌ open |
+| 7 | **Counsel review** — option alerts are securities, not futures; the "Status" paragraph says nothing about registration and needs a lawyer's wording | ❌ open |
 | 8 | Dashboard base — switch the options dashboard to 3,000 / 30,000 (warning only; the page explains the difference meanwhile) | ⚠️ open |
 | 9 | Costs — is `dollar_pl` net? | ✅ resolved by arithmetic: gross on every row with an exit price; the page says "before commissions and fees" |
 

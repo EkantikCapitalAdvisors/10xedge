@@ -13,14 +13,3 @@
 .x9__name { font-weight: 500; color: var(--ink); }
 .x9__rule { width: 32px; height: 1px; background: var(--line); }
 .x9__role { font-size: var(--t-sm); color: var(--ink-3); }
-.x9__p { margin-top: var(--s-7); max-width: 52ch; }
-.x9__a {
-  color: var(--ink);
-  text-decoration: underline;
-  text-decoration-thickness: 1px;
-  text-decoration-color: var(--ink-4);
-  text-underline-offset: .22em;
-  padding-block: .875rem;
-  white-space: nowrap;
-}
-.x9__a:hover { text-decoration-color: var(--ink-3); }
