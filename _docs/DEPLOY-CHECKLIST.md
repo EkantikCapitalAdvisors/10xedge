@@ -217,28 +217,35 @@ credibility rests on that one sentence.
 
 ---
 
-# Deploy checklist — THE EXPERIMENT page (`/`), added 2026-11-10
+# Deploy checklist — EKANTIK ASCENT, the 10× Experiment (`/`)
 
-The site now builds two pages. `/program/` is the Structural Edge page above, moved
-intact. `/` is the experiment: **$3,000 to $30,000 in one year**, in long options.
-Everything above still applies to `/program/`. This section gates `/`.
+Added 10 November 2026; rewritten 11 November 2026 for the charter dated 9 November 2026.
 
-`node _build/lint.mjs` exits non-zero while any item below is open.
+The site builds two pages. `/program/` is the Structural Edge page above, moved intact
+and not linked from the root. `/` is Ekantik Ascent. Everything above still applies to
+`/program/`. This section gates `/`.
+
+`node _build/lint.mjs` exits non-zero while any gate below is open.
 `node _build/lint.mjs --preview` reports them without enforcing, for private previews.
 
-## Gates on `/`
+## The charter's launch gates — "Nothing goes public until every box is ticked."
 
-| # | Gate | State |
-|---|---|---|
-| 1 | **Sign-up endpoint** — deploy `_build/signup-apps-script.gs`, set `experiment.signup.endpoint` (`_docs/SIGNUP-SETUP.md`). Without it nobody's name is collected. | ❌ open |
-| 2 | **Start date**, and whether fills before it count | ❌ open |
-| 3 | **The account** — funded $3,000 account (and broker) or model portfolio | ❌ open |
-| 4 | **Protocol at the $3,000 scale** — premium unit, weekly cap, buffer; resolve the cap-versus-unit tension | ❌ open |
-| 5 | **Witness countersignature** of the options protocol | ❌ open |
-| 6 | **Journal clean-up** — 4 duplicated and 5 undated rows, 2 without a logged risk | ❌ open |
-| 7 | **Counsel review** — option alerts are securities, not futures; the "Status" paragraph says nothing about registration and needs a lawyer's wording | ❌ open |
-| 8 | Dashboard base — switch the options dashboard to 3,000 / 30,000 (warning only; the page explains the difference meanwhile) | ⚠️ open |
-| 9 | Costs — is `dollar_pl` net? | ✅ resolved by arithmetic: gross on every row with an exit price; the page says "before commissions and fees" |
+| Charter gate | State |
+|---|---|
+| All SET items in Rules and Kill criteria are filled in | ✅ answered 11 Nov 2026 (10% / 10%, floor $2,000, last-30-trade edge check, real time) — except ❌ **sizing below $6,000**: confirm "one contract until equity reaches $6,000" |
+| Manish countersigns the charter as independent witness | ❌ open — the page says the countersignature is pending |
+| Attorney reviews the public wording, especially "10×" and any scaling example | ❌ open — also "financial publisher, not a registered investment adviser" and the contracts-by-equity strip |
+| Demo data is labelled as demo everywhere it appears | ✅ enforced by the linter |
+| Charter is published before the first trade on 1 December 2026 | ❌ open — this page is that publication; it deploys only on the operator's go-ahead |
+| Sign-up link is live and tested | ❌ open — the operator chose the on-page form over the Alpha portal; deploy `_build/signup-apps-script.gs` and set `experiment.signup.endpoint` (`_docs/SIGNUP-SETUP.md`) |
+
+## Also open
+
+| Item | State |
+|---|---|
+| Demo journal clean-up — 4 duplicated and 5 undated rows, 2 without a logged risk | ❌ open (gate) |
+| Dashboard says "model portfolio" and is denominated $10,000 → $100,000 | ⚠️ warning — the page explains the base beside the reference card |
+| The accelerator site describes the same channel as "$10K → $100K, live since June 30" | ⚠️ outside this repo |
 
 ## Before `/` replaces what is live
 
@@ -249,7 +256,7 @@ Everything above still applies to `/program/`. This section gates `/`.
 - [ ] `/program/` opens, and an old deep link such as `/#capacity` lands on `/program/#capacity`
 - [ ] `/_build/`, `/_docs/`, `/_sections/` still return 404 (never add `.nojekyll`)
 
-## Refreshing the experiment's figures
+## Once the experiment is running
 
 ```
 node _build/refresh-experiment.mjs            # dry run
@@ -257,4 +264,7 @@ node _build/refresh-experiment.mjs --apply
 node _build/build.mjs && node _build/lint.mjs
 ```
 
-Human-initiated, like the futures refresh. The page states a dated snapshot.
+Human-initiated. The page states a dated snapshot; the scoreboard counts only alerts
+dated on or after 1 December 2026. If equity closes at or below the floor the hero
+status reads "Stopped at the floor" on the next refresh; the charter's final report is
+due within 7 days of that close.

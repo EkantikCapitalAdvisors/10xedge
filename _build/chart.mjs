@@ -1,8 +1,9 @@
-/* Build-time charts and figure fragments for the EXPERIMENT page.
+/* Build-time charts and figure fragments for the EXPERIMENT page (Ekantik Ascent).
  *
- * Everything the page shows about the record or the run is generated here from
- * figures.json → experiment, at build time. No chart library ships and the page
- * fetches nothing at runtime: a figure on the page is one a person rebuilt and read.
+ * Everything the page shows about the run, the rules' numbers or the demo data is
+ * generated here from figures.json → experiment, at build time. No chart library ships
+ * and the page fetches nothing at runtime: a figure on the page is one a person rebuilt
+ * and read.
  *
  * Returns { blocks, values }:
  *   blocks  → replace <!--#chart name-->  (HTML / inline SVG)
@@ -13,20 +14,23 @@
  * HTML element placed by percentage, so text is real 13px+ type at every width
  * instead of SVG text that shrinks with the viewport.
  *
- * Type discipline: .mono marks a number the journal measured. Rule values, targets
- * and arithmetic (the pace line, $30,000, 3.32 doublings) carry .num--rule instead.
+ * Type discipline: .mono marks a number that was measured (the live account, or the
+ * demo journal — which is always labelled demo). Rule values, the ceiling and
+ * arithmetic (the pace line, 10×, the floor) carry .num--rule instead.
  */
 import { readFileSync } from 'node:fs';
 import { join } from 'node:path';
 
 const MON = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+const MONTH = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
 const usd = v => (v < 0 ? '&minus;$' : '$') + Math.abs(Math.round(v)).toLocaleString('en-US');
 const signed = v => (v < 0 ? '&minus;$' : '+$') + Math.abs(Math.round(v)).toLocaleString('en-US');
 const signedR = v => (v < 0 ? '&minus;' : '+') + Math.abs(v).toFixed(2) + 'R';
-const day = isoStr => { const [y, m, d] = isoStr.split('-').map(Number); return `${d} ${MON[m - 1]} ${y}`; };
+const parts = isoStr => isoStr.split('-').map(Number);
+const day = isoStr => { const [y, m, d] = parts(isoStr); return `${d} ${MON[m - 1]} ${y}`; };
+const dayLong = isoStr => { const [y, m, d] = parts(isoStr); return `${d} ${MONTH[m - 1]} ${y}`; };
 const f1 = v => v.toFixed(1), f2 = v => v.toFixed(2);
 const pc = v => `${+v.toFixed(2)}%`;
-const list = a => a.length < 2 ? a.join('') : `${a.slice(0, -1).join(', ')} and ${a[a.length - 1]}`;
 const ONES = ['zero', 'one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight', 'nine', 'ten', 'eleven', 'twelve',
   'thirteen', 'fourteen', 'fifteen', 'sixteen', 'seventeen', 'eighteen', 'nineteen'];
 const TENS = ['', '', 'twenty', 'thirty', 'forty', 'fifty', 'sixty', 'seventy', 'eighty', 'ninety'];
@@ -36,24 +40,22 @@ const Word = n => { const w = word(n); return w[0].toUpperCase() + w.slice(1); }
 export async function charts(root) {
   const fig = JSON.parse(readFileSync(join(root, '_build', 'figures.json'), 'utf8'));
   const X = fig.experiment, H = X.history, R = X.run, C = X.challenge, P = X.protocol;
-  const doublingsTarget = Math.log2(C.targetUsd / C.startUsd);          // 3.32
   const live = !!R.started;
+  const mult = v => v / C.startUsd;
+  const multLabel = m => `${Number.isInteger(m) ? m : f2(m)}&times;`;
 
   /* ===================== X2 · scoreboard ===================== */
   const lows = live ? R.fills.map(f => f.bal) : [];
-  const yMin = Math.min(2000, ...lows.map(v => v * 0.8)), yMax = 34000;
+  const yMin = Math.min(P.floorUsd * 0.8, ...lows.map(v => v * 0.8)), yMax = C.targetUsd * 1.13;
   const ly = v => (1 - (Math.log(v) - Math.log(yMin)) / (Math.log(yMax) - Math.log(yMin))) * 100;   // % from top
   const lx = d => Math.max(0, Math.min(C.days, d)) / C.days * 100;
   const P10 = v => +(v * 10).toFixed(1);                                 // % → viewBox units (0..1000)
 
-  const grid = [
-    { v: C.startUsd, tag: null },
-    { v: C.startUsd * 2, tag: '1 doubling' },
-    { v: C.startUsd * 4, tag: '2 doublings' },
-    { v: C.startUsd * 8, tag: '3 doublings' },
-    { v: C.targetUsd, tag: `10&times; &middot; ${f2(doublingsTarget)} doublings` },
-  ];
+  /* The axis is in multiples of the start — the charter's target is a multiple. Dollars
+     ride inside the plot as the secondary reading. */
+  const grid = [1, 2, 4, 8, C.multiple].map(m => ({ m, v: C.startUsd * m }));
   const quarters = [0, 91, 182, 273, 365];
+  const fy = ly(P.floorUsd);
 
   let eqPath = '', endDot = '', endTag = '';
   if (live) {
@@ -63,82 +65,86 @@ export async function charts(root) {
     eqPath = `<path class="xc__eq" d="${d}"/>`;
     const ex = lx(R.day), ey = ly(Math.max(R.balanceUsd, yMin));
     endDot = `<span class="xc__dot xc__dot--now" style="--x:${pc(ex)};--y:${pc(ey)}" aria-hidden="true"></span>`;
-    endTag = `<span class="xc__tag xc__tag--now${ex > 60 ? ' xc__tag--left' : ''}" style="--x:${pc(ex)};--y:${pc(ey)}"><span class="mono">${usd(R.balanceUsd)}</span> &middot; day <span class="mono">${R.day}</span></span>`;
+    endTag = `<span class="xc__tag xc__tag--now${ex > 60 ? ' xc__tag--left' : ''}" style="--x:${pc(ex)};--y:${pc(ey)}"><span class="mono">${f2(mult(R.balanceUsd))}&times;</span> &middot; day <span class="mono">${R.day}</span></span>`;
   }
-  const paceMidX = 64, paceMidY = ly(C.startUsd * Math.pow(C.targetUsd / C.startUsd, paceMidX / 100));
-  const behind = live ? R.balanceUsd - R.paceUsd : 0;
+  const paceMidX = 64, paceMidY = ly(C.startUsd * Math.pow(C.multiple, paceMidX / 100));
+  const gap = live ? R.balanceUsd - R.paceUsd : 0;
   const readout = !live
-    ? `The clock has not started. On day <span class="num--rule">0</span> the balance and the pace line are the same point: <span class="num--rule">${usd(C.startUsd)}</span>.`
-    : `As of ${day(R.asOf)}, day <span class="mono">${R.day}</span>: balance <span class="mono">${usd(R.balanceUsd)}</span> against a pace of <span class="num--rule">${usd(R.paceUsd)}</span> &mdash; <strong><span class="mono">${usd(Math.abs(behind))}</span> ${behind >= 0 ? 'ahead of' : 'behind'} pace</strong>.`;
+    ? `The clock starts on ${dayLong(C.startDate)}. On day <span class="num--rule">0</span> the account and the pace line are the same point: <span class="num--rule">1&times;</span>, or <span class="num--rule">${usd(C.startUsd)}</span>.`
+    : `As of ${day(R.asOf)}, day <span class="mono">${R.day}</span>: equity <span class="mono">${usd(R.balanceUsd)}</span>, or <span class="mono">${f2(mult(R.balanceUsd))}&times;</span>, against a ceiling pace of <span class="num--rule">${f2(mult(R.paceUsd))}&times;</span> &mdash; <strong><span class="mono">${usd(Math.abs(gap))}</span> ${gap >= 0 ? 'ahead of' : 'behind'} it</strong>, and <span class="mono">${usd(R.toFloorUsd)}</span> above the floor.`;
 
   const scoreboard = `<figure class="xc" role="group" aria-labelledby="xc-cap">
   <div class="xc__frame">
     <div class="xc__plot">
       <svg class="xc__svg" viewBox="0 0 1000 1000" preserveAspectRatio="none" aria-hidden="true" focusable="false">
 ${quarters.slice(1, -1).map(q => `        <line class="xc__vgrid" x1="${P10(lx(q))}" x2="${P10(lx(q))}" y1="0" y2="1000"/>`).join('\n')}
-${grid.map(g => `        <line class="xc__grid${g.v === C.targetUsd ? ' xc__grid--target' : ''}" x1="0" x2="1000" y1="${P10(ly(g.v))}" y2="${P10(ly(g.v))}"/>`).join('\n')}
+${grid.map(g => `        <line class="xc__grid${g.m === C.multiple ? ' xc__grid--target' : ''}" x1="0" x2="1000" y1="${P10(ly(g.v))}" y2="${P10(ly(g.v))}"/>`).join('\n')}
+        <line class="xc__floor" x1="0" x2="1000" y1="${P10(fy)}" y2="${P10(fy)}"/>
         <path class="xc__pace" d="M0,${P10(ly(C.startUsd))} L1000,${P10(ly(C.targetUsd))}"/>
         ${eqPath}
       </svg>
-${grid.map(g => `      <span class="xc__y num--rule" style="--y:${pc(ly(g.v))}">${usd(g.v)}</span>`).join('\n')}
-${grid.filter(g => g.tag).map(g => `      <span class="xc__band" style="--y:${pc(ly(g.v))}">${g.tag}</span>`).join('\n')}
-      <span class="xc__tag xc__tag--pace" style="--x:${pc(paceMidX)};--y:${pc(paceMidY)}">Pace to <span class="num--rule">10&times;</span></span>
+${grid.map(g => `      <span class="xc__y num--rule" style="--y:${pc(ly(g.v))}">${multLabel(g.m)}</span>`).join('\n')}
+${grid.filter(g => g.m > 1).map(g => `      <span class="xc__band num--rule" style="--y:${pc(ly(g.v))}">${usd(g.v)}${g.m === C.multiple ? ' &middot; the ceiling' : ''}</span>`).join('\n')}
+      <span class="xc__band xc__band--floor num--rule" style="--y:${pc(fy)}">Floor &middot; ${usd(P.floorUsd)}</span>
+      <span class="xc__tag xc__tag--pace" style="--x:${pc(paceMidX)};--y:${pc(paceMidY)}">Pace to <span class="num--rule">${C.multiple}&times;</span></span>
       <span class="xc__dot" style="--x:0%;--y:${pc(ly(C.startUsd))}" aria-hidden="true"></span>
       <span class="xc__dot xc__dot--target" style="--x:100%;--y:${pc(ly(C.targetUsd))}" aria-hidden="true"></span>
       ${endDot}
       ${endTag}
     </div>
     <div class="xc__x" aria-hidden="true">
-${quarters.map((q, i) => `      <span class="xc__xl num--rule" style="--x:${pc(lx(q))}">${i === 0 ? 'Day 0' : i === quarters.length - 1 ? 'Day 365' : q}</span>`).join('\n')}
+${quarters.map((q, i) => `      <span class="xc__xl num--rule" style="--x:${pc(lx(q))}">${i === 0 ? 'Day 0' : i === quarters.length - 1 ? `Day ${C.days}` : q}</span>`).join('\n')}
     </div>
   </div>
   <figcaption class="xc__cap" id="xc-cap">
-    <span class="xc__key"><span class="xc__sw xc__sw--pace" aria-hidden="true"></span><span>Pace line &mdash; the constant rate that turns <span class="num--rule">${usd(C.startUsd)}</span> into <span class="num--rule">${usd(C.targetUsd)}</span> in <span class="num--rule">${C.days}</span> days. It is arithmetic, not a forecast.</span></span>
-    <span class="xc__key"><span class="xc__sw xc__sw--eq" aria-hidden="true"></span><span>Realised balance &mdash; ${live ? 'steps on each closed trade.' : 'drawn here from the first closed trade.'}</span></span>
-    <span class="xc__scale">Log scale: every doubling is the same height.</span>
+    <span class="xc__key"><span class="xc__sw xc__sw--pace" aria-hidden="true"></span><span>Pace line &mdash; the constant rate that would take the account from <span class="num--rule">1&times;</span> to <span class="num--rule">${C.multiple}&times;</span> in <span class="num--rule">${C.days}</span> days. It is arithmetic, not a forecast.</span></span>
+    <span class="xc__key"><span class="xc__sw xc__sw--eq" aria-hidden="true"></span><span>Account equity &mdash; ${live ? 'steps on each closed trade.' : 'drawn here from the first closed trade.'}</span></span>
+    <span class="xc__key"><span class="xc__sw xc__sw--floor" aria-hidden="true"></span><span>Floor &mdash; equity closing at or below <span class="num--rule">${usd(P.floorUsd)}</span> ends the experiment.</span></span>
+    <span class="xc__scale">Log scale: every doubling is the same height. Dollar figures are multiples of the <span class="num--rule">${usd(C.startUsd)}</span> start.</span>
   </figcaption>
   <p class="xc__read">${readout}</p>
 </figure>`;
 
-  /* ===================== X2 · tiles ===================== */
+  /* ===================== X2 · tiles / X1 · rail ===================== */
   const bal = live ? R.balanceUsd : C.startUsd;
-  const mult = bal / C.startUsd;
-  const dbl = bal > 0 ? Math.log2(mult) : 0;
   const cls = live ? 'mono' : 'num--rule';
   const daysLeft = C.days - (live ? R.day : 0);
+  const contracts = live ? R.contracts : Math.max(1, Math.floor(C.startUsd / P.contractPerUsd));
   const tiles = `<dl class="xt">
-  <div class="xt__i"><dt class="xt__k">Balance</dt><dd class="xt__v ${cls}">${usd(bal)}</dd><dd class="xt__s">from <span class="num--rule">${usd(C.startUsd)}</span></dd></div>
-  <div class="xt__i"><dt class="xt__k">Multiple</dt><dd class="xt__v ${cls}">${f2(mult)}&times;</dd><dd class="xt__s">target <span class="num--rule">10&times;</span></dd></div>
-  <div class="xt__i"><dt class="xt__k">Doublings earned</dt><dd class="xt__v ${cls}">${f2(dbl)}</dd><dd class="xt__s">of <span class="num--rule">${f2(doublingsTarget)}</span></dd></div>
+  <div class="xt__i"><dt class="xt__k">Equity</dt><dd class="xt__v ${cls}">${usd(bal)}</dd><dd class="xt__s">started at <span class="num--rule">${usd(C.startUsd)}</span></dd></div>
+  <div class="xt__i"><dt class="xt__k">Multiple</dt><dd class="xt__v ${cls}">${f2(mult(bal))}&times;</dd><dd class="xt__s">ceiling <span class="num--rule">${C.multiple}&times;</span></dd></div>
+  <div class="xt__i"><dt class="xt__k">Contracts in play</dt><dd class="xt__v ${cls}">${contracts}</dd><dd class="xt__s">one per <span class="num--rule">${usd(P.contractPerUsd)}</span> of equity</dd></div>
   <div class="xt__i"><dt class="xt__k">Days left</dt><dd class="xt__v ${cls}">${daysLeft}</dd><dd class="xt__s">of <span class="num--rule">${C.days}</span></dd></div>
 </dl>`;
 
-  /* ===================== X1 · state rail ===================== */
+  const status = !live ? 'Pre-launch' : R.floorBreached ? 'Stopped at the floor' : R.ended ? 'Ended' : 'Live';
   const rail = `<dl class="xr">
-  <div class="xr__i"><dt>Status</dt><dd>${live ? 'Live' : 'Pre-launch'}</dd></div>
+  <div class="xr__i"><dt>Status</dt><dd>${status}</dd></div>
   <div class="xr__i"><dt>Day</dt><dd><span class="${cls}">${live ? R.day : 0}</span> of <span class="num--rule">${C.days}</span></dd></div>
-  <div class="xr__i"><dt>Balance</dt><dd><span class="${cls}">${usd(bal)}</span></dd></div>
-  <div class="xr__i"><dt>Multiple</dt><dd><span class="${cls}">${f2(mult)}&times;</span></dd></div>
-  <div class="xr__i"><dt>Doublings</dt><dd><span class="${cls}">${f2(dbl)}</span> of <span class="num--rule">${f2(doublingsTarget)}</span></dd></div>
+  <div class="xr__i"><dt>Equity</dt><dd><span class="${cls}">${usd(bal)}</span></dd></div>
+  <div class="xr__i"><dt>Multiple</dt><dd><span class="${cls}">${f2(mult(bal))}&times;</span></dd></div>
+  <div class="xr__i"><dt>Contracts</dt><dd><span class="${cls}">${contracts}</span></dd></div>
   <div class="xr__i"><dt>Trades</dt><dd><span class="${cls}">${live ? R.trades : 0}</span></dd></div>
 </dl>`;
   const railStamp = live
     ? `As of ${day(R.asOf)}. A dated snapshot, rebuilt by hand &mdash; not a live feed.`
-    : `Not started &mdash; the start date has not been set. These are the opening values.`;
+    : `The first trade is on ${dayLong(C.startDate)}. These are the opening values.`;
 
-  /* ===================== X5 · ladder ===================== */
-  const steps = P.ladderUsd.map((to, i) => {
-    const fromBal = i === 0 ? C.startUsd : P.ladderUsd[i - 1];
-    return { size: 2 ** i, from: fromBal, earn: to - fromBal, to };
-  });
-  const ladder = `<ol class="xl" role="list">
-${steps.map((s, i) => `  <li class="xl__s" style="--h:${pc((i + 1) / steps.length * 100)}">
-    <span class="xl__bar" aria-hidden="true"></span>
-    <p class="xl__size"><span class="num--rule">${s.size}&times;</span></p>
-    <p class="xl__earn">Earn <span class="num--rule">${usd(s.earn)}</span></p>
-    <p class="xl__at">${i === steps.length - 1 ? 'reaches' : 'next step at'} <span class="num--rule">${usd(s.to)}</span></p>
-  </li>`).join('\n')}
-</ol>`;
+  /* ===================== X5 · contracts by equity ===================== */
+  const steps = Array.from({ length: C.multiple }, (_, i) => ({ n: i + 1, at: (i + 1) * P.contractPerUsd }));
+  const marks = [steps[0], steps[Math.floor(steps.length / 3)], steps[Math.floor(steps.length * 2 / 3)], steps[steps.length - 1]];
+  const strip = `<figure class="xk" role="group" aria-labelledby="xk-cap">
+  <ol class="xk__bars" role="list">
+${steps.map(s => `    <li class="xk__c" style="--h:${pc(s.n / steps.length * 100)}"><span class="xk__bar" aria-hidden="true"></span><span class="xk__n num--rule">${s.n}<span class="sr-only"> contract${s.n > 1 ? 's' : ''} from ${usd(s.at)} of equity</span></span></li>`).join('\n')}
+  </ol>
+  <div class="xk__ax" aria-hidden="true">
+${marks.map(s => `    <span class="xk__al num--rule" style="--x:${pc((s.n - 0.5) / steps.length * 100)}">${usd(s.at)}</span>`).join('\n')}
+  </div>
+  <figcaption class="xs xk__cap" id="xk-cap">Contracts per trade, by account equity. The rule is arithmetic, not a projection: the account only reaches a step if the trades take it there.</figcaption>
+</figure>`;
+
+  /* How many maximum-size losses in a row take the starting capital to the floor. */
+  const lossesToFloor = Math.ceil(Math.log(P.floorUsd / C.startUsd) / Math.log(1 - P.riskPerTradePct / 100));
 
   /* ===================== X4 · payoff sketch ===================== */
   const payoff = `<figure class="xp" role="group" aria-labelledby="xp-cap">
@@ -156,16 +162,15 @@ ${steps.map((s, i) => `  <li class="xl__s" style="--h:${pc((i + 1) / steps.lengt
   <figcaption class="xs xp__cap" id="xp-cap">A long option, sketched: its value before expiry (solid) and at expiry (dashed). Illustrative and not to scale &mdash; it is not a projection of returns.</figcaption>
 </figure>`;
 
-  /* ===================== X7 · the historical record ===================== */
+  /* ===================== X7b · the demo data ===================== */
   const D = H.defects;
   const ledger = `<dl class="xh">
-  <div class="xh__i"><dt class="xh__k">Closed alerts</dt><dd class="xh__v mono">${H.trades}</dd><dd class="xh__s">logged through ${day(H.asOf)}</dd></div>
-  <div class="xh__i"><dt class="xh__k">Winners</dt><dd class="xh__v mono">${f1(H.winRatePct)}%</dd><dd class="xh__s"><span class="mono">${H.wins}</span> of <span class="mono">${H.trades}</span></dd></div>
-  <div class="xh__i"><dt class="xh__k">Collected per $1.00 lost</dt><dd class="xh__v mono">$${f2(H.profitFactor)}</dd><dd class="xh__s">before commissions and fees</dd></div>
-  <div class="xh__i"><dt class="xh__k">Average result</dt><dd class="xh__v mono">${signedR(H.avgR)}</dd><dd class="xh__s">per alert, where R is the risk logged</dd></div>
+  <div class="xh__i"><dt class="xh__k">Demo &middot; closed alerts</dt><dd class="xh__v mono">${H.trades}</dd><dd class="xh__s">logged through ${day(H.asOf)}</dd></div>
+  <div class="xh__i"><dt class="xh__k">Demo &middot; winners</dt><dd class="xh__v mono">${f1(H.winRatePct)}%</dd><dd class="xh__s"><span class="mono">${H.wins}</span> of <span class="mono">${H.trades}</span></dd></div>
+  <div class="xh__i"><dt class="xh__k">Demo &middot; profit factor</dt><dd class="xh__v mono">${f2(H.profitFactor)}</dd><dd class="xh__s">dollars collected per dollar lost, before commissions and fees</dd></div>
+  <div class="xh__i"><dt class="xh__k">Demo &middot; average result</dt><dd class="xh__v mono">${signedR(H.avgR)}</dd><dd class="xh__s">per alert, where R is the risk logged</dd></div>
 </dl>`;
 
-  /* cumulative result, alert by alert */
   const cums = [0, ...H.series.map(s => s.cum)];
   const cMin = Math.min(...cums), cMax = Math.max(...cums);
   const sy = v => (1 - (v - cMin) / (cMax - cMin)) * 100;
@@ -181,54 +186,61 @@ ${steps.map((s, i) => `  <li class="xl__s" style="--h:${pc((i + 1) / steps.lengt
     <span class="xs-plot__dot" style="--x:100%;--y:${pc(sy(H.netUsd))}" aria-hidden="true"></span>
   </div>
   <div class="xs-plot__ends">
-    <span>Alert <span class="mono">1</span></span>
-    <span>Alert <span class="mono">${H.trades}</span> &middot; <span class="mono">${signed(H.netUsd)}</span></span>
+    <span>Demo alert <span class="mono">1</span></span>
+    <span>Demo alert <span class="mono">${H.trades}</span> &middot; <span class="mono">${signed(H.netUsd)}</span></span>
   </div>
-  <figcaption class="xs xs-plot__cap" id="xs-cap">Cumulative result across the <span class="mono">${H.trades}</span> closed alerts, in the order journalled, at the size alerted and before commissions and fees. The deepest fall from a peak was <span class="mono">${usd(H.maxDrawdownUsd)}</span>.</figcaption>
+  <figcaption class="xs xs-plot__cap" id="xs-cap">Demo account. Cumulative result across the <span class="mono">${H.trades}</span> closed alerts, in the order journalled, at the size alerted and before commissions and fees. The deepest fall from a peak was <span class="mono">${usd(H.maxDrawdownUsd)}</span>.</figcaption>
 </figure>`;
 
   /* Sentences that exist only while the source journal has the defect they describe. */
   const dc = H.dashboardCounts;
   const reconcile = [];
   if (D.duplicated.length)
-    reconcile.push(`The dashboard currently lists <span class="mono">${dc.trades}</span> fills and <span class="mono">${signed(dc.netUsd)}</span> because ${word(D.duplicated.length)} alerts appear twice in its journal; this page counts each alert once, which gives <span class="mono">${H.trades}</span> and <span class="mono">${signed(H.netUsd)}</span>.`);
+    reconcile.push(`The dashboard currently lists <span class="mono">${dc.trades}</span> fills and <span class="mono">${signed(dc.netUsd)}</span> because ${word(D.duplicated.length)} demo alerts appear twice in its journal; this page counts each alert once, which gives <span class="mono">${H.trades}</span> and <span class="mono">${signed(H.netUsd)}</span>.`);
   if (D.undated.length || D.importDated.length) {
-    const parts = [];
-    if (D.importDated.length) parts.push(`${word(D.importDated.length)} early alerts carry the date they were imported, not the date they were traded`);
-    if (D.undated.length) parts.push(`${word(D.undated.length)} carry no date`);
-    reconcile.push(`${parts.join(', and ').replace(/^./, c => c.toUpperCase())}, so the calendar span of the record is approximate; the count and the results are not affected.`);
+    const bits = [];
+    if (D.importDated.length) bits.push(`${word(D.importDated.length)} early demo alerts carry the date they were imported, not the date they were traded`);
+    if (D.undated.length) bits.push(`${word(D.undated.length)} carry no date`);
+    reconcile.push(`${bits.join(', and ').replace(/^./, c => c.toUpperCase())}, so the calendar span of the demo data is approximate; the count and the results are not affected.`);
   }
   if (!X.dashboardBase.aligned)
-    reconcile.push(`The dashboard plots the same fills against a <span class="num--ext">${usd(X.dashboardBase.startUsd)}</span> base and a <span class="num--ext">${usd(X.dashboardBase.targetUsd)}</span> target. This experiment is scored from <span class="num--rule">${usd(C.startUsd)}</span>.`);
+    reconcile.push(`The dashboard plots the same demo alerts against a <span class="num--ext">${usd(X.dashboardBase.startUsd)}</span> base. The live account is scored from <span class="num--rule">${usd(C.startUsd)}</span>.`);
 
+  const OL = H.overLimit;
   const blocks = {
-    scoreboard, tiles, rail, ladder, payoff, ledger, spark,
+    scoreboard, tiles, rail, strip, payoff, ledger, spark,
     'rail-stamp': railStamp,
     reconcile: reconcile.map(s => `<p class="xs xd__note">${s}</p>`).join('\n        '),
-    'ci-sentence': `Read that average with its error bars: on <span class="mono">${H.rSample}</span> alerts with a logged risk it sits somewhere between <span class="mono">${signedR(H.avgRCi95[0])}</span> and <span class="mono">${signedR(H.avgRCi95[1])}</span> at <span class="num--ext">95%</span> confidence.`,
+    'ci-sentence': `Read that demo average with its error bars: on <span class="mono">${H.rSample}</span> alerts with a logged risk it sits somewhere between <span class="mono">${signedR(H.avgRCi95[0])}</span> and <span class="mono">${signedR(H.avgRCi95[1])}</span> at <span class="num--ext">95%</span> confidence.`,
+    'fit-sentence': `These demo alerts were not sized under the experiment&rsquo;s rules. <span class="mono">${OL.count}</span> of the <span class="mono">${OL.of}</span> with a logged risk put more than <span class="num--rule">${usd(OL.limitUsd)}</span> at risk &mdash; above the <span class="num--rule">${P.riskPerTradePct}%</span> limit on a <span class="num--rule">${usd(C.startUsd)}</span> account. The live account cannot take those trades at that size.`,
+    'floor-sentence': `From <span class="num--rule">${usd(C.startUsd)}</span>, ${word(lossesToFloor)} maximum-size losses in a row reach the floor.`,
+    witness: X.witness.countersigned
+      ? `<strong>${X.witness.name}</strong>, independent witness, has countersigned this charter.`
+      : `<strong>${X.witness.name}</strong> is the independent witness. <strong>His countersignature of this charter is still pending</strong>, and it is stated here because a rulebook that hides its own gaps is not one.`,
   };
   const values = {
     'history.trades': String(H.trades),
     'history.asOf': day(H.asOf),
-    'history.winRate': f1(H.winRatePct),
-    'history.pf': f2(H.profitFactor),
-    'history.wins': String(H.wins),
-    'history.losses': String(H.losses),
     'history.index': String(H.index),
     'history.singleStock': String(H.singleStock),
     'history.Trades': Word(H.trades),
-    'status.word': live ? 'Live' : 'Pre-launch',
-    'status.since': live ? `Live since ${day(R.startDate)}` : 'Pre-launch &middot; start date to be set',
+    'status.badge': live ? `${status} &middot; day ${R.day} of ${C.days}` : `Pre-launch &middot; starts ${dayLong(C.startDate)}`,
     'signup.action': X.signup.endpoint || '',
     'dashboard.url': X.dashboard,
-    'protocol.unit': usd(P.premiumUnitUsd),
-    'protocol.weeklyCap': usd(P.weeklyCapUsd),
-    'protocol.weeklyPct': String(P.weeklyCapPct),
-    'protocol.buffer': word(P.bufferTrades),
-    'protocol.Buffer': Word(P.bufferTrades),
-    'protocol.firstBuffer': usd(P.bufferTrades * P.premiumUnitUsd),
-    'protocol.ladderSum': usd(C.targetUsd - C.startUsd),
-    'doublings.target': f2(doublingsTarget),
+    'start.date': dayLong(C.startDate),
+    'end.date': dayLong(C.endDate),
+    'start.usd': usd(C.startUsd),
+    'multiple': String(C.multiple),
+    'charter.date': dayLong(X.charter.dated),
+    'rule.risk': String(P.riskPerTradePct),
+    'rule.riskUsd': usd(C.startUsd * P.riskPerTradePct / 100),
+    'rule.open': String(P.openRiskPct),
+    'rule.per': usd(P.contractPerUsd),
+    'rule.second': usd(P.contractPerUsd * 2),
+    'rule.floor': usd(P.floorUsd),
+    'rule.floorDays': String(P.floorReportDays),
+    'rule.edge': String(P.edgeWindowTrades),
+    'rule.posting': P.posting,
   };
   return { blocks, values };
 }

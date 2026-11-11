@@ -7,14 +7,14 @@ const HOSTS = 'calendly\\.com|discord\\.(gg|com)|(?:10xedge|accelerator)\\.ekant
 
 export const PAGES = [
   {
-    /* The public experiment: $3,000 → $30,000 in one year, in long options. */
+    /* Ekantik Ascent, the 10× Experiment: one live account, twelve months, long options. */
     name: 'experiment', profile: 'experiment',
     shell: '_build/shell-experiment.html',
     sections: '_sections/experiment',
     outHtml: 'index.html', outCss: 'experiment.css',
     base: '',
     charts: experimentCharts,
-    requiredIds: ['top', 'scoreboard', 'takes', 'why', 'rules', 'kill', 'record', 'follow', 'operator', 'disclosures'],
+    requiredIds: ['top', 'scoreboard', 'odds', 'why', 'rules', 'kill', 'log', 'record', 'follow', 'not', 'disclosures'],
     allowHosts: new RegExp(`${HOSTS}|script\\.google\\.com`),
   },
   {

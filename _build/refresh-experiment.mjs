@@ -115,7 +115,15 @@ const series = rows.map((r, i) => {
   return { n: i + 1, id: r.trade_num, date: d ? iso(d) : null, ticker: r.ticker, pl: num(r.dollar_pl), cum: c };
 });
 
+/* The experiment caps risk per trade as a share of the account. These alerts were
+   logged before that rule existed: count how many would not have fitted it at the start. */
+const limitUsd = X.challenge.startUsd * X.protocol.riskPerTradePct / 100;
+const withRisk = rows.filter(r => num(r.risk_dollars) > 0);
+const overLimit = withRisk.filter(r => num(r.risk_dollars) > limitUsd).length;
+
 const history = {
+  label: X.historyLabel || 'demo',
+  overLimit: { count: overLimit, of: withRisk.length, limitUsd },
   asOf: dated.length ? iso(dated[dated.length - 1]) : null,
   refreshedOn: iso(new Date()),
   rawRows: raw.length,
@@ -133,10 +141,20 @@ const history = {
 };
 
 /* ---------- the experiment run ------------------------------------------ */
-const ch = X.challenge;
-let run = { started: false, startDate: null, fills: [], balanceUsd: ch.startUsd, multiple: 1, doublings: 0, day: 0, asOf: null };
-if (ch.startDate) {
-  const start = parseDate(ch.startDate);
+/* The clock starts on the charter's start date and not before: until then the page
+   shows its pre-launch state, whatever the journal holds. `--today=YYYY-MM-DD` lets a
+   test stand in a different day. Only alerts dated on or after the start count. */
+const ch = X.challenge, pr = X.protocol;
+const todayArg = (process.argv.find(a => a.startsWith('--today=')) || '').slice(8);
+const today = todayArg ? parseDate(todayArg) : new Date(new Date().toDateString());
+const contractsAt = bal => Math.max(1, Math.floor(bal / pr.contractPerUsd));
+const start = ch.startDate ? parseDate(ch.startDate) : null;
+let run = {
+  started: false, startDate: start ? iso(start) : null, endDate: ch.endDate || null, fills: [],
+  balanceUsd: ch.startUsd, multiple: 1, contracts: contractsAt(ch.startUsd),
+  toFloorUsd: ch.startUsd - pr.floorUsd, day: 0, trades: 0, asOf: null,
+};
+if (start && today >= start) {
   const inRun = rows.filter(r => { const d = dateOf(r); return d && d >= start; });
   let bal = ch.startUsd;
   const fills = inRun.map(r => {
@@ -144,15 +162,16 @@ if (ch.startDate) {
     const d = dateOf(r);
     return { id: r.trade_num, date: iso(d), day: Math.round((d - start) / 864e5), pl: num(r.dollar_pl), bal };
   });
-  const asOf = fills.length ? fills[fills.length - 1].date : iso(start);
-  const asOfDay = fills.length ? fills[fills.length - 1].day : 0;
+  const day = Math.min(ch.days, Math.round((today - start) / 864e5));
+  const s = stats(inRun);
   run = {
-    started: true, startDate: iso(start), fills, balanceUsd: bal,
+    started: true, ended: day >= ch.days, startDate: iso(start), endDate: ch.endDate || null,
+    fills, balanceUsd: bal,
     multiple: +(bal / ch.startUsd).toFixed(2),
-    doublings: bal > 0 ? +Math.log2(bal / ch.startUsd).toFixed(2) : null,
-    day: asOfDay, asOf, ...(() => { const s = stats(inRun); return { trades: s.trades, wins: s.wins, losses: s.losses, netUsd: s.netUsd }; })(),
-    paceUsd: Math.round(ch.startUsd * Math.pow(ch.targetUsd / ch.startUsd, asOfDay / ch.days)),
-    undatedAfterStartPossible: undated,
+    contracts: contractsAt(bal), toFloorUsd: bal - pr.floorUsd,
+    floorBreached: fills.some(f => f.bal <= pr.floorUsd),
+    day, asOf: iso(today), trades: s.trades, wins: s.wins, losses: s.losses, netUsd: s.netUsd,
+    paceUsd: Math.round(ch.startUsd * Math.pow(ch.targetUsd / ch.startUsd, day / ch.days)),
   };
 }
 
@@ -164,9 +183,10 @@ console.log(`  unique      : ${unique.wins}W / ${unique.losses}L · ${unique.win
 console.log(`  as dashboard: ${asDashboard.trades} fills · ${asDashboard.winRatePct}% · net $${asDashboard.netUsd} · PF ${asDashboard.profitFactor}`);
 console.log(`  dated ${history.firstDated} → ${history.lastDated} · gross check: ${grossMatches}/${priced.length} priced rows equal (exit − entry) × 100`);
 console.log(`  defects     : duplicated ${duplicated.join(', ') || 'none'} · undated ${undated.join(', ') || 'none'} · no risk ${riskless.join(', ') || 'none'} · import-dated ${importDated.join(', ') || 'none'}`);
+console.log(`  rule fit    : ${overLimit} of ${withRisk.length} alerts with a logged risk exceed $${limitUsd} (${pr.riskPerTradePct}% of $${ch.startUsd})`);
 console.log(run.started
-  ? `Experiment run — from ${run.startDate}: ${run.trades} fills · balance $${run.balanceUsd} · ${run.multiple}× · day ${run.day} of ${ch.days} · pace $${run.paceUsd}`
-  : 'Experiment run — no start date set (challenge.startDate is null): the page renders its pre-launch state');
+  ? `Experiment run — from ${run.startDate}, as of ${run.asOf}: ${run.trades} fills · equity $${run.balanceUsd} · ${run.multiple}× · ${run.contracts} contract(s) · day ${run.day} of ${ch.days} · pace $${run.paceUsd}`
+  : `Experiment run — starts ${run.startDate || '(no date set)'}: the page renders its pre-launch state`);
 console.log(bar);
 
 if (APPLY) {

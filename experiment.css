@@ -64,6 +64,9 @@
     color: var(--ink-3);
     margin-bottom: 2px;
   }
+  /* A two-column rule/value table needs no repeated "Value" label when stacked. */
+  .xtbl--kv tbody td::before { content: none; }
+  .xtbl--kv tbody td { margin-top: var(--s-2); }
 }
 
 /* --- Stat tiles ----------------------------------------------------------- */
@@ -164,7 +167,7 @@
 .x1__title {
   /* A full sentence, not a two-word title: it runs a step below --t-display so
      it holds to three lines at desktop and never orphans the year. */
-  font-size: clamp(2.6rem, .9rem + 6.6vw, 5.6rem);
+  font-size: clamp(2.5rem, .95rem + 6vw, 5.25rem);
   line-height: 1;
 }
 .x1__nb { white-space: nowrap; }
@@ -293,6 +296,7 @@
 .xc__grid { stroke: var(--line); stroke-width: 1; }
 .xc__grid--target { stroke: var(--ink-3); }
 .xc__vgrid { stroke: var(--line-2); stroke-width: 1; }
+.xc__floor { stroke: var(--ink-2); stroke-width: 1.5; stroke-dasharray: 2 4; }
 .xc__pace { stroke: var(--ink-3); stroke-width: 1.5; stroke-dasharray: 6 5; }
 .xc__eq { stroke: var(--ink); stroke-width: 2; stroke-linejoin: round; }
 
@@ -312,6 +316,8 @@
   color: var(--ink-3);
   white-space: nowrap;
 }
+/* The floor's label sits under its line, so it never collides with the 1x label above. */
+.xc__band--floor { transform: none; padding: 4px 0 0; color: var(--ink-2); }
 .xc__dot {
   position: absolute; left: var(--x); top: var(--y);
   width: 9px; height: 9px; margin: -4.5px 0 0 -4.5px;
@@ -354,6 +360,7 @@
 .xc__key { display: inline-flex; align-items: baseline; gap: var(--s-3); max-width: min(46ch, 100%); min-width: 0; }
 .xc__sw { flex: none; width: 26px; height: 0; align-self: center; border-top: 2px solid var(--ink); }
 .xc__sw--pace { border-top: 1.5px dashed var(--ink-3); }
+.xc__sw--floor { border-top: 1.5px dotted var(--ink-2); }
 .xc__scale { flex-basis: 100%; }
 .xc__read {
   margin-top: var(--s-5);
@@ -378,8 +385,9 @@
   .xc__cap { gap: var(--s-3); }
 }
 
-/* ===== x3-takes.css ================================================== */
-/* ---------- X3 · WHAT TEN TIMES TAKES ----------------------------------- */
+/* ===== x3-odds.css =================================================== */
+/* ---------- X3 · HONEST ODDS -------------------------------------------- */
+.x3__tbl tbody th { width: 46%; }
 .x3__hyp {
   margin-top: var(--s-6);
   padding: var(--s-4) 0 var(--s-4) var(--s-5);
@@ -432,51 +440,53 @@
 }
 
 /* ===== x5-rules.css ================================================== */
-/* ---------- X5 · THE PROTOCOL ------------------------------------------- */
+/* ---------- X5 · THE RULES ---------------------------------------------- */
+.x5__size { margin-top: clamp(var(--s-8), 5vw, var(--s-10)); }
 .x5__k { margin-bottom: var(--s-5); }
-.xl {
+
+/* Contracts by equity: ten columns, one per contract. Height is the count. */
+.xk { margin: 0; max-width: 58rem; }
+.xk__bars {
   display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
+  grid-template-columns: repeat(10, minmax(0, 1fr));
   gap: 2px;
-  max-width: 58rem;
 }
-.xl__s {
+.xk__c {
   display: grid;
-  grid-template-rows: 9rem auto auto auto;
+  grid-template-rows: 8rem auto;
   min-width: 0;
 }
-.xl__bar {
+.xk__bar {
   align-self: end;
   height: var(--h);
   background: var(--bg-raise);
   border-top: 2px solid var(--ink);
 }
-.xl__size {
-  margin-top: var(--s-3);
-  font-size: var(--t-fig-md);
-  line-height: 1.1;
-  letter-spacing: -.02em;
+.xk__n {
+  margin-top: var(--s-2);
+  font-size: var(--t-sm);
+  line-height: 1.2;
   color: var(--ink);
+  text-align: center;
 }
-.xl__earn { margin-top: var(--s-2); font-size: var(--t-sm); line-height: 1.35; color: var(--ink); }
-.xl__at { margin-top: 2px; padding-right: var(--s-2); font-size: var(--t-xs); line-height: 1.35; color: var(--ink-3); }
-.x5__sum { margin-top: var(--s-6); }
-
-.x5__defs {
-  margin-top: var(--s-8);
-  display: grid;
-  grid-template-columns: minmax(0, 1fr);
-  gap: var(--s-5) var(--s-7);
-  max-width: 62rem;
-}
-.x5__defs li {
+.xk__ax {
+  position: relative;
+  height: 1.75rem;
+  margin-top: var(--s-2);
   border-top: 1px solid var(--line);
-  padding-top: var(--s-4);
-  font-size: var(--t-sm); line-height: 1.6;
-  color: var(--ink-2);
 }
-.x5__defs strong { color: var(--ink); }
-.x5__risk { margin-top: clamp(var(--s-8), 5vw, var(--s-10)); }
+.xk__al {
+  position: absolute; left: var(--x); top: var(--s-2);
+  transform: translateX(-50%);
+  font-size: var(--t-xs); line-height: 1;
+  color: var(--ink-3);
+  white-space: nowrap;
+}
+.xk__al:first-child { left: 0; transform: none; }
+.xk__al:last-child { left: auto; right: 0; transform: none; }
+.xk__cap { margin-top: var(--s-3); max-width: 56ch; }
+.x5__sum { margin-top: var(--s-5); max-width: 68ch; }
+
 .x5__draft {
   margin-top: var(--s-7);
   padding: var(--s-4) 0 var(--s-4) var(--s-5);
@@ -485,76 +495,85 @@
 }
 .x5__draft strong { color: var(--ink); }
 
-@media (max-width: 560px) {
-  .xl__earn { font-size: var(--t-xs); padding-right: var(--s-2); }
-}
 @media (min-width: 48em) {
-  .x5__defs { grid-template-columns: repeat(3, minmax(0, 1fr)); }
-  .xl__s { grid-template-rows: 11rem auto auto auto; }
+  .xk__c { grid-template-rows: 10rem auto; }
 }
 
 /* ===== x6-kill.css =================================================== */
-/* ---------- X6 · HOW IT STOPS ------------------------------------------- */
-.x6__gates {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr);
-  gap: var(--s-7);
-}
-.x6__gate { border-top: 1px solid var(--line); padding-top: var(--s-5); }
-.x6__q { margin-top: var(--s-3); }
-.x6__b { margin-top: var(--s-4); max-width: 50ch; }
-.x6__b strong { color: var(--ink); }
-.x6__check { margin-top: var(--s-4); display: grid; gap: var(--s-3); }
-.x6__check li {
-  position: relative;
-  padding-left: var(--s-5);
-  color: var(--ink-2);
-}
-.x6__check li::before {
-  content: '';
-  position: absolute; left: 0; top: .72em;
-  width: 10px; height: 1px;
-  background: var(--ink-3);
-}
-
+/* ---------- X6 · KILL CRITERIA ------------------------------------------
+   Three criteria, three equal columns from 768px. The numeral is a rule
+   value (the order is the charter's own), never a decorative marker.
+   ------------------------------------------------------------------------ */
 .x6__kc {
-  margin-top: clamp(var(--s-8), 5vw, var(--s-10));
   display: grid;
   grid-template-columns: minmax(0, 1fr);
-  border-top: 1px solid var(--line);
+  gap: var(--s-6);
 }
 .x6__kc li {
-  display: grid;
-  grid-template-columns: 2.5rem minmax(0, 1fr);
-  column-gap: var(--s-3);
-  padding-block: var(--s-4);
-  border-bottom: 1px solid var(--line);
+  border-top: 1px solid var(--line);
+  padding-top: var(--s-4);
+  min-width: 0;
 }
-.x6__n { font-size: var(--t-sm); color: var(--ink-3); padding-top: 1px; }
-.x6__t { color: var(--ink); line-height: 1.4; }
-.x6__r { grid-column: 2; margin-top: 2px; font-size: var(--t-sm); line-height: 1.45; color: var(--ink-3); }
+.x6__n {
+  display: block;
+  font-size: var(--t-sm);
+  color: var(--ink-3);
+}
+.x6__t { margin-top: var(--s-3); }
+.x6__r { margin-top: var(--s-3); max-width: 40ch; }
 
-.x6__seam { margin-top: clamp(var(--s-8), 5vw, var(--s-10)); }
+.x6__else {
+  margin-top: var(--s-7);
+  font-size: var(--t-lede);
+  line-height: 1.5;
+  color: var(--ink-2);
+}
+
+.x6__seam { margin-top: clamp(var(--s-7), 5vw, var(--s-9)); }
 .x6__witness {
   margin-top: var(--s-7);
   display: grid;
   grid-template-columns: minmax(0, 1fr);
   gap: var(--s-4);
 }
-.x6__witness .x6__b { margin-top: 0; max-width: 58ch; }
+.x6__q { margin-top: var(--s-3); }
+.x6__b { max-width: 58ch; }
+.x6__b strong { color: var(--ink); }
 .x6__punch { margin-top: clamp(var(--s-8), 5vw, var(--s-10)); max-width: 26em; }
 
 @media (min-width: 48em) {
-  .x6__gates { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--s-9); }
-  .x6__kc { grid-template-columns: repeat(2, minmax(0, 1fr)); column-gap: var(--s-9); }
+  .x6__kc { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--s-8); }
   .x6__witness { grid-template-columns: minmax(0, 1fr) minmax(0, 1.4fr); gap: var(--s-9); }
 }
 
-/* ===== x7-record.css ================================================= */
+/* ===== x7-log.css ==================================================== */
+/* ---------- X7 · THE PUBLIC LOG ----------------------------------------- */
+.x7l__list {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--s-6) var(--s-8);
+  margin-bottom: 0;   /* the top margin belongs to .sec-head + * */
+}
+.x7l__i {
+  border-top: 1px solid var(--line);
+  padding-top: var(--s-4);
+  min-width: 0;
+}
+.x7l__i dd { margin: var(--s-3) 0 0; max-width: 38ch; }
+
+@media (min-width: 40em) {
+  .x7l__list { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+@media (min-width: 64em) {
+  .x7l__list { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+}
+
+/* ===== x7b-record.css ================================================ */
 /* ---------- X7 · THE RECORD SO FAR --------------------------------------
    History, kept visibly apart from the experiment's own scoreboard. The
    reference card is the section's destination: a bordered block, never gold.
    ------------------------------------------------------------------------ */
+.x7__demo { margin-bottom: var(--s-5); white-space: normal; }
 .x7__grid {
   margin-top: clamp(var(--s-8), 5vw, var(--s-10));
   display: grid;
@@ -692,19 +711,35 @@
   .x8__grid { grid-template-columns: minmax(0, 1.05fr) minmax(0, 1fr); gap: var(--s-10); align-items: start; }
 }
 
-/* ===== x9-operator.css =============================================== */
-/* ---------- X9 · THE OPERATOR ------------------------------------------- */
+/* ===== x9-not.css ==================================================== */
+/* ---------- X9 · WHAT THIS IS NOT --------------------------------------- */
 .x9 { border-top: 1px solid var(--line); }
-.x9__q {
-  margin-top: var(--s-5);
-  font-family: 'Cormorant Garamond', Georgia, serif;
-  font-size: var(--t-pull);
-  line-height: 1.32;
-  letter-spacing: -.012em;
-  color: var(--ink);
-  text-wrap: pretty;
+.x9__list {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--s-6) var(--s-8);
+  margin-bottom: 0;   /* the top margin belongs to .sec-head + * */
 }
-.x9__sig { margin-top: var(--s-6); display: flex; flex-wrap: wrap; align-items: center; gap: var(--s-3) var(--s-4); }
+.x9__i {
+  border-top: 1px solid var(--line);
+  padding-top: var(--s-4);
+  min-width: 0;
+}
+.x9__i dt { font-weight: 500; color: var(--ink); }
+.x9__i dd {
+  margin: var(--s-2) 0 0;
+  font-size: var(--t-sm); line-height: 1.6;
+  color: var(--ink-2);
+  max-width: 44ch;
+}
+.x9__sig { margin-top: var(--s-8); display: flex; flex-wrap: wrap; align-items: center; gap: var(--s-3) var(--s-4); }
 .x9__name { font-weight: 500; color: var(--ink); }
 .x9__rule { width: 32px; height: 1px; background: var(--line); }
 .x9__role { font-size: var(--t-sm); color: var(--ink-3); }
+
+@media (min-width: 40em) {
+  .x9__list { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+@media (min-width: 64em) {
+  .x9__list { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+}

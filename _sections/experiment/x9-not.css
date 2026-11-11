@@ -1,0 +1,31 @@
+/* ---------- X9 · WHAT THIS IS NOT --------------------------------------- */
+.x9 { border-top: 1px solid var(--line); }
+.x9__list {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--s-6) var(--s-8);
+  margin-bottom: 0;   /* the top margin belongs to .sec-head + * */
+}
+.x9__i {
+  border-top: 1px solid var(--line);
+  padding-top: var(--s-4);
+  min-width: 0;
+}
+.x9__i dt { font-weight: 500; color: var(--ink); }
+.x9__i dd {
+  margin: var(--s-2) 0 0;
+  font-size: var(--t-sm); line-height: 1.6;
+  color: var(--ink-2);
+  max-width: 44ch;
+}
+.x9__sig { margin-top: var(--s-8); display: flex; flex-wrap: wrap; align-items: center; gap: var(--s-3) var(--s-4); }
+.x9__name { font-weight: 500; color: var(--ink); }
+.x9__rule { width: 32px; height: 1px; background: var(--line); }
+.x9__role { font-size: var(--t-sm); color: var(--ink-3); }
+
+@media (min-width: 40em) {
+  .x9__list { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+@media (min-width: 64em) {
+  .x9__list { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+}

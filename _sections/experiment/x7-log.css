@@ -1,0 +1,20 @@
+/* ---------- X7 · THE PUBLIC LOG ----------------------------------------- */
+.x7l__list {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--s-6) var(--s-8);
+  margin-bottom: 0;   /* the top margin belongs to .sec-head + * */
+}
+.x7l__i {
+  border-top: 1px solid var(--line);
+  padding-top: var(--s-4);
+  min-width: 0;
+}
+.x7l__i dd { margin: var(--s-3) 0 0; max-width: 38ch; }
+
+@media (min-width: 40em) {
+  .x7l__list { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+@media (min-width: 64em) {
+  .x7l__list { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+}

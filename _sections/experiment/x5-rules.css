@@ -1,48 +1,50 @@
-/* ---------- X5 · THE PROTOCOL ------------------------------------------- */
+/* ---------- X5 · THE RULES ---------------------------------------------- */
+.x5__size { margin-top: clamp(var(--s-8), 5vw, var(--s-10)); }
 .x5__k { margin-bottom: var(--s-5); }
-.xl {
+
+/* Contracts by equity: ten columns, one per contract. Height is the count. */
+.xk { margin: 0; max-width: 58rem; }
+.xk__bars {
   display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
+  grid-template-columns: repeat(10, minmax(0, 1fr));
   gap: 2px;
-  max-width: 58rem;
 }
-.xl__s {
+.xk__c {
   display: grid;
-  grid-template-rows: 9rem auto auto auto;
+  grid-template-rows: 8rem auto;
   min-width: 0;
 }
-.xl__bar {
+.xk__bar {
   align-self: end;
   height: var(--h);
   background: var(--bg-raise);
   border-top: 2px solid var(--ink);
 }
-.xl__size {
-  margin-top: var(--s-3);
-  font-size: var(--t-fig-md);
-  line-height: 1.1;
-  letter-spacing: -.02em;
+.xk__n {
+  margin-top: var(--s-2);
+  font-size: var(--t-sm);
+  line-height: 1.2;
   color: var(--ink);
+  text-align: center;
 }
-.xl__earn { margin-top: var(--s-2); font-size: var(--t-sm); line-height: 1.35; color: var(--ink); }
-.xl__at { margin-top: 2px; padding-right: var(--s-2); font-size: var(--t-xs); line-height: 1.35; color: var(--ink-3); }
-.x5__sum { margin-top: var(--s-6); }
-
-.x5__defs {
-  margin-top: var(--s-8);
-  display: grid;
-  grid-template-columns: minmax(0, 1fr);
-  gap: var(--s-5) var(--s-7);
-  max-width: 62rem;
-}
-.x5__defs li {
+.xk__ax {
+  position: relative;
+  height: 1.75rem;
+  margin-top: var(--s-2);
   border-top: 1px solid var(--line);
-  padding-top: var(--s-4);
-  font-size: var(--t-sm); line-height: 1.6;
-  color: var(--ink-2);
 }
-.x5__defs strong { color: var(--ink); }
-.x5__risk { margin-top: clamp(var(--s-8), 5vw, var(--s-10)); }
+.xk__al {
+  position: absolute; left: var(--x); top: var(--s-2);
+  transform: translateX(-50%);
+  font-size: var(--t-xs); line-height: 1;
+  color: var(--ink-3);
+  white-space: nowrap;
+}
+.xk__al:first-child { left: 0; transform: none; }
+.xk__al:last-child { left: auto; right: 0; transform: none; }
+.xk__cap { margin-top: var(--s-3); max-width: 56ch; }
+.x5__sum { margin-top: var(--s-5); max-width: 68ch; }
+
 .x5__draft {
   margin-top: var(--s-7);
   padding: var(--s-4) 0 var(--s-4) var(--s-5);
@@ -51,10 +53,6 @@
 }
 .x5__draft strong { color: var(--ink); }
 
-@media (max-width: 560px) {
-  .xl__earn { font-size: var(--t-xs); padding-right: var(--s-2); }
-}
 @media (min-width: 48em) {
-  .x5__defs { grid-template-columns: repeat(3, minmax(0, 1fr)); }
-  .xl__s { grid-template-rows: 11rem auto auto auto; }
+  .xk__c { grid-template-rows: 10rem auto; }
 }

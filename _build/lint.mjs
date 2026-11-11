@@ -368,15 +368,19 @@ function program(ctx) {
 
 }
 
-/* ============ PROFILE — experiment ($3,000 → $30,000, options) ============ */
+/* ====== PROFILE — experiment (Ekantik Ascent, the 10× Experiment) ====== */
+/* Source of truth: the charter dated 2026-11-09 and the operator's answers of
+   2026-11-11, recorded in figures.json → experiment. */
 function experiment(ctx) {
   const { htmlRaw, stripped, text, allCopy, F, W, G } = ctx;
   const fig = JSON.parse(readFileSync(join(root, '_build', 'figures.json'), 'utf8'));
   const X = fig.experiment || {};
   const section = id => {
     const m = stripped.match(new RegExp(`<(section|footer)[^>]*id="${id}"[\\s\\S]*?</\\1>`, 'i'));
-    return m ? m[0].replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ') : '';
+    return m ? m[0].replace(/<[^>]+>/g, ' ').replace(/&times;/g, '×').replace(/&middot;/g, '·')
+      .replace(/&rsquo;/g, '’').replace(/&mdash;/g, '—').replace(/&amp;/g, '&').replace(/\s+/g, ' ') : '';
   };
+  const body = stripped.replace(/<head[\s\S]*?<\/head>/i, '');
 
   /* ---------- 1. Forbidden content ---------------------------------------- */
   const FORBIDDEN_CONTENT = [
@@ -386,13 +390,19 @@ function experiment(ctx) {
     [/\bcountdown\b|\bacts? now\b|\bhurry\b|\bdon.t miss out\b/i, 'manufactured urgency'],
     [/\bpriority access\b|\breserve (your |a )?(seat|spot|allocation)\b|\bfirst access\b|\bearly access\b/i, 'allocation-priority promise'],
     [/revolutionary|unprecedented|game[- ]?chang|supercharge|unlock the|secret sauce|explosive/i, 'hype adjective'],
-    /* "10× in a year" is the objective of an experiment, never an expected return. */
+    /* 10× is the ceiling of a design under test, never an expected return. */
     [/\bwill (reach|hit|make|turn|grow|deliver|return)\b/i, 'a statement that the result WILL happen'],
     [/\bexpected return\b|\bon track to\b|\brisk[- ]free\b|\bcan(no|')t lose\b|\bsure thing\b|\bproven (edge|system|strategy)\b/i, 'outcome language the experiment cannot support'],
+    /* "The target is a multiple, not a dollar figure." */
+    [/take \$3,000 to|\$3,000 (to|→|into) \$30,000|\$3,?000\s*(-|–|→)\s*\$30,?000/i, 'the target stated as a dollar figure — the charter says it is a multiple'],
+    /* The charter: one LIVE account. "Model portfolio" described the old page. */
+    [/model portfolio/i, '"model portfolio" — the experiment is a live account; the earlier data is demo data'],
     /* The other page's engine. None of its figures or venues belong here. */
     [/62\.4\s?%|\$\s?1\.69\b|\b149\s+(live\s+)?trades|\$5\s?M\b|\$5,000,000|\b166\s+fit/i, 'a figure from the ES-futures record'],
-    [/Interactive Brokers|Tradovate/i, 'a brokerage named — this page describes a model portfolio and names no venue'],
-    [/Cash[- ]Flow Engine|Compounding Engine|Never Lose Money/i, 'a label from the reference page that is not carried over'],
+    [/Interactive Brokers|Tradovate/i, 'a brokerage named — the charter names none'],
+    [/Cash[- ]Flow Engine|Compounding Engine|Never Lose Money|Convexity/i, 'a label from the superseded protocol'],
+    /* Superseded by the charter's rules. */
+    [/earned[- ]doubling|six uncorrelated|weekly (loss )?cap|Expression Gate|Fidelity Gate/i, 'a rule from the superseded protocol — the charter has three kill criteria and one sizing rule'],
   ];
   for (const [re, why] of FORBIDDEN_CONTENT) {
     const m = allCopy.match(new RegExp(`.{0,60}(?:${re.source}).{0,60}`, 'i'));
@@ -402,67 +412,122 @@ function experiment(ctx) {
   if (wl.length && !/no waitlist/i.test(allCopy)) F('FORBIDDEN-CONTENT', '"waitlist" appears without the negating "no waitlist"');
   if (wl.length > 1) W('CHECK', `"waitlist" appears ${wl.length}× — only the negating use is permitted`);
 
-  /* ---------- 2. Required statements -------------------------------------- */
+  /* $30,000 is what 10× of $3,000 is. It may be read off the scoreboard and the sizing
+     strip; it may never be stated as the goal anywhere else. */
+  for (const id of ['top', 'odds', 'why', 'kill', 'log', 'record', 'follow', 'not', 'disclosures'])
+    if (/\$30,000/.test(section(id))) F('TARGET', `"$30,000" appears in #${id} — the target is a multiple; the dollar figure belongs only on the scoreboard and the sizing strip`);
+  if (/\$30,000/.test((htmlRaw.match(/<head[\s\S]*?<\/head>/i) || [''])[0])) F('TARGET', '"$30,000" appears in the title or meta description');
+
+  /* ---------- 2. The charter's statements --------------------------------- */
+  const ch = X.challenge || {}, ac = X.account || {}, pr = X.protocol || {}, wi = X.witness || {};
   const REQUIRED = [
-    [/take \$3,000 to \$30,000 in one year/i, 'the challenge, as the H1 states it'],
-    [/3\.32/, 'the doublings arithmetic (3.32)'],
-    [/it is not a forecast/i, '"it is not a forecast" beside the objective'],
+    [/one live account/i, 'the declaration: one live account'],
+    [/founder.s own money/i, "the declaration: the founder's own money"],
+    [/published before the first trade/i, 'rules published before the first trade'],
+    [/The result is published in full, whatever it is/i, 'the declaration: the result is published in full'],
+    [/is the design ceiling, not the expectation/i, 'honest odds: the design ceiling, not the expectation'],
+    [/We consider reaching it unlikely/i, 'honest odds: "we consider reaching it unlikely"'],
+    [/The only failed experiment is one where a rule is broken/i, 'honest odds: the only failed experiment'],
+    [/No additions, no withdrawals/i, 'rule: no additions, no withdrawals'],
+    [/1 December 2026/, 'rule: the start date'],
+    [/30 November 2027/, 'rule: the end date'],
+    [/One contract per \$3,000 of account equity/i, 'rule: position sizing'],
+    [/Any amendment is published and countersigned before it takes effect/i, 'rule: rule changes'],
+    [/the target is a multiple, not a dollar figure/i, 'the target is a multiple, not a dollar figure'],
+    [/reported as a breach, not a result/i, 'kill criterion: rule breach'],
+    [/Losses are posted the same way as wins/i, 'public log: losses posted the same way as wins'],
+    [/A broker statement confirming the balance/i, 'public log: the monthly broker statement'],
+    [/a financial publisher, not a registered investment adviser/i, 'what this is not: not advice'],
+    [/No result is promised or implied/i, 'what this is not: not a promise'],
+    [/holds only the founder.s own capital/i, 'what this is not: not outside money'],
+    [/There is no backtest/i, 'what this is not: no backtest'],
+    [/Demo results do not predict live results/i, 'what this is not: demo results do not predict live results'],
+    [/rated Aggressive/i, 'what this is not: rated Aggressive'],
+    [/can lose most or all of its value/i, 'what this is not: can lose most or all of its value'],
+    [/sets no goal for any reader.s money/i, 'what this is not: not a personal target'],
     [/is not indicative of future results/i, 'the past-performance line'],
-    [/trades is not proof/i, 'the sample caveat ("… trades is not proof")'],
-    [/Expression Gate/i, 'the Expression Gate'],
-    [/Fidelity Gate/i, 'the Fidelity Gate'],
     [/Characteristics and Risks of Standardized Options/i, 'the options disclosure document'],
     [/whole premium paid can be lost/i, 'the options risk of total loss of premium'],
-    [/before commissions and fees/i, 'the cost basis of the record'],
-    [/not an audited or broker-reconciled statement/i, 'the status of the record'],
+    [/before commissions and fees/i, 'the cost basis of the demo data'],
+    [/not an audited or broker-reconciled statement/i, 'the status of the demo data'],
     [/no waitlist/i, 'the negated waitlist'],
-    [/observation and education/i, 'what following is'],
-    [/Hypothetical performance has inherent limitations|Hypothetical and model results have inherent limitations/i, 'the hypothetical-performance limitation'],
     [/dated snapshot/i, 'the snapshot framing'],
-    [/small sample/i, 'the sample-size statement'],
   ];
   for (const [re, why] of REQUIRED) if (!re.test(allCopy)) F('MISSING-REQUIRED', why);
 
-  const soft = (allCopy.match(/no capital is managed/gi) || []).length;
-  if (soft < 2) F('MISSING-REQUIRED', `"No capital is managed" appears ${soft}× — it must appear above the fold AND at the sign-up`);
-  if (!/no capital is managed/i.test(section('top'))) F('MISSING-REQUIRED', 'the status sentence is not in the hero');
-  if (!/no capital is managed/i.test(section('follow'))) F('MISSING-REQUIRED', 'the status sentence is not beside the sign-up form');
-
-  /* Every block that shows a trajectory says, inside itself, what it is. */
-  if (!/not a forecast/i.test(section('scoreboard'))) F('HYPOTHETICAL', 'the scoreboard shows a pace line without "not a forecast"');
-  if (!/hypothetical/i.test(section('takes'))) F('HYPOTHETICAL', 'the scenario table has no "Hypothetical" label');
-  if (!/not a projection/i.test(section('rules'))) F('HYPOTHETICAL', 'the ladder arithmetic is not labelled "not a projection"');
-  if (!/not a projection/i.test(section('why'))) F('HYPOTHETICAL', 'the payoff sketch is not labelled "not a projection"');
-  /* Three of the four scenarios fall short; the table may never show the good one alone. */
-  for (const row of ['Cooperative', 'Mixed', 'Hostile', 'Falsified'])
-    if (!new RegExp(row).test(section('takes'))) F('HYPOTHETICAL', `the scenario table is missing its "${row}" row`);
+  /* The numbers the operator set on 2026-11-11 must be the ones on the page. */
+  const rules = section('rules'), kill = section('kill');
+  if (!new RegExp(`${pr.riskPerTradePct}% of the account`).test(rules)) F('RULES', `the rules do not state the ${pr.riskPerTradePct}% maximum risk per trade`);
+  if ((rules.match(new RegExp(`${pr.openRiskPct}% of the account`, 'g')) || []).length < 2 && pr.riskPerTradePct === pr.openRiskPct)
+    F('RULES', `the rules do not state both limits (${pr.riskPerTradePct}% per trade and ${pr.openRiskPct}% total open risk)`);
+  if (!new RegExp(`\\$${pr.floorUsd.toLocaleString('en-US')}`).test(kill)) F('RULES', `the kill criteria do not state the $${pr.floorUsd} floor`);
+  if (!new RegExp(`last ${pr.edgeWindowTrades} trades`).test(kill)) F('RULES', `the edge check does not state the last-${pr.edgeWindowTrades}-trades window`);
+  if (!new RegExp(`in ${pr.posting}`).test(section('log'))) F('RULES', `the public log does not say trades are posted in ${pr.posting}`);
 
   const kc = (stripped.match(/<ol class="x6__kc"[\s\S]*?<\/ol>/) || [''])[0];
   const kcN = (kc.match(/<li>/g) || []).length;
-  if (kcN !== 8) F('STRUCTURE', `the stop-condition list has ${kcN} items — the protocol names eight`);
+  if (kcN !== 3) F('STRUCTURE', `the kill-criteria list has ${kcN} items — the charter names three (floor, rule breach, edge check)`);
+  const oddsRows = ((stripped.match(/<table class="xtbl x3__tbl"[\s\S]*?<\/table>/) || [''])[0].match(/<tr>/g) || []).length - 1;
+  if (oddsRows !== 3) F('STRUCTURE', `the honest-odds table has ${oddsRows} outcomes — the charter names three, and the floor must be one of them`);
+  if ((body.match(/<dl class="x9__list"[\s\S]*?<\/dl>/) || [''])[0].split('<dt>').length - 1 !== 6)
+    F('STRUCTURE', 'the "what this is not" list does not have the charter\'s six items');
 
-  /* ---------- 3. One record per page -------------------------------------- */
+  /* The odds are stated where the odds are discussed, and above the fold — not only in
+     the small print. */
+  for (const id of ['top', 'odds'])
+    if (!/consider reaching it unlikely/i.test(section(id)))
+      F('MISSING-REQUIRED', `"we consider reaching it unlikely" is missing from #${id}`);
+
+  /* Status sentence above the fold and at the sign-up. */
+  for (const id of ['top', 'follow'])
+    if (!/no outside money is managed, and no investment is offered or solicited/i.test(section(id)))
+      F('MISSING-REQUIRED', `the status sentence ("No outside money is managed…") is missing from #${id}`);
+
+  /* Every trajectory block says, inside itself, what it is. */
+  if (!/not a forecast/i.test(section('scoreboard'))) F('HYPOTHETICAL', 'the scoreboard shows a pace line without "not a forecast"');
+  if (!/not a projection/i.test(rules)) F('HYPOTHETICAL', 'the sizing strip is not labelled "not a projection"');
+  if (!/not a projection/i.test(section('why'))) F('HYPOTHETICAL', 'the payoff sketch is not labelled "not a projection"');
+  if (!/Floor/.test(section('scoreboard'))) F('STRUCTURE', 'the scoreboard does not draw the floor');
+
+  /* ---------- 3. Demo data is labelled demo everywhere it appears --------- */
+  /* Charter launch gate, enforced here rather than left to a checklist. */
   const H = X.history || {};
+  const rec = (stripped.match(/<section[^>]*id="record"[\s\S]*?<\/section>/i) || [''])[0];
+  const tiles = [...rec.matchAll(/<dt class="xh__k">([\s\S]*?)<\/dt>/g)].map(m => m[1]);
+  if (tiles.length !== 4) F('DEMO', `expected four demo tiles in the record section, found ${tiles.length}`);
+  for (const t of tiles) if (!/^Demo\b/.test(t)) F('DEMO', `a record tile is not labelled demo: "${t.replace(/<[^>]+>/g, '').trim()}"`);
+  const cap = (rec.match(/<figcaption class="xs xs-plot__cap"[^>]*>([\s\S]*?)<\/figcaption>/) || [, ''])[1];
+  if (!/^Demo account/.test(cap)) F('DEMO', 'the cumulative plot\'s caption does not begin "Demo account"');
+  if (!/Demo account/.test(section('record').slice(0, 400))) F('DEMO', 'the record section does not open by saying the data is from a demo account');
+  if (!/class="badge x7__demo"/.test(rec)) F('DEMO', 'the demo badge above the tiles is missing');
+  if (!/demo trades is not proof/i.test(section('record'))) F('DEMO', 'the sample caveat ("… demo trades is not proof") is missing');
+  /* The demo figures may appear only in the record section and the disclosure that describes them. */
+  for (const id of ['top', 'scoreboard', 'odds', 'why', 'rules', 'kill', 'log', 'follow', 'not'])
+    if (new RegExp(`${String(H.winRatePct).replace('.', '\\.')}\\s?%|\\b${String(H.profitFactor).replace('.', '\\.')}\\b`).test(section(id)))
+      F('DEMO', `a demo figure (${H.winRatePct}% or ${H.profitFactor}) appears in #${id}, outside the labelled demo section`);
   if (!new RegExp(`\\b${H.trades}\\b`).test(section('record'))) F('FIGURE-DRIFT', `the record section does not state ${H.trades} closed alerts (figures.json)`);
   if (!new RegExp(`${String(H.winRatePct).replace('.', '\\.')}\\s?%`).test(section('record'))) F('FIGURE-DRIFT', `the record section does not state the ${H.winRatePct}% win rate (figures.json)`);
+  if ((H.overLimit || {}).count && !/were not sized under the experiment.s rules/i.test(section('record')))
+    F('DEMO', `${H.overLimit.count} demo alerts exceed the per-trade limit, but the record section does not say the demo data was not sized under the rules`);
   if (/\[MISSING VALUE|MISSING CHART/.test(htmlRaw)) F('STRUCTURE', 'a build-time value or chart failed to resolve');
-  /* Operator, 2026-11-10: this page carries no reference to the futures edge for now —
-     no link to /program/, no mention of the futures record. (/program/ is still built,
-     and old deep links still forward to it.) */
-  if (/href="program\/|Structural Edge|ES futures|futures (record|edge|engine)|Commodity Trading Advisor|Series 3/i.test(stripped.replace(/<head[\s\S]*?<\/head>/i, '')))
+
+  /* Operator, 2026-11-10: no reference to the futures edge on this page for now. */
+  if (/href="program\/|Structural Edge|ES futures|futures (record|edge|engine)|Commodity Trading Advisor|Series 3/i.test(body))
     F('SCOPE', 'the page refers to the futures edge or links to /program/ — removed at the operator\'s instruction');
+  /* Operator, 2026-11-11: the on-page form is the sign-up; the Alpha portal is not mentioned. */
+  if (/Alpha portal/i.test(allCopy)) F('SCOPE', 'the Alpha portal is mentioned — the operator chose the on-page form');
 
   /* ---------- 4. The dashboard reference ---------------------------------- */
   const dash = (X.dashboard || '').replace(/^https?:\/\//, '');
   const dashLinks = [...stripped.matchAll(new RegExp(`<a\\b[^>]*href="[^"]*${dash.replace(/[.]/g, '\\.')}"[^>]*>`, 'gi'))];
-  if (dashLinks.length < 3) F('DASHBOARD', `the options dashboard is linked ${dashLinks.length}× — it is the page's reference point (hero rail, scoreboard, record card, footer)`);
+  if (dashLinks.length < 3) F('DASHBOARD', `the Ascent dashboard is linked ${dashLinks.length}× — it is the page's reference point (hero rail, scoreboard, record card, footer)`);
   for (const a of dashLinks) {
     if (/class="[^"]*\bbtn\b/.test(a[0])) F('DASHBOARD', `dashboard linked as a button — it must never compete with the sign-up: ${a[0].slice(0, 90)}`);
     if (!/rel="[^"]*noopener/.test(a[0])) F('DASHBOARD', `dashboard link missing rel="noopener": ${a[0].slice(0, 80)}`);
   }
   if (!/<aside class="x7__ref"/.test(stripped)) F('DASHBOARD', 'the reference card is missing from the record section');
   if (!/keeps counting/i.test(section('record'))) F('DASHBOARD', 'the reference card lacks the snapshot framing (page = dated snapshot, dashboard = live)');
-  if (/accelerator\.ekantikcapital\.com\/experiment\.html/.test(stripped)) F('DASHBOARD', 'the ES-futures dashboard is linked from the options page');
+  if (/accelerator\.ekantikcapital\.com\/experiment\.html/.test(stripped)) F('DASHBOARD', 'the ES-futures dashboard is linked from this page');
 
   /* ---------- 5. One action: sign up -------------------------------------- */
   /* The Discord invite is returned by the sign-up endpoint after the row is written.
@@ -492,29 +557,30 @@ function experiment(ctx) {
     if (!/id="signup-status"[^>]*aria-live/.test(stripped)) F('SIGNUP', 'the form status is not an aria-live region');
     const action = (form.match(/action="([^"]*)"/) || [, ''])[1];
     if (!/^https:\/\/script\.google\.com\/macros\/s\/[\w-]+\/exec$/.test(action))
-      G('SIGNUP', `the form is not connected — action is "${action}". Deploy _build/signup-apps-script.gs and put the /exec URL in figures.json → experiment.signup.endpoint. Until then nobody's name is collected.`);
+      G('SIGN-UP LIVE AND TESTED', `the form is not connected — action is "${action}". Deploy _build/signup-apps-script.gs and put the /exec URL in figures.json → experiment.signup.endpoint. Until then nobody's name is collected.`);
   }
 
-  /* ---------- 6. Operator inputs ------------------------------------------ */
-  const ch = X.challenge || {}, ac = X.account || {}, pr = X.protocol || {}, d = H.defects || {};
-  if (!ch.verified) G('START', `challenge.startDate is ${ch.startDate ? `"${ch.startDate}" but unverified` : 'not set'} — the page shows its pre-launch state. Set the date, and whether earlier fills count.`);
-  if (!ac.verified) G('ACCOUNT', `account.kind is "${ac.kind}" and unverified — the page says "model portfolio" because the dashboard does. Confirm, or state the funded account and its broker.`);
-  if (!pr.verified) G('PROTOCOL', 'the rules at the $3,000 scale are unconfirmed (premium unit, weekly cap, buffer). Note the tension recorded in figures.json: a 12% weekly cap is $360, less than one full-premium loss at 2×.');
-  if (!pr.countersigned) {
-    G('WITNESS', 'the options protocol is not countersigned by the witness.');
-    if (!/countersignature is still pending/i.test(allCopy) || !/Status: draft/i.test(allCopy))
-      F('UNVERIFIED-CLAIM', 'the protocol is not countersigned, but the page does not say so (needs "Status: draft" and "countersignature is still pending")');
-  } else if (/countersignature is still pending|Status: draft/i.test(allCopy))
-    F('UNVERIFIED-CLAIM', 'figures.json says the protocol is countersigned, but the page still calls it a draft');
+  /* ---------- 6. The charter's launch gates ------------------------------- */
+  /* "Nothing goes public until every box is ticked." */
+  const d = H.defects || {};
+  if (!ch.verified || !ac.verified || !pr.verified)
+    G('SET ITEMS', 'a rule or date in figures.json → experiment is not verified by the operator');
+  if (!(pr.sizingBelowStart || {}).verified)
+    G('SET ITEMS', `position sizing below $${(pr.contractPerUsd * 2).toLocaleString('en-US')} — "one contract per $${pr.contractPerUsd.toLocaleString('en-US')}" read literally is zero contracts after the first loss. The page says one contract until equity reaches $${(pr.contractPerUsd * 2).toLocaleString('en-US')}. Confirm that reading.`);
+  if (!wi.countersigned) {
+    G('WITNESS', `${wi.name ? wi.name.split(' ')[0] : 'the witness'} has not countersigned the charter.`);
+    if (!/countersignature of this charter is still pending/i.test(allCopy))
+      F('UNVERIFIED-CLAIM', 'the charter is not countersigned, but the page does not say the countersignature is pending');
+  } else if (/still pending/i.test(section('kill')))
+    F('UNVERIFIED-CLAIM', 'figures.json says the charter is countersigned, but the page still says pending');
+  G('ATTORNEY', 'the public wording has not been reviewed by an attorney — especially "10×", the sizing strip, and "financial publisher, not a registered investment adviser".');
+  G('PUBLISH', `the charter must be published before the first trade on ${ch.startDate}. This page is that publication; it goes live only on the operator's go-ahead.`);
   if ((d.duplicated || []).length)
-    G('JOURNAL', `the options journal repeats ${d.duplicated.join(', ')}, so the dashboard shows ${H.dashboardCounts.trades} fills where this page states ${H.trades}. The page explains the difference; the fix is to remove the duplicate rows at source.`);
+    G('JOURNAL', `the demo journal repeats ${d.duplicated.join(', ')}, so the dashboard shows ${H.dashboardCounts.trades} fills where this page states ${H.trades}. The page explains the difference; the fix is to remove the duplicate rows at source.`);
   if ((d.undated || []).length || (d.riskless || []).length)
-    G('JOURNAL', `journal rows without a date (${(d.undated || []).join(', ') || 'none'}) or without a logged risk (${(d.riskless || []).join(', ') || 'none'}). Undated rows can never be placed on the experiment's timeline.`);
+    G('JOURNAL', `demo journal rows without a date (${(d.undated || []).join(', ') || 'none'}) or without a logged risk (${(d.riskless || []).join(', ') || 'none'}). From ${ch.startDate} an undated row cannot be placed on the live account's timeline and will be left off the scoreboard.`);
   if (!(X.dashboardBase || {}).aligned)
-    W('DASHBOARD', `the dashboard is denominated $${X.dashboardBase.startUsd} → $${X.dashboardBase.targetUsd}; the page says so beside the reference card. Switching the dashboard to 3,000 / 30,000 removes the sentence.`);
-  if (ac.kind === 'model-portfolio' && !/model portfolio/i.test(section('top')))
-    F('UNVERIFIED-CLAIM', 'the hero does not say the experiment is a model portfolio');
-  G('COUNSEL', 'not reviewed by counsel. Real-time option alerts concern securities; the "Status" paragraph in the disclosures says nothing about registration and needs a lawyer\'s wording.');
+    W('DASHBOARD', `the dashboard is denominated $${X.dashboardBase.startUsd} → $${X.dashboardBase.targetUsd} and calls the record a model portfolio; the page says "demo" and explains the base beside the reference card.`);
 }
 
 const PROFILES = { program, experiment };

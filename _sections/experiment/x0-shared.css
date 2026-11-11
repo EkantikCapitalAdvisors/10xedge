@@ -63,6 +63,9 @@
     color: var(--ink-3);
     margin-bottom: 2px;
   }
+  /* A two-column rule/value table needs no repeated "Value" label when stacked. */
+  .xtbl--kv tbody td::before { content: none; }
+  .xtbl--kv tbody td { margin-top: var(--s-2); }
 }
 
 /* --- Stat tiles ----------------------------------------------------------- */

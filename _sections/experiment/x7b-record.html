@@ -1,0 +1,44 @@
+<section class="band x7" id="record" aria-labelledby="record-title">
+  <div class="wrap">
+
+    <header class="sec-head">
+      <p class="eyebrow" data-reveal>DESIGN DATA &middot; DEMO ACCOUNT</p>
+      <h2 class="sec-title" id="record-title" data-reveal style="--d:80ms">There is no live track record yet.</h2>
+      <p class="lede" data-reveal style="--d:160ms">The design data behind this experiment comes from a demo account: <span class="mono">{{history.trades}}</span> option alerts posted in Discord and closed before the experiment began &mdash; <span class="mono">{{history.index}}</span> on the S&amp;P 500 through SPX and SPY, <span class="mono">{{history.singleStock}}</span> on other names. There is no backtest. Demo results do not predict live results.</p>
+    </header>
+
+    <div class="x7__ledger" data-reveal>
+      <p class="badge x7__demo">Demo account &middot; not live results</p>
+      <!--#chart ledger-->
+    </div>
+
+    <div class="x7__grid">
+      <div class="x7__plot" data-reveal>
+        <!--#chart spark-->
+      </div>
+      <div class="x7__read" data-reveal style="--d:80ms">
+        <p class="body"><!--#chart ci-sentence--></p>
+        <p class="body"><!--#chart fit-sentence--></p>
+      </div>
+    </div>
+
+    <p class="caveat x7__punch" data-reveal>{{history.Trades}} demo trades is not proof. It is the reason to run the experiment with real money, in the open.</p>
+
+    <aside class="x7__ref" aria-labelledby="ref-title" data-reveal>
+      <div class="x7__ref-main">
+        <p class="eyebrow">THE REFERENCE</p>
+        <h3 class="h3 x7__ref-title" id="ref-title">Every demo alert is on the Ascent dashboard &mdash; and the live account will be too.</h3>
+        <p class="body x7__ref-p">Each closed alert is listed there with its entry, exit, result and R, and the full log can be downloaded. Check anything on this page against it.</p>
+        <p class="x7__ref-link">
+          <a class="verify-link" href="{{dashboard.url}}" target="_blank" rel="noopener"><span>Open the Ascent dashboard</span><span class="sr-only">(opens in a new tab)</span><span class="arw" aria-hidden="true">&rarr;</span></a>
+        </p>
+      </div>
+      <div class="x7__ref-notes">
+        <p class="xs xd__note">This page states a dated snapshot of the demo data, as of {{history.asOf}}. The dashboard is live and keeps counting, so its totals will have moved past these.</p>
+        <!--#chart reconcile-->
+        <p class="xs xd__note">The demo data is a small sample from a limited period. It is not an audited or broker-reconciled statement, and it is before commissions and fees.</p>
+      </div>
+    </aside>
+
+  </div>
+</section>

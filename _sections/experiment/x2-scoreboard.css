@@ -12,6 +12,7 @@
 .xc__grid { stroke: var(--line); stroke-width: 1; }
 .xc__grid--target { stroke: var(--ink-3); }
 .xc__vgrid { stroke: var(--line-2); stroke-width: 1; }
+.xc__floor { stroke: var(--ink-2); stroke-width: 1.5; stroke-dasharray: 2 4; }
 .xc__pace { stroke: var(--ink-3); stroke-width: 1.5; stroke-dasharray: 6 5; }
 .xc__eq { stroke: var(--ink); stroke-width: 2; stroke-linejoin: round; }
 
@@ -31,6 +32,8 @@
   color: var(--ink-3);
   white-space: nowrap;
 }
+/* The floor's label sits under its line, so it never collides with the 1x label above. */
+.xc__band--floor { transform: none; padding: 4px 0 0; color: var(--ink-2); }
 .xc__dot {
   position: absolute; left: var(--x); top: var(--y);
   width: 9px; height: 9px; margin: -4.5px 0 0 -4.5px;
@@ -73,6 +76,7 @@
 .xc__key { display: inline-flex; align-items: baseline; gap: var(--s-3); max-width: min(46ch, 100%); min-width: 0; }
 .xc__sw { flex: none; width: 26px; height: 0; align-self: center; border-top: 2px solid var(--ink); }
 .xc__sw--pace { border-top: 1.5px dashed var(--ink-3); }
+.xc__sw--floor { border-top: 1.5px dotted var(--ink-2); }
 .xc__scale { flex-basis: 100%; }
 .xc__read {
   margin-top: var(--s-5);

@@ -2,50 +2,42 @@
   <div class="wrap">
 
     <header class="sec-head">
-      <p class="eyebrow" data-reveal>HOW IT STOPS</p>
-      <h2 class="sec-title" id="kill-title" data-reveal style="--d:80ms">Eight conditions. All of them armed.</h2>
-      <p class="lede" data-reveal style="--d:160ms">An edge can fade, or its operator can drift. Each failure has its own alarm, written down before the first trade, and none of them asks for an opinion.</p>
+      <p class="eyebrow" data-reveal>KILL CRITERIA</p>
+      <h2 class="sec-title" id="kill-title" data-reveal style="--d:80ms">Three things end it early.</h2>
+      <p class="lede" data-reveal style="--d:160ms">The experiment stops if any one of these happens. Each is published in advance, and none of them asks for an opinion.</p>
     </header>
 
-    <div class="x6__gates">
-      <div class="x6__gate" data-reveal>
-        <p class="eyebrow x6__k">EXPRESSION GATE</p>
-        <h3 class="h3 x6__q">Is the edge still positive?</h3>
-        <p class="body x6__b">If expectancy over the last <span class="num--rule">100</span> trades falls to <span class="num--rule">$0</span> per trade or below, new trading stops. The gate reads provisionally from <span class="num--rule">80</span> trades and binds at <span class="num--rule">100</span>.</p>
-      </div>
-      <div class="x6__gate" data-reveal style="--d:80ms">
-        <p class="eyebrow x6__k">FIDELITY GATE</p>
-        <h3 class="h3 x6__q">Are the rules still being followed?</h3>
-        <ul class="x6__check" role="list">
-          <li>Every trade is attributed.</li>
-          <li>Every rule change is countersigned and disclosed before it runs.</li>
-          <li>Every step up and every step down is logged.</li>
-        </ul>
-      </div>
-    </div>
-
     <ol class="x6__kc" role="list" data-reveal>
-      <li><span class="x6__n num--rule">01</span><span class="x6__t">Expectancy over the last <span class="num--rule">100</span> trades at or below <span class="num--rule">$0</span></span><span class="x6__r">Stop. Research only.</span></li>
-      <li><span class="x6__n num--rule">02</span><span class="x6__t">One realised loss in a day</span><span class="x6__r">Stop for the day.</span></li>
-      <li><span class="x6__n num--rule">03</span><span class="x6__t">The weekly loss cap is reached</span><span class="x6__r">Stand down for the week.</span></li>
-      <li><span class="x6__n num--rule">04</span><span class="x6__t">Two losing weeks in a row</span><span class="x6__r">Stand down for the month.</span></li>
-      <li><span class="x6__n num--rule">05</span><span class="x6__t">A cushion is given back</span><span class="x6__r">Size reverts one step.</span></li>
-      <li><span class="x6__n num--rule">06</span><span class="x6__t">Two reverts within <span class="num--rule">14</span> days</span><span class="x6__r">Pause for witness review.</span></li>
-      <li><span class="x6__n num--rule">07</span><span class="x6__t">A trade without attribution</span><span class="x6__r">Fidelity breach.</span></li>
-      <li><span class="x6__n num--rule">08</span><span class="x6__t">A fidelity breach still open</span><span class="x6__r">Gate readings are suspended until it is fixed.</span></li>
+      <li>
+        <span class="x6__n num--rule">1</span>
+        <h3 class="h3 x6__t">Floor</h3>
+        <p class="body x6__r">Account equity closes at or below <span class="num--rule">{{rule.floor}}</span>. Trading stops. A final report follows within <span class="num--rule">{{rule.floorDays}}</span> days.</p>
+      </li>
+      <li>
+        <span class="x6__n num--rule">2</span>
+        <h3 class="h3 x6__t">Rule breach</h3>
+        <p class="body x6__r">Any trade outside the rules above. The experiment ends and is reported as a breach, not a result.</p>
+      </li>
+      <li>
+        <span class="x6__n num--rule">3</span>
+        <h3 class="h3 x6__t">Edge check</h3>
+        <p class="body x6__r">Expectancy over the last <span class="num--rule">{{rule.edge}}</span> trades turns negative. Trading pauses until the witness reviews it.</p>
+      </li>
     </ol>
+
+    <p class="x6__else" data-reveal>If none of these happens, the experiment ends on {{end.date}}.</p>
 
     <hr class="rule x6__seam">
 
     <div class="x6__witness" data-reveal>
       <div>
         <p class="eyebrow x6__k">INDEPENDENT WITNESS</p>
-        <h3 class="h3 x6__q">Who can overrule the operator?</h3>
+        <h3 class="h3 x6__q">Who checks the operator?</h3>
       </div>
-      <p class="body x6__b">The call on a breach is not the operator&rsquo;s to make, and a rule change is not the operator&rsquo;s to approve. Every stand-down, revert and gate event is posted in Discord within <span class="num--rule">24</span> hours. <strong>For this protocol the witness&rsquo;s countersignature is still pending</strong> &mdash; it is stated here because a rulebook that hides its own gaps is not one.</p>
+      <p class="body x6__b"><!--#chart witness--></p>
     </div>
 
-    <p class="caveat x6__punch" data-reveal>Failure is public by design. If the edge is not there, this page is where you will see it first.</p>
+    <p class="caveat x6__punch" data-reveal>None of the three needs anyone&rsquo;s permission to fire. If the design does not work, this page is where you will see it.</p>
 
   </div>
 </section>

@@ -38,7 +38,7 @@
 .x1__title {
   /* A full sentence, not a two-word title: it runs a step below --t-display so
      it holds to three lines at desktop and never orphans the year. */
-  font-size: clamp(2.6rem, .9rem + 6.6vw, 5.6rem);
+  font-size: clamp(2.5rem, .95rem + 6vw, 5.25rem);
   line-height: 1;
 }
 .x1__nb { white-space: nowrap; }

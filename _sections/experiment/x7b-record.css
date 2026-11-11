@@ -2,6 +2,7 @@
    History, kept visibly apart from the experiment's own scoreboard. The
    reference card is the section's destination: a bordered block, never gold.
    ------------------------------------------------------------------------ */
+.x7__demo { margin-bottom: var(--s-5); white-space: normal; }
 .x7__grid {
   margin-top: clamp(var(--s-8), 5vw, var(--s-10));
   display: grid;
